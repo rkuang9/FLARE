@@ -1,0 +1,157 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"childIndexes" : 
+					[
+						1
+					],
+					"jsonFile" : "directory-.-Debug-d0094a50bb2071803777.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.21"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0
+					]
+				},
+				{
+					"build" : "orion",
+					"childIndexes" : 
+					[
+						2,
+						3,
+						4,
+						5,
+						6,
+						7
+					],
+					"jsonFile" : "directory-orion-Debug-1ac364ad7d12d80203d7.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.21"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "orion"
+				},
+				{
+					"build" : "orion/activations",
+					"jsonFile" : "directory-orion.activations-Debug-00417eabf102ed2afc9b.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.21"
+					},
+					"parentIndex" : 1,
+					"projectIndex" : 0,
+					"source" : "orion/activations"
+				},
+				{
+					"build" : "orion/layers",
+					"jsonFile" : "directory-orion.layers-Debug-2c3bf223f641077b1028.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.21"
+					},
+					"parentIndex" : 1,
+					"projectIndex" : 0,
+					"source" : "orion/layers"
+				},
+				{
+					"build" : "orion/weights",
+					"jsonFile" : "directory-orion.weights-Debug-e2fe2babf006a36d5635.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.21"
+					},
+					"parentIndex" : 1,
+					"projectIndex" : 0,
+					"source" : "orion/weights"
+				},
+				{
+					"build" : "orion/optimizers",
+					"jsonFile" : "directory-orion.optimizers-Debug-5ec8303ed05fc6ba2469.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.21"
+					},
+					"parentIndex" : 1,
+					"projectIndex" : 0,
+					"source" : "orion/optimizers"
+				},
+				{
+					"build" : "orion/loss",
+					"jsonFile" : "directory-orion.loss-Debug-c576f50e6679d4fc8399.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.21"
+					},
+					"parentIndex" : 1,
+					"projectIndex" : 0,
+					"source" : "orion/loss"
+				},
+				{
+					"build" : "orion/internal",
+					"jsonFile" : "directory-orion.internal-Debug-c38d95ced2b0fd555acd.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.21"
+					},
+					"parentIndex" : 1,
+					"projectIndex" : 0,
+					"source" : "orion/internal"
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3,
+						4,
+						5,
+						6,
+						7
+					],
+					"name" : "Orion",
+					"targetIndexes" : 
+					[
+						0
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "Orion::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-Orion-Debug-e8f4eb85dd91ce93a2d4.json",
+					"name" : "Orion",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "C:/Users/rkuang/Desktop/Orion/cmake-build-debug",
+		"source" : "C:/Users/rkuang/Desktop/Orion"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 3
+	}
+}
