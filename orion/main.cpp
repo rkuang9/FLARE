@@ -42,7 +42,7 @@ void linear_sigmoid_test()
     TensorMap<2> infer_input(training_set.front().data(), 2, 1);
     TensorMap<2> infer_label(training_labels.front().data(), 1, 1);
 
-    std::cout << "gradient check:  " << model.GradientCheck(infer_input, infer_label, 1e-7);
+    std::cout << "gradient check:   " << model.GradientCheck(infer_input, infer_label, 1e-7);
 }
 
 
