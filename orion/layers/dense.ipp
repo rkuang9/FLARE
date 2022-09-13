@@ -30,12 +30,17 @@ void Dense<Activation>::Forward(const Tensor2D &input)
             << " INPUT FEATURES, INSTEAD GOT "
             << input.dimension(0));
 
-    // Z = W * X + b
+    // Z = w * X + b
     this->X = input;
-    this->Z = this->w.contract(this->X, this->matmul);
+    this->Z = this->w.contract(this->X, ContractDim{Axes(1, 0)});
+
+    if (this->use_bias) {
+        // broadcast bias into the shape of Z
+        this->Z += this->b.broadcast(
+                Eigen::array<Eigen::Index, 2>({1, input.dimension(1)}));
+    }
 
     this->A = Activation::Activate(this->Z);
-    //std::cout << this->name << " A=\n" << this->A << "\n";
 }
 
 
@@ -51,29 +56,25 @@ Tensor2D Dense<Activation>::operator()(const Tensor2D &tensor) const
 {
     orion_assert(this->w.dimension(1) == tensor.dimension(0),
                  "Dense::Forward EXPECTED " << this->w.dimension(1)
-                         << " INPUT FEATURES, INSTEAD GOT "
-                         << tensor.dimension(0));
-
-    return Activation::Activate(this->w.contract(tensor, this->matmul));
+                         << " INPUT FEATURES, GOT " << tensor.dimension(0));
+    std::cerr << "overloaded operator () forward does not use bias\n";
+    return Activation::Activate(
+            this->w.contract(tensor, ContractDim{Axes(1, 0)}));
 }
 
 
 template<typename Activation>
 void Dense<Activation>::Backward(const Layer &next) // hidden layer backward
 {
-    std::cout << "next weights:\n" << next.GetWeights() << "\n";
-    std::cout << "next dL/dZ:\n" << next.GetInputGradients2D() << "\n";
-    std::cout << "sigmoid derivative:\n" << Activation::Activate(this->Z) << "\n";
+    // next.weights.transpose * next.dL_dZ
     this->Backward(next.GetWeights().contract(next.GetInputGradients2D(),
                                               ContractDim{Axes{0, 0}}));
-    //std::terminate();
 }
 
 
 template<typename Activation>
 void Dense<Activation>::Backward(const Loss &loss) // output backward
 {
-    //std::cout << "loss gradients:\n" << loss.GetGradients2D() << "\n";
     this->Backward(loss.GetGradients2D());
 }
 
@@ -89,7 +90,7 @@ void Dense<Activation>::Backward(const Tensor2D &gradients)
     // dL/dw = dL/dz * dz/dw * 1/m = (dL/da * da/dz) * dz/dw * 1/m,
     this->dL_dZ = gradients * Activation::Gradients(this->Z);
     this->dL_dw = this->dL_dZ.contract(this->X, ContractDim{Axes(1, 1)}) /
-                  (Scalar) this->w.dimension(0);
+            (Scalar) this->dL_dZ.dimension(1);
 
 
     orion_assert(this->w.dimensions() == this->dL_dw.dimensions(), this->name <<
@@ -99,8 +100,9 @@ void Dense<Activation>::Backward(const Tensor2D &gradients)
 
     if (this->use_bias) {
         // dL/db = dL/dZ, if batch size > 1 then sum along the 1st dimension (col)
-        this->dL_db = this->dL_dZ.sum(Eigen::array<int, 1>{1}) /
-                      (Scalar) this->w.dimension(0);
+        this->dL_db = this->dL_dZ.sum(Eigen::array<int, 1>{1}).reshape(
+                Tensor<2>::Dimensions(this->dL_dZ.dimension(0), 1)) /
+                      (Scalar) this->dL_dZ.dimension(1);
 
         orion_assert(this->b.dimensions() == this->dL_db.dimensions(),
                      "Dense::Backward BIAS DIMENSIONS " << this->b.dimensions()
@@ -136,13 +138,6 @@ const Tensor<2> &Dense<Activation>::GetInputGradients2D() const
 
 
 template<typename Activation>
-Tensor2D Dense<Activation>::GetGradients() const
-{
-    return this->w.contract(this->dL_dZ, ContractDim{Axes(0, 0)});
-}
-
-
-template<typename Activation>
 const Tensor2D &Dense<Activation>::GetWeights() const
 {
     return this->w;
@@ -161,9 +156,8 @@ void Dense<Activation>::SetWeights(const Tensor<2> &weights)
 {
     if (weights.dimensions() != this->w.dimensions()) {
         std::ostringstream error_msg;
-        error_msg << this->name << " expected weights dimensions " <<
-                this->w.dimensions() << ", got " << weights.dimensions()
-                << "\n";
+        error_msg << this->name << " Dense::SetWeights EXPECTED DIMENSIONS " <<
+                this->w.dimensions() << ", GOT " << weights.dimensions();
         throw std::invalid_argument(error_msg.str());
     }
 
@@ -172,9 +166,28 @@ void Dense<Activation>::SetWeights(const Tensor<2> &weights)
 
 
 template<typename Activation>
-Tensor2D &Dense<Activation>::Bias()
+const Tensor<2> &Dense<Activation>::GetBias() const
 {
     return this->b;
+}
+
+
+template<typename Activation>
+void Dense<Activation>::SetBias(const Tensor<2> &bias)
+{
+    if (bias.dimensions() != this->b.dimensions()) {
+        std::ostringstream error_msg;
+        error_msg << this->name << " Dense::SetBias EXPECTED DIMENSIONS " <<
+                this->b.dimensions() << ", GOT " << bias.dimensions();
+        throw std::invalid_argument(error_msg.str());
+    }
+
+    if (!this->use_bias) {
+        std::cerr << this->name << " use_bias is false, Dense::SetBias skipped\n";
+        return;
+    }
+
+    this->b = bias;
 }
 
 

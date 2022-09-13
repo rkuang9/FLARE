@@ -24,8 +24,6 @@ public:
 
     const Tensor<3> &GetOutput3D() const override;
 
-    Tensor<2> GetGradients() const override;
-
     const Tensor<2> &GetWeights() const override;
 
     void SetWeights(const Tensor<2> &weights) override;

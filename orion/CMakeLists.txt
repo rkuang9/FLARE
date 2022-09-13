@@ -2,7 +2,7 @@ set(SOURCES
         orion_types.hpp
         orion.hpp
         orion_assert.hpp
-        main.cpp
+        #main.cpp
         sequential.cpp
         )
 

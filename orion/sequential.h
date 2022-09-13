@@ -34,6 +34,7 @@ public:
     Scalar GradientCheck(const Tensor<2> &input, const Tensor<2> &label,
                        Scalar epsilon = 1e-7);
 
+    std::vector<Layer *> layers;
 protected:
 
     void Forward(const Tensor2D &training_sample);
@@ -46,11 +47,10 @@ protected:
     std::vector<Tensor2D> training_data2D;
     std::vector<Tensor2D> training_labels2D;
 
-    std::vector<Layer *> layers;
     Loss *loss = nullptr;
     Optimizer *opt = nullptr;
-    int epochs = 0;
-    int batch_size = 32;
+    int epochs = 0; // not in use
+    int batch_size = 32; // not in use
 };
 
 }

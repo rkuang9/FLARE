@@ -36,13 +36,12 @@ void BinaryCrossEntropy::CalculateLoss(const Tensor<2> &predict,
 Scalar BinaryCrossEntropy::operator()(const Tensor<2> &predict,
                                       const Tensor<2> &label) const
 {
-    auto predict_clip = predict.cwiseMax(this->clip_min)
-            .cwiseMin(this->clip_max);
+    auto predict_clip = predict.cwiseMax(this->clip_min).cwiseMin(this->clip_max);
 
-    Tensor<0> mean = -(label * (predict_clip + this->epsilon).log() +
-                       (1 - label) * (1 - predict_clip + this->epsilon).log()).mean();
+    Tensor<0> mean = (label * (predict_clip + this->epsilon).log() +
+                      (1 - label) * (1 - predict_clip + this->epsilon).log()).mean();
 
-    return mean(0);
+    return -mean(0);
 }
 
 } // namespace orion

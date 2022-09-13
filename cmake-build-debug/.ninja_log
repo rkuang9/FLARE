@@ -1,0 +1,13 @@
+# ninja log v5
+6796	8792	1663045131007872578	CMakeFiles/Orion.dir/orion/sequential.cpp.o	1861a2f8560132f5
+1	3825	1663045126035846815	CMakeFiles/Orion.dir/orion/layers/embedding.cpp.o	6ea305c6e796331f
+3825	6796	1663045129011862238	CMakeFiles/Orion.dir/orion/loss/binary_cross_entropy.cpp.o	4f344355c6ee631a
+7	3775	1663045125987846566	CMakeFiles/Orion.dir/orion/optimizers/adam.cpp.o	75669e2a5ac87506
+3775	6712	1663045128927861801	CMakeFiles/Orion.dir/orion/optimizers/rmsprop.cpp.o	194df2d49cef2ece
+2	3333	1663045125543844264	CMakeFiles/Orion.dir/orion/weights/random_generator.cpp.o	d605f7c08fe15ec
+3333	6235	1663045128451859337	CMakeFiles/Orion.dir/orion/optimizers/sgd.cpp.o	f547e0197ccb672a
+3504	3896	1663049080507006598	../bin/Orion	451f9115977ebd0a
+6236	7851	1663045130067867707	CMakeFiles/Orion.dir/orion/loss/mean_squared_error.cpp.o	1018bee414b51f89
+6712	8400	1663045130615870546	CMakeFiles/Orion.dir/orion/internal/batcher.cpp.o	55737e51dc76f015
+1	3504	1663049080115004793	CMakeFiles/Orion.dir/examples/xor_classifier.cpp.o	dae8317501f62e03
+1	3847	1663046228609225105	CMakeFiles/Orion.dir/orion/main.cpp.o	6737406671d63f23
