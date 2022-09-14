@@ -105,6 +105,13 @@ build CMakeFiles/Orion.dir/orion/internal/batcher.cpp.o: CXX_COMPILER__Orion_Deb
   OBJECT_DIR = CMakeFiles/Orion.dir
   OBJECT_FILE_DIR = CMakeFiles/Orion.dir/orion/internal
 
+build CMakeFiles/Orion.dir/orion/main.cpp.o: CXX_COMPILER__Orion_Debug /home/macross/Desktop/OrionNN/orion/main.cpp || cmake_object_order_depends_target_Orion
+  DEP_FILE = CMakeFiles/Orion.dir/orion/main.cpp.o.d
+  FLAGS = -O0  -Wno-return-type -Wreturn-local-addr -static -g -std=gnu++17
+  INCLUDES = -I/home/macross/Desktop/OrionNN/lib/Eigen -I/home/macross/Desktop/OrionNN
+  OBJECT_DIR = CMakeFiles/Orion.dir
+  OBJECT_FILE_DIR = CMakeFiles/Orion.dir/orion
+
 build CMakeFiles/Orion.dir/orion/sequential.cpp.o: CXX_COMPILER__Orion_Debug /home/macross/Desktop/OrionNN/orion/sequential.cpp || cmake_object_order_depends_target_Orion
   DEP_FILE = CMakeFiles/Orion.dir/orion/sequential.cpp.o.d
   FLAGS = -O0  -Wno-return-type -Wreturn-local-addr -static -g -std=gnu++17
@@ -120,7 +127,7 @@ build CMakeFiles/Orion.dir/orion/sequential.cpp.o: CXX_COMPILER__Orion_Debug /ho
 #############################################
 # Link the executable ../bin/Orion
 
-build ../bin/Orion: CXX_EXECUTABLE_LINKER__Orion_Debug CMakeFiles/Orion.dir/orion/layers/embedding.cpp.o CMakeFiles/Orion.dir/orion/weights/random_generator.cpp.o CMakeFiles/Orion.dir/orion/optimizers/adam.cpp.o CMakeFiles/Orion.dir/orion/optimizers/sgd.cpp.o CMakeFiles/Orion.dir/orion/optimizers/rmsprop.cpp.o CMakeFiles/Orion.dir/orion/loss/binary_cross_entropy.cpp.o CMakeFiles/Orion.dir/orion/loss/mean_squared_error.cpp.o CMakeFiles/Orion.dir/orion/internal/batcher.cpp.o CMakeFiles/Orion.dir/orion/sequential.cpp.o
+build ../bin/Orion: CXX_EXECUTABLE_LINKER__Orion_Debug CMakeFiles/Orion.dir/orion/layers/embedding.cpp.o CMakeFiles/Orion.dir/orion/weights/random_generator.cpp.o CMakeFiles/Orion.dir/orion/optimizers/adam.cpp.o CMakeFiles/Orion.dir/orion/optimizers/sgd.cpp.o CMakeFiles/Orion.dir/orion/optimizers/rmsprop.cpp.o CMakeFiles/Orion.dir/orion/loss/binary_cross_entropy.cpp.o CMakeFiles/Orion.dir/orion/loss/mean_squared_error.cpp.o CMakeFiles/Orion.dir/orion/internal/batcher.cpp.o CMakeFiles/Orion.dir/orion/main.cpp.o CMakeFiles/Orion.dir/orion/sequential.cpp.o
   FLAGS = -O0  -Wno-return-type -Wreturn-local-addr -static -g
   OBJECT_DIR = CMakeFiles/Orion.dir
   POST_BUILD = :

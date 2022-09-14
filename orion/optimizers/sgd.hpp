@@ -17,6 +17,8 @@ public:
 
     ~SGD() = default;
 
+    void Step() override;
+
     void Minimize(Tensor2D &W, const Tensor2D &dL_dW) override;
 
     void Minimize(Tensor1D &b, const Tensor1D &dL_db) override;

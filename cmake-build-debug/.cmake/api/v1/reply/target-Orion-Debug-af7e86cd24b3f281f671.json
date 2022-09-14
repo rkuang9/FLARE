@@ -84,7 +84,8 @@
 				12,
 				13,
 				14,
-				18
+				18,
+				19
 			]
 		}
 	],
@@ -147,7 +148,8 @@
 				12,
 				13,
 				14,
-				18
+				18,
+				19
 			]
 		}
 	],
@@ -250,6 +252,12 @@
 			"backtrace" : 1,
 			"path" : "orion/orion_assert.hpp",
 			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "orion/main.cpp",
+			"sourceGroupIndex" : 2
 		},
 		{
 			"backtrace" : 1,

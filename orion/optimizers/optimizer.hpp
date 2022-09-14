@@ -18,6 +18,8 @@ class Optimizer
 public:
     explicit Optimizer(Scalar learning_rate) : learning_rate(learning_rate) {}
 
+    virtual void Step() = 0;
+
     // skip bias correction for most implementations
     virtual void Minimize(Tensor2D &W, const Tensor2D &dL_dW) = 0;
 

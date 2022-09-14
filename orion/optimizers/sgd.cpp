@@ -30,6 +30,12 @@ void SGD::Minimize(Tensor2D &W, const Tensor2D &dL_dW)
 }
 
 
+void SGD::Step()
+{
+
+}
+
+
 void SGD::Minimize(Tensor1D &b, const Tensor1D &dL_db)
 {
     Tensor1D &velocity = this->v_db[b.data()];

@@ -86,8 +86,13 @@ void Sequential::Backward(const Tensor2D &training_label, Loss &loss_function)
 void Sequential::Update(Optimizer &optimizer)
 {
     for (Layer *layer: this->layers) {
+        // update each layer's learnable parameters
         layer->Update(*this->opt);
     }
+
+    // let the optimizer know to move to the next iteration t
+    // where some optimizers need to update their internal parameters
+    optimizer.Step();
 }
 
 
