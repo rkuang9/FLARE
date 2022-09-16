@@ -55,6 +55,8 @@ build CMakeFiles/Orion.dir/orion/layers/embedding.cpp.o: CXX_COMPILER__Orion_Deb
   INCLUDES = -I/home/macross/Desktop/OrionNN/lib/Eigen -I/home/macross/Desktop/OrionNN
   OBJECT_DIR = CMakeFiles/Orion.dir
   OBJECT_FILE_DIR = CMakeFiles/Orion.dir/orion/layers
+  TARGET_COMPILE_PDB = CMakeFiles/Orion.dir/
+  TARGET_PDB = ../bin/Orion.pdb
 
 build CMakeFiles/Orion.dir/orion/weights/random_generator.cpp.o: CXX_COMPILER__Orion_Debug /home/macross/Desktop/OrionNN/orion/weights/random_generator.cpp || cmake_object_order_depends_target_Orion
   DEP_FILE = CMakeFiles/Orion.dir/orion/weights/random_generator.cpp.o.d
@@ -62,6 +64,8 @@ build CMakeFiles/Orion.dir/orion/weights/random_generator.cpp.o: CXX_COMPILER__O
   INCLUDES = -I/home/macross/Desktop/OrionNN/lib/Eigen -I/home/macross/Desktop/OrionNN
   OBJECT_DIR = CMakeFiles/Orion.dir
   OBJECT_FILE_DIR = CMakeFiles/Orion.dir/orion/weights
+  TARGET_COMPILE_PDB = CMakeFiles/Orion.dir/
+  TARGET_PDB = ../bin/Orion.pdb
 
 build CMakeFiles/Orion.dir/orion/optimizers/adam.cpp.o: CXX_COMPILER__Orion_Debug /home/macross/Desktop/OrionNN/orion/optimizers/adam.cpp || cmake_object_order_depends_target_Orion
   DEP_FILE = CMakeFiles/Orion.dir/orion/optimizers/adam.cpp.o.d
@@ -69,6 +73,8 @@ build CMakeFiles/Orion.dir/orion/optimizers/adam.cpp.o: CXX_COMPILER__Orion_Debu
   INCLUDES = -I/home/macross/Desktop/OrionNN/lib/Eigen -I/home/macross/Desktop/OrionNN
   OBJECT_DIR = CMakeFiles/Orion.dir
   OBJECT_FILE_DIR = CMakeFiles/Orion.dir/orion/optimizers
+  TARGET_COMPILE_PDB = CMakeFiles/Orion.dir/
+  TARGET_PDB = ../bin/Orion.pdb
 
 build CMakeFiles/Orion.dir/orion/optimizers/sgd.cpp.o: CXX_COMPILER__Orion_Debug /home/macross/Desktop/OrionNN/orion/optimizers/sgd.cpp || cmake_object_order_depends_target_Orion
   DEP_FILE = CMakeFiles/Orion.dir/orion/optimizers/sgd.cpp.o.d
@@ -76,6 +82,8 @@ build CMakeFiles/Orion.dir/orion/optimizers/sgd.cpp.o: CXX_COMPILER__Orion_Debug
   INCLUDES = -I/home/macross/Desktop/OrionNN/lib/Eigen -I/home/macross/Desktop/OrionNN
   OBJECT_DIR = CMakeFiles/Orion.dir
   OBJECT_FILE_DIR = CMakeFiles/Orion.dir/orion/optimizers
+  TARGET_COMPILE_PDB = CMakeFiles/Orion.dir/
+  TARGET_PDB = ../bin/Orion.pdb
 
 build CMakeFiles/Orion.dir/orion/optimizers/rmsprop.cpp.o: CXX_COMPILER__Orion_Debug /home/macross/Desktop/OrionNN/orion/optimizers/rmsprop.cpp || cmake_object_order_depends_target_Orion
   DEP_FILE = CMakeFiles/Orion.dir/orion/optimizers/rmsprop.cpp.o.d
@@ -83,6 +91,8 @@ build CMakeFiles/Orion.dir/orion/optimizers/rmsprop.cpp.o: CXX_COMPILER__Orion_D
   INCLUDES = -I/home/macross/Desktop/OrionNN/lib/Eigen -I/home/macross/Desktop/OrionNN
   OBJECT_DIR = CMakeFiles/Orion.dir
   OBJECT_FILE_DIR = CMakeFiles/Orion.dir/orion/optimizers
+  TARGET_COMPILE_PDB = CMakeFiles/Orion.dir/
+  TARGET_PDB = ../bin/Orion.pdb
 
 build CMakeFiles/Orion.dir/orion/loss/binary_cross_entropy.cpp.o: CXX_COMPILER__Orion_Debug /home/macross/Desktop/OrionNN/orion/loss/binary_cross_entropy.cpp || cmake_object_order_depends_target_Orion
   DEP_FILE = CMakeFiles/Orion.dir/orion/loss/binary_cross_entropy.cpp.o.d
@@ -90,6 +100,8 @@ build CMakeFiles/Orion.dir/orion/loss/binary_cross_entropy.cpp.o: CXX_COMPILER__
   INCLUDES = -I/home/macross/Desktop/OrionNN/lib/Eigen -I/home/macross/Desktop/OrionNN
   OBJECT_DIR = CMakeFiles/Orion.dir
   OBJECT_FILE_DIR = CMakeFiles/Orion.dir/orion/loss
+  TARGET_COMPILE_PDB = CMakeFiles/Orion.dir/
+  TARGET_PDB = ../bin/Orion.pdb
 
 build CMakeFiles/Orion.dir/orion/loss/mean_squared_error.cpp.o: CXX_COMPILER__Orion_Debug /home/macross/Desktop/OrionNN/orion/loss/mean_squared_error.cpp || cmake_object_order_depends_target_Orion
   DEP_FILE = CMakeFiles/Orion.dir/orion/loss/mean_squared_error.cpp.o.d
@@ -97,6 +109,8 @@ build CMakeFiles/Orion.dir/orion/loss/mean_squared_error.cpp.o: CXX_COMPILER__Or
   INCLUDES = -I/home/macross/Desktop/OrionNN/lib/Eigen -I/home/macross/Desktop/OrionNN
   OBJECT_DIR = CMakeFiles/Orion.dir
   OBJECT_FILE_DIR = CMakeFiles/Orion.dir/orion/loss
+  TARGET_COMPILE_PDB = CMakeFiles/Orion.dir/
+  TARGET_PDB = ../bin/Orion.pdb
 
 build CMakeFiles/Orion.dir/orion/internal/batcher.cpp.o: CXX_COMPILER__Orion_Debug /home/macross/Desktop/OrionNN/orion/internal/batcher.cpp || cmake_object_order_depends_target_Orion
   DEP_FILE = CMakeFiles/Orion.dir/orion/internal/batcher.cpp.o.d
@@ -104,6 +118,8 @@ build CMakeFiles/Orion.dir/orion/internal/batcher.cpp.o: CXX_COMPILER__Orion_Deb
   INCLUDES = -I/home/macross/Desktop/OrionNN/lib/Eigen -I/home/macross/Desktop/OrionNN
   OBJECT_DIR = CMakeFiles/Orion.dir
   OBJECT_FILE_DIR = CMakeFiles/Orion.dir/orion/internal
+  TARGET_COMPILE_PDB = CMakeFiles/Orion.dir/
+  TARGET_PDB = ../bin/Orion.pdb
 
 build CMakeFiles/Orion.dir/orion/main.cpp.o: CXX_COMPILER__Orion_Debug /home/macross/Desktop/OrionNN/orion/main.cpp || cmake_object_order_depends_target_Orion
   DEP_FILE = CMakeFiles/Orion.dir/orion/main.cpp.o.d
@@ -111,6 +127,8 @@ build CMakeFiles/Orion.dir/orion/main.cpp.o: CXX_COMPILER__Orion_Debug /home/mac
   INCLUDES = -I/home/macross/Desktop/OrionNN/lib/Eigen -I/home/macross/Desktop/OrionNN
   OBJECT_DIR = CMakeFiles/Orion.dir
   OBJECT_FILE_DIR = CMakeFiles/Orion.dir/orion
+  TARGET_COMPILE_PDB = CMakeFiles/Orion.dir/
+  TARGET_PDB = ../bin/Orion.pdb
 
 build CMakeFiles/Orion.dir/orion/sequential.cpp.o: CXX_COMPILER__Orion_Debug /home/macross/Desktop/OrionNN/orion/sequential.cpp || cmake_object_order_depends_target_Orion
   DEP_FILE = CMakeFiles/Orion.dir/orion/sequential.cpp.o.d
@@ -118,6 +136,8 @@ build CMakeFiles/Orion.dir/orion/sequential.cpp.o: CXX_COMPILER__Orion_Debug /ho
   INCLUDES = -I/home/macross/Desktop/OrionNN/lib/Eigen -I/home/macross/Desktop/OrionNN
   OBJECT_DIR = CMakeFiles/Orion.dir
   OBJECT_FILE_DIR = CMakeFiles/Orion.dir/orion
+  TARGET_COMPILE_PDB = CMakeFiles/Orion.dir/
+  TARGET_PDB = ../bin/Orion.pdb
 
 
 # =============================================================================
@@ -132,15 +152,16 @@ build ../bin/Orion: CXX_EXECUTABLE_LINKER__Orion_Debug CMakeFiles/Orion.dir/orio
   OBJECT_DIR = CMakeFiles/Orion.dir
   POST_BUILD = :
   PRE_LINK = :
+  TARGET_COMPILE_PDB = CMakeFiles/Orion.dir/
   TARGET_FILE = ../bin/Orion
-  TARGET_PDB = Orion.dbg
+  TARGET_PDB = ../bin/Orion.pdb
 
 
 #############################################
 # Utility command for edit_cache
 
 build CMakeFiles/edit_cache.util: CUSTOM_COMMAND
-  COMMAND = cd /home/macross/Desktop/OrionNN/cmake-build-debug && /snap/clion/204/bin/cmake/linux/bin/ccmake -S/home/macross/Desktop/OrionNN -B/home/macross/Desktop/OrionNN/cmake-build-debug
+  COMMAND = cd /home/macross/Desktop/OrionNN/cmake-build-debug && /snap/clion/206/bin/cmake/linux/bin/ccmake -S/home/macross/Desktop/OrionNN -B/home/macross/Desktop/OrionNN/cmake-build-debug
   DESC = Running CMake cache editor...
   pool = console
   restat = 1
@@ -152,7 +173,7 @@ build edit_cache: phony CMakeFiles/edit_cache.util
 # Utility command for rebuild_cache
 
 build CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
-  COMMAND = cd /home/macross/Desktop/OrionNN/cmake-build-debug && /snap/clion/204/bin/cmake/linux/bin/cmake --regenerate-during-build -S/home/macross/Desktop/OrionNN -B/home/macross/Desktop/OrionNN/cmake-build-debug
+  COMMAND = cd /home/macross/Desktop/OrionNN/cmake-build-debug && /snap/clion/206/bin/cmake/linux/bin/cmake --regenerate-during-build -S/home/macross/Desktop/OrionNN -B/home/macross/Desktop/OrionNN/cmake-build-debug
   DESC = Running CMake to regenerate build system...
   pool = console
   restat = 1
@@ -169,7 +190,7 @@ build rebuild_cache: phony CMakeFiles/rebuild_cache.util
 # Utility command for edit_cache
 
 build orion/CMakeFiles/edit_cache.util: CUSTOM_COMMAND
-  COMMAND = cd /home/macross/Desktop/OrionNN/cmake-build-debug/orion && /snap/clion/204/bin/cmake/linux/bin/ccmake -S/home/macross/Desktop/OrionNN -B/home/macross/Desktop/OrionNN/cmake-build-debug
+  COMMAND = cd /home/macross/Desktop/OrionNN/cmake-build-debug/orion && /snap/clion/206/bin/cmake/linux/bin/ccmake -S/home/macross/Desktop/OrionNN -B/home/macross/Desktop/OrionNN/cmake-build-debug
   DESC = Running CMake cache editor...
   pool = console
   restat = 1
@@ -181,7 +202,7 @@ build orion/edit_cache: phony orion/CMakeFiles/edit_cache.util
 # Utility command for rebuild_cache
 
 build orion/CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
-  COMMAND = cd /home/macross/Desktop/OrionNN/cmake-build-debug/orion && /snap/clion/204/bin/cmake/linux/bin/cmake --regenerate-during-build -S/home/macross/Desktop/OrionNN -B/home/macross/Desktop/OrionNN/cmake-build-debug
+  COMMAND = cd /home/macross/Desktop/OrionNN/cmake-build-debug/orion && /snap/clion/206/bin/cmake/linux/bin/cmake --regenerate-during-build -S/home/macross/Desktop/OrionNN -B/home/macross/Desktop/OrionNN/cmake-build-debug
   DESC = Running CMake to regenerate build system...
   pool = console
   restat = 1
@@ -198,7 +219,7 @@ build orion/rebuild_cache: phony orion/CMakeFiles/rebuild_cache.util
 # Utility command for edit_cache
 
 build orion/activations/CMakeFiles/edit_cache.util: CUSTOM_COMMAND
-  COMMAND = cd /home/macross/Desktop/OrionNN/cmake-build-debug/orion/activations && /snap/clion/204/bin/cmake/linux/bin/ccmake -S/home/macross/Desktop/OrionNN -B/home/macross/Desktop/OrionNN/cmake-build-debug
+  COMMAND = cd /home/macross/Desktop/OrionNN/cmake-build-debug/orion/activations && /snap/clion/206/bin/cmake/linux/bin/ccmake -S/home/macross/Desktop/OrionNN -B/home/macross/Desktop/OrionNN/cmake-build-debug
   DESC = Running CMake cache editor...
   pool = console
   restat = 1
@@ -210,7 +231,7 @@ build orion/activations/edit_cache: phony orion/activations/CMakeFiles/edit_cach
 # Utility command for rebuild_cache
 
 build orion/activations/CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
-  COMMAND = cd /home/macross/Desktop/OrionNN/cmake-build-debug/orion/activations && /snap/clion/204/bin/cmake/linux/bin/cmake --regenerate-during-build -S/home/macross/Desktop/OrionNN -B/home/macross/Desktop/OrionNN/cmake-build-debug
+  COMMAND = cd /home/macross/Desktop/OrionNN/cmake-build-debug/orion/activations && /snap/clion/206/bin/cmake/linux/bin/cmake --regenerate-during-build -S/home/macross/Desktop/OrionNN -B/home/macross/Desktop/OrionNN/cmake-build-debug
   DESC = Running CMake to regenerate build system...
   pool = console
   restat = 1
@@ -227,7 +248,7 @@ build orion/activations/rebuild_cache: phony orion/activations/CMakeFiles/rebuil
 # Utility command for edit_cache
 
 build orion/layers/CMakeFiles/edit_cache.util: CUSTOM_COMMAND
-  COMMAND = cd /home/macross/Desktop/OrionNN/cmake-build-debug/orion/layers && /snap/clion/204/bin/cmake/linux/bin/ccmake -S/home/macross/Desktop/OrionNN -B/home/macross/Desktop/OrionNN/cmake-build-debug
+  COMMAND = cd /home/macross/Desktop/OrionNN/cmake-build-debug/orion/layers && /snap/clion/206/bin/cmake/linux/bin/ccmake -S/home/macross/Desktop/OrionNN -B/home/macross/Desktop/OrionNN/cmake-build-debug
   DESC = Running CMake cache editor...
   pool = console
   restat = 1
@@ -239,7 +260,7 @@ build orion/layers/edit_cache: phony orion/layers/CMakeFiles/edit_cache.util
 # Utility command for rebuild_cache
 
 build orion/layers/CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
-  COMMAND = cd /home/macross/Desktop/OrionNN/cmake-build-debug/orion/layers && /snap/clion/204/bin/cmake/linux/bin/cmake --regenerate-during-build -S/home/macross/Desktop/OrionNN -B/home/macross/Desktop/OrionNN/cmake-build-debug
+  COMMAND = cd /home/macross/Desktop/OrionNN/cmake-build-debug/orion/layers && /snap/clion/206/bin/cmake/linux/bin/cmake --regenerate-during-build -S/home/macross/Desktop/OrionNN -B/home/macross/Desktop/OrionNN/cmake-build-debug
   DESC = Running CMake to regenerate build system...
   pool = console
   restat = 1
@@ -256,7 +277,7 @@ build orion/layers/rebuild_cache: phony orion/layers/CMakeFiles/rebuild_cache.ut
 # Utility command for edit_cache
 
 build orion/weights/CMakeFiles/edit_cache.util: CUSTOM_COMMAND
-  COMMAND = cd /home/macross/Desktop/OrionNN/cmake-build-debug/orion/weights && /snap/clion/204/bin/cmake/linux/bin/ccmake -S/home/macross/Desktop/OrionNN -B/home/macross/Desktop/OrionNN/cmake-build-debug
+  COMMAND = cd /home/macross/Desktop/OrionNN/cmake-build-debug/orion/weights && /snap/clion/206/bin/cmake/linux/bin/ccmake -S/home/macross/Desktop/OrionNN -B/home/macross/Desktop/OrionNN/cmake-build-debug
   DESC = Running CMake cache editor...
   pool = console
   restat = 1
@@ -268,7 +289,7 @@ build orion/weights/edit_cache: phony orion/weights/CMakeFiles/edit_cache.util
 # Utility command for rebuild_cache
 
 build orion/weights/CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
-  COMMAND = cd /home/macross/Desktop/OrionNN/cmake-build-debug/orion/weights && /snap/clion/204/bin/cmake/linux/bin/cmake --regenerate-during-build -S/home/macross/Desktop/OrionNN -B/home/macross/Desktop/OrionNN/cmake-build-debug
+  COMMAND = cd /home/macross/Desktop/OrionNN/cmake-build-debug/orion/weights && /snap/clion/206/bin/cmake/linux/bin/cmake --regenerate-during-build -S/home/macross/Desktop/OrionNN -B/home/macross/Desktop/OrionNN/cmake-build-debug
   DESC = Running CMake to regenerate build system...
   pool = console
   restat = 1
@@ -285,7 +306,7 @@ build orion/weights/rebuild_cache: phony orion/weights/CMakeFiles/rebuild_cache.
 # Utility command for edit_cache
 
 build orion/optimizers/CMakeFiles/edit_cache.util: CUSTOM_COMMAND
-  COMMAND = cd /home/macross/Desktop/OrionNN/cmake-build-debug/orion/optimizers && /snap/clion/204/bin/cmake/linux/bin/ccmake -S/home/macross/Desktop/OrionNN -B/home/macross/Desktop/OrionNN/cmake-build-debug
+  COMMAND = cd /home/macross/Desktop/OrionNN/cmake-build-debug/orion/optimizers && /snap/clion/206/bin/cmake/linux/bin/ccmake -S/home/macross/Desktop/OrionNN -B/home/macross/Desktop/OrionNN/cmake-build-debug
   DESC = Running CMake cache editor...
   pool = console
   restat = 1
@@ -297,7 +318,7 @@ build orion/optimizers/edit_cache: phony orion/optimizers/CMakeFiles/edit_cache.
 # Utility command for rebuild_cache
 
 build orion/optimizers/CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
-  COMMAND = cd /home/macross/Desktop/OrionNN/cmake-build-debug/orion/optimizers && /snap/clion/204/bin/cmake/linux/bin/cmake --regenerate-during-build -S/home/macross/Desktop/OrionNN -B/home/macross/Desktop/OrionNN/cmake-build-debug
+  COMMAND = cd /home/macross/Desktop/OrionNN/cmake-build-debug/orion/optimizers && /snap/clion/206/bin/cmake/linux/bin/cmake --regenerate-during-build -S/home/macross/Desktop/OrionNN -B/home/macross/Desktop/OrionNN/cmake-build-debug
   DESC = Running CMake to regenerate build system...
   pool = console
   restat = 1
@@ -314,7 +335,7 @@ build orion/optimizers/rebuild_cache: phony orion/optimizers/CMakeFiles/rebuild_
 # Utility command for edit_cache
 
 build orion/loss/CMakeFiles/edit_cache.util: CUSTOM_COMMAND
-  COMMAND = cd /home/macross/Desktop/OrionNN/cmake-build-debug/orion/loss && /snap/clion/204/bin/cmake/linux/bin/ccmake -S/home/macross/Desktop/OrionNN -B/home/macross/Desktop/OrionNN/cmake-build-debug
+  COMMAND = cd /home/macross/Desktop/OrionNN/cmake-build-debug/orion/loss && /snap/clion/206/bin/cmake/linux/bin/ccmake -S/home/macross/Desktop/OrionNN -B/home/macross/Desktop/OrionNN/cmake-build-debug
   DESC = Running CMake cache editor...
   pool = console
   restat = 1
@@ -326,7 +347,7 @@ build orion/loss/edit_cache: phony orion/loss/CMakeFiles/edit_cache.util
 # Utility command for rebuild_cache
 
 build orion/loss/CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
-  COMMAND = cd /home/macross/Desktop/OrionNN/cmake-build-debug/orion/loss && /snap/clion/204/bin/cmake/linux/bin/cmake --regenerate-during-build -S/home/macross/Desktop/OrionNN -B/home/macross/Desktop/OrionNN/cmake-build-debug
+  COMMAND = cd /home/macross/Desktop/OrionNN/cmake-build-debug/orion/loss && /snap/clion/206/bin/cmake/linux/bin/cmake --regenerate-during-build -S/home/macross/Desktop/OrionNN -B/home/macross/Desktop/OrionNN/cmake-build-debug
   DESC = Running CMake to regenerate build system...
   pool = console
   restat = 1
@@ -343,7 +364,7 @@ build orion/loss/rebuild_cache: phony orion/loss/CMakeFiles/rebuild_cache.util
 # Utility command for edit_cache
 
 build orion/internal/CMakeFiles/edit_cache.util: CUSTOM_COMMAND
-  COMMAND = cd /home/macross/Desktop/OrionNN/cmake-build-debug/orion/internal && /snap/clion/204/bin/cmake/linux/bin/ccmake -S/home/macross/Desktop/OrionNN -B/home/macross/Desktop/OrionNN/cmake-build-debug
+  COMMAND = cd /home/macross/Desktop/OrionNN/cmake-build-debug/orion/internal && /snap/clion/206/bin/cmake/linux/bin/ccmake -S/home/macross/Desktop/OrionNN -B/home/macross/Desktop/OrionNN/cmake-build-debug
   DESC = Running CMake cache editor...
   pool = console
   restat = 1
@@ -355,7 +376,7 @@ build orion/internal/edit_cache: phony orion/internal/CMakeFiles/edit_cache.util
 # Utility command for rebuild_cache
 
 build orion/internal/CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
-  COMMAND = cd /home/macross/Desktop/OrionNN/cmake-build-debug/orion/internal && /snap/clion/204/bin/cmake/linux/bin/cmake --regenerate-during-build -S/home/macross/Desktop/OrionNN -B/home/macross/Desktop/OrionNN/cmake-build-debug
+  COMMAND = cd /home/macross/Desktop/OrionNN/cmake-build-debug/orion/internal && /snap/clion/206/bin/cmake/linux/bin/cmake --regenerate-during-build -S/home/macross/Desktop/OrionNN -B/home/macross/Desktop/OrionNN/cmake-build-debug
   DESC = Running CMake to regenerate build system...
   pool = console
   restat = 1
@@ -433,14 +454,14 @@ build orion/weights/all: phony
 #############################################
 # Re-run CMake if any of its inputs changed.
 
-build build.ninja: RERUN_CMAKE | ../CMakeLists.txt ../orion/CMakeLists.txt ../orion/activations/CMakeLists.txt ../orion/internal/CMakeLists.txt ../orion/layers/CMakeLists.txt ../orion/loss/CMakeLists.txt ../orion/optimizers/CMakeLists.txt ../orion/weights/CMakeLists.txt /snap/clion/204/bin/cmake/linux/share/cmake-3.23/Modules/CMakeCInformation.cmake /snap/clion/204/bin/cmake/linux/share/cmake-3.23/Modules/CMakeCXXInformation.cmake /snap/clion/204/bin/cmake/linux/share/cmake-3.23/Modules/CMakeCommonLanguageInclude.cmake /snap/clion/204/bin/cmake/linux/share/cmake-3.23/Modules/CMakeGenericSystem.cmake /snap/clion/204/bin/cmake/linux/share/cmake-3.23/Modules/CMakeInitializeConfigs.cmake /snap/clion/204/bin/cmake/linux/share/cmake-3.23/Modules/CMakeLanguageInformation.cmake /snap/clion/204/bin/cmake/linux/share/cmake-3.23/Modules/CMakeSystemSpecificInformation.cmake /snap/clion/204/bin/cmake/linux/share/cmake-3.23/Modules/CMakeSystemSpecificInitialize.cmake /snap/clion/204/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/CMakeCommonCompilerMacros.cmake /snap/clion/204/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/GNU-C.cmake /snap/clion/204/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/GNU-CXX.cmake /snap/clion/204/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/GNU.cmake /snap/clion/204/bin/cmake/linux/share/cmake-3.23/Modules/Platform/Linux-GNU-C.cmake /snap/clion/204/bin/cmake/linux/share/cmake-3.23/Modules/Platform/Linux-GNU-CXX.cmake /snap/clion/204/bin/cmake/linux/share/cmake-3.23/Modules/Platform/Linux-GNU.cmake /snap/clion/204/bin/cmake/linux/share/cmake-3.23/Modules/Platform/Linux.cmake /snap/clion/204/bin/cmake/linux/share/cmake-3.23/Modules/Platform/UnixPaths.cmake CMakeCache.txt CMakeFiles/3.23.2/CMakeCCompiler.cmake CMakeFiles/3.23.2/CMakeCXXCompiler.cmake CMakeFiles/3.23.2/CMakeSystem.cmake
+build build.ninja: RERUN_CMAKE | ../CMakeLists.txt ../orion/CMakeLists.txt ../orion/activations/CMakeLists.txt ../orion/internal/CMakeLists.txt ../orion/layers/CMakeLists.txt ../orion/loss/CMakeLists.txt ../orion/optimizers/CMakeLists.txt ../orion/weights/CMakeLists.txt /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/CMakeCCompiler.cmake.in /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/CMakeCCompilerABI.c /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/CMakeCInformation.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/CMakeCXXCompiler.cmake.in /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/CMakeCXXCompilerABI.cpp /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/CMakeCXXInformation.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/CMakeCommonLanguageInclude.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/CMakeCompilerIdDetection.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/CMakeDetermineCCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/CMakeDetermineCXXCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/CMakeDetermineCompileFeatures.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/CMakeDetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/CMakeDetermineCompilerABI.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/CMakeDetermineCompilerId.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/CMakeDetermineSystem.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/CMakeFindBinUtils.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/CMakeGenericSystem.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/CMakeInitializeConfigs.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/CMakeLanguageInformation.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/CMakeParseImplicitIncludeInfo.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/CMakeParseImplicitLinkInfo.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/CMakeParseLibraryArchitecture.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/CMakeSystem.cmake.in /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/CMakeSystemSpecificInformation.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/CMakeSystemSpecificInitialize.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/CMakeTestCCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/CMakeTestCXXCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/CMakeTestCompilerCommon.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/ADSP-DetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/ARMCC-DetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/ARMClang-DetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/AppleClang-DetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/Borland-DetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/Bruce-C-DetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/CMakeCommonCompilerMacros.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/Clang-DetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/Clang-DetermineCompilerInternal.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/Comeau-CXX-DetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/Compaq-C-DetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/Compaq-CXX-DetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/Cray-DetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/Embarcadero-DetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/Fujitsu-DetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/FujitsuClang-DetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/GHS-DetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/GNU-C-DetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/GNU-C.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/GNU-CXX-DetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/GNU-CXX.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/GNU-FindBinUtils.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/GNU.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/HP-C-DetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/HP-CXX-DetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/IAR-DetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/IBMCPP-C-DetermineVersionInternal.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/IBMCPP-CXX-DetermineVersionInternal.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/IBMClang-C-DetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/IBMClang-CXX-DetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/Intel-DetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/IntelLLVM-DetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/LCC-C-DetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/LCC-CXX-DetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/MSVC-DetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/NVHPC-DetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/NVIDIA-DetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/OpenWatcom-DetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/PGI-DetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/PathScale-DetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/SCO-DetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/SDCC-C-DetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/SunPro-C-DetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/SunPro-CXX-DetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/TI-DetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/TinyCC-C-DetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/VisualAge-C-DetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/VisualAge-CXX-DetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/Watcom-DetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/XL-C-DetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/XL-CXX-DetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/XLClang-C-DetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/XLClang-CXX-DetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/zOS-C-DetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/zOS-CXX-DetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Internal/FeatureTesting.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Platform/Linux-Determine-CXX.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Platform/Linux-GNU-C.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Platform/Linux-GNU-CXX.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Platform/Linux-GNU.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Platform/Linux.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Platform/UnixPaths.cmake CMakeCache.txt CMakeFiles/3.23.2/CMakeCCompiler.cmake CMakeFiles/3.23.2/CMakeCXXCompiler.cmake CMakeFiles/3.23.2/CMakeSystem.cmake
   pool = console
 
 
 #############################################
 # A missing CMake input file is not an error.
 
-build ../CMakeLists.txt ../orion/CMakeLists.txt ../orion/activations/CMakeLists.txt ../orion/internal/CMakeLists.txt ../orion/layers/CMakeLists.txt ../orion/loss/CMakeLists.txt ../orion/optimizers/CMakeLists.txt ../orion/weights/CMakeLists.txt /snap/clion/204/bin/cmake/linux/share/cmake-3.23/Modules/CMakeCInformation.cmake /snap/clion/204/bin/cmake/linux/share/cmake-3.23/Modules/CMakeCXXInformation.cmake /snap/clion/204/bin/cmake/linux/share/cmake-3.23/Modules/CMakeCommonLanguageInclude.cmake /snap/clion/204/bin/cmake/linux/share/cmake-3.23/Modules/CMakeGenericSystem.cmake /snap/clion/204/bin/cmake/linux/share/cmake-3.23/Modules/CMakeInitializeConfigs.cmake /snap/clion/204/bin/cmake/linux/share/cmake-3.23/Modules/CMakeLanguageInformation.cmake /snap/clion/204/bin/cmake/linux/share/cmake-3.23/Modules/CMakeSystemSpecificInformation.cmake /snap/clion/204/bin/cmake/linux/share/cmake-3.23/Modules/CMakeSystemSpecificInitialize.cmake /snap/clion/204/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/CMakeCommonCompilerMacros.cmake /snap/clion/204/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/GNU-C.cmake /snap/clion/204/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/GNU-CXX.cmake /snap/clion/204/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/GNU.cmake /snap/clion/204/bin/cmake/linux/share/cmake-3.23/Modules/Platform/Linux-GNU-C.cmake /snap/clion/204/bin/cmake/linux/share/cmake-3.23/Modules/Platform/Linux-GNU-CXX.cmake /snap/clion/204/bin/cmake/linux/share/cmake-3.23/Modules/Platform/Linux-GNU.cmake /snap/clion/204/bin/cmake/linux/share/cmake-3.23/Modules/Platform/Linux.cmake /snap/clion/204/bin/cmake/linux/share/cmake-3.23/Modules/Platform/UnixPaths.cmake CMakeCache.txt CMakeFiles/3.23.2/CMakeCCompiler.cmake CMakeFiles/3.23.2/CMakeCXXCompiler.cmake CMakeFiles/3.23.2/CMakeSystem.cmake: phony
+build ../CMakeLists.txt ../orion/CMakeLists.txt ../orion/activations/CMakeLists.txt ../orion/internal/CMakeLists.txt ../orion/layers/CMakeLists.txt ../orion/loss/CMakeLists.txt ../orion/optimizers/CMakeLists.txt ../orion/weights/CMakeLists.txt /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/CMakeCCompiler.cmake.in /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/CMakeCCompilerABI.c /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/CMakeCInformation.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/CMakeCXXCompiler.cmake.in /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/CMakeCXXCompilerABI.cpp /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/CMakeCXXInformation.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/CMakeCommonLanguageInclude.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/CMakeCompilerIdDetection.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/CMakeDetermineCCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/CMakeDetermineCXXCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/CMakeDetermineCompileFeatures.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/CMakeDetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/CMakeDetermineCompilerABI.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/CMakeDetermineCompilerId.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/CMakeDetermineSystem.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/CMakeFindBinUtils.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/CMakeGenericSystem.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/CMakeInitializeConfigs.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/CMakeLanguageInformation.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/CMakeParseImplicitIncludeInfo.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/CMakeParseImplicitLinkInfo.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/CMakeParseLibraryArchitecture.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/CMakeSystem.cmake.in /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/CMakeSystemSpecificInformation.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/CMakeSystemSpecificInitialize.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/CMakeTestCCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/CMakeTestCXXCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/CMakeTestCompilerCommon.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/ADSP-DetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/ARMCC-DetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/ARMClang-DetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/AppleClang-DetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/Borland-DetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/Bruce-C-DetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/CMakeCommonCompilerMacros.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/Clang-DetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/Clang-DetermineCompilerInternal.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/Comeau-CXX-DetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/Compaq-C-DetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/Compaq-CXX-DetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/Cray-DetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/Embarcadero-DetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/Fujitsu-DetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/FujitsuClang-DetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/GHS-DetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/GNU-C-DetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/GNU-C.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/GNU-CXX-DetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/GNU-CXX.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/GNU-FindBinUtils.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/GNU.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/HP-C-DetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/HP-CXX-DetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/IAR-DetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/IBMCPP-C-DetermineVersionInternal.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/IBMCPP-CXX-DetermineVersionInternal.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/IBMClang-C-DetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/IBMClang-CXX-DetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/Intel-DetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/IntelLLVM-DetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/LCC-C-DetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/LCC-CXX-DetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/MSVC-DetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/NVHPC-DetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/NVIDIA-DetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/OpenWatcom-DetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/PGI-DetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/PathScale-DetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/SCO-DetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/SDCC-C-DetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/SunPro-C-DetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/SunPro-CXX-DetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/TI-DetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/TinyCC-C-DetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/VisualAge-C-DetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/VisualAge-CXX-DetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/Watcom-DetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/XL-C-DetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/XL-CXX-DetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/XLClang-C-DetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/XLClang-CXX-DetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/zOS-C-DetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Compiler/zOS-CXX-DetermineCompiler.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Internal/FeatureTesting.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Platform/Linux-Determine-CXX.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Platform/Linux-GNU-C.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Platform/Linux-GNU-CXX.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Platform/Linux-GNU.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Platform/Linux.cmake /snap/clion/206/bin/cmake/linux/share/cmake-3.23/Modules/Platform/UnixPaths.cmake CMakeCache.txt CMakeFiles/3.23.2/CMakeCCompiler.cmake CMakeFiles/3.23.2/CMakeCXXCompiler.cmake CMakeFiles/3.23.2/CMakeSystem.cmake: phony
 
 
 #############################################

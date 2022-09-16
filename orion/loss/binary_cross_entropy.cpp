@@ -4,6 +4,7 @@
 
 #include "binary_cross_entropy.hpp"
 #include <iostream>
+#include <cmath>
 
 namespace orion
 {
@@ -28,8 +29,8 @@ void BinaryCrossEntropy::CalculateLoss(const Tensor<2> &predict,
     this->loss_history.push_back((*this)(predict, label));
 
     this->gradient_history.emplace_back(
-            (-label / (predict + this->epsilon)) +
-            (1 - label) / (1 - predict + this->epsilon));
+            (-label / ((predict  + this->epsilon))) +
+            (1 - label) / ((1 - predict + this->epsilon)));
 }
 
 

@@ -16,6 +16,7 @@ Dense<Activation>::Dense(int inputs, int outputs, bool use_bias,
     this->w = initializer.Initialize(outputs, inputs);
 
     if (this->use_bias) {
+        throw std::invalid_argument("bias not available");
         this->b.resize(outputs, 1);
         this->b.setZero();
     }
@@ -66,31 +67,29 @@ Tensor2D Dense<Activation>::operator()(const Tensor2D &tensor) const
 template<typename Activation>
 void Dense<Activation>::Backward(const Layer &next) // hidden layer backward
 {
-    // next.weights.transpose * next.dL_dZ
-    this->Backward(next.GetWeights().contract(next.GetInputGradients2D(),
-                                              ContractDim{Axes{0, 0}}));
+    // (next.weights.transpose * next.dL_dZ) hadamard (this->Z)
+    this->dL_dZ = next.GetWeights().contract(
+            next.GetInputGradients2D(), ContractDim{Axes{0, 0}});
+
+    // hadamard product (element-wise product)
+    this->dL_dZ *= Activation::Gradients(this->Z);
+    this->Backward();
 }
 
 
 template<typename Activation>
 void Dense<Activation>::Backward(const Loss &loss) // output backward
 {
-    this->Backward(loss.GetGradients2D());
+    this->dL_dZ = loss.GetGradients2D() * Activation::Gradients(this->Z) /
+                  (Scalar) this->w.dimension(0);
+    this->Backward();
 }
 
 
 template<typename Activation>
-void Dense<Activation>::Backward(const Tensor2D &gradients)
+void Dense<Activation>::Backward()
 {
-    orion_assert(gradients.dimensions() == this->Z.dimensions(),
-                 this->name << " Dense::Backward expected "
-                         << this->Z.dimensions() << ", got "
-                         << gradients.dimensions() << " instead");
-
-    // dL/dw = dL/dz * dz/dw * 1/m = (dL/da * da/dz) * dz/dw * 1/m,
-    this->dL_dZ = gradients * Activation::Gradients(this->Z);
-    this->dL_dw = this->dL_dZ.contract(this->X, ContractDim{Axes(1, 1)}) /
-            (Scalar) this->dL_dZ.dimension(1);
+    this->dL_dw = this->dL_dZ.contract(this->X, ContractDim{Axes(1, 1)});
 
 
     orion_assert(this->w.dimensions() == this->dL_dw.dimensions(), this->name <<
@@ -99,6 +98,7 @@ void Dense<Activation>::Backward(const Tensor2D &gradients)
             << this->dL_dw.dimensions());
 
     if (this->use_bias) {
+        throw std::invalid_argument("bias not available yet");
         // dL/db = dL/dZ, if batch size > 1 then sum along the 1st dimension (col)
         this->dL_db = this->dL_dZ.sum(Eigen::array<int, 1>{1}).reshape(
                 Tensor<2>::Dimensions(this->dL_dZ.dimension(0), 1)) /

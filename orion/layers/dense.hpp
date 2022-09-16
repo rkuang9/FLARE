@@ -37,8 +37,8 @@ public:
     void Forward(const Layer &prev) override;
 
     /**
-     * Backward propagation for hidden layers, passes next layer's
-     * weights and gradients to Backward(gradients)
+     * Backward propagation for hidden layers, calculates
+     * loss gradients w.r.t. Z
      *
      * @param next   a reference to the next layer
      */
@@ -46,8 +46,9 @@ public:
 
 
     /**
-     * Backward propagation for the output layer, passes the loss gradients
-     * w.r.t. output layer's output to Backward(gradients)
+     * Backward propagation for the output layer, calculates
+     * loss gradients w.r.t. Z using the loss gradients recorded
+     * in the loss object
      *
      * @param loss_function   a reference to the loss object
      */
@@ -132,12 +133,12 @@ public:
 
 private:
     /**
-     * Backward propagation, computes the loss gradients w.r.t. Z (dL / dZ)
-     * and the loss gradients w.r.t. weights and bias (dL / dw, dL / db)
+     * Backward propagation, computes the loss gradients
+     * w.r.t. weights and bias (dL / dw, dL / db)
      *
-     * @param gradients   loss gradients, source will differ based on calling layer
+     * dL / dZ is calculated in the other Backward() function overrides
      */
-    void Backward(const Tensor2D &gradients);
+    void Backward();
 
     bool use_bias = true;
 
