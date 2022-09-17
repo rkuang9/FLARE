@@ -2,7 +2,36 @@
 #include <orion/orion.hpp>
 
 
-void adam_compare_with_tf() {
+void embedding_development()
+{
+    using namespace orion;
+
+    Tensor<2> weights(4, 3);
+    weights.setValues({{1, 1, 2},
+                       {2, 2, 3},
+                       {3, 3, 4},
+                       {4, 4, 5}});
+
+    Tensor<2> input(2, 1);
+    input.setValues({{0}, {1}});
+
+    Layer *embedding = new Embedding(4, 3, 2);
+    embedding->SetWeights(weights);
+
+    embedding->Forward(input);
+
+
+    std::cout << "embedding weights\n" << embedding->GetWeights() << "\n";
+    std::cout << "embedding output\n" << embedding->GetOutput3D() << "\n";
+    std::cout << "embedding output dimensions: " << embedding->GetOutput3D().dimensions() << "\n";
+
+
+
+}
+
+
+void adam_compare_with_tf()
+{
     using namespace orion;
 
     SGD sgd;
@@ -17,11 +46,15 @@ void adam_compare_with_tf() {
     int epochs = 10;
 
     std::vector<std::vector<Scalar>> training_set{
-            std::vector<std::vector<Scalar>>(batch_size, std::vector<Scalar>(input_features, 0.2))
+            std::vector<std::vector<Scalar>>(batch_size,
+                                             std::vector<Scalar>(input_features,
+                                                                 0.2))
     };
 
     std::vector<std::vector<Scalar>> training_labels{
-            std::vector<std::vector<Scalar>>(batch_size, std::vector<Scalar>(label_features, 0.5))
+            std::vector<std::vector<Scalar>>(batch_size,
+                                             std::vector<Scalar>(label_features,
+                                                                 0.5))
     };
 
     Tensor<2> w1(input_features, input_features);
@@ -51,9 +84,11 @@ void adam_compare_with_tf() {
     model.Compile(mse, adam);
     model.Fit(training_set, training_labels, epochs, batch_size);
     std::cout << "gradient check: "
-              << model.GradientCheck(
-                      TensorMap<2>(training_set.front().data(), input_features, batch_size),
-                      TensorMap<2>(training_labels.front().data(), label_features, batch_size)) << "\n";
+            << model.GradientCheck(
+                    TensorMap<2>(training_set.front().data(), input_features,
+                                 batch_size),
+                    TensorMap<2>(training_labels.front().data(), label_features,
+                                 batch_size)) << "\n";
 
 
     for (Layer *layer: model.layers) {
@@ -62,10 +97,11 @@ void adam_compare_with_tf() {
 }
 
 
-int main() {
+int main()
+{
     auto start = std::chrono::high_resolution_clock::now();
 
-    adam_compare_with_tf();
+    embedding_development();
 
     auto stop = std::chrono::high_resolution_clock::now();
     auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);

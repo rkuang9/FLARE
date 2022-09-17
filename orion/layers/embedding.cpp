@@ -10,15 +10,18 @@ namespace orion
 Embedding::Embedding(int vocab_size, int embedding_dim, int input_len,
                      const Initializer &initializer)
         : w(initializer.Initialize(vocab_size, embedding_dim)),
-          embed_dim(embedding_dim),
-          Z(Tensor3D(input_len, embedding_dim, 2))
+          embed_dim(embedding_dim)
 {
     this->name = "embedding";
 }
 
 
-void Embedding::Forward(const Tensor2D &input)
+void Embedding::Forward(const Tensor<2> &input)
 {
+    // layer output shape is (row=input.rows, embed_dum, batch=input.cols)
+    this->Z.resize(Tensor<3>::Dimensions(
+            input.dimension(0), this->embed_dim, input.dimension(1)));
+
     // access input by column and extract a slice from vocabulary
     // as indicated by the column vector values
     for (Eigen::Index col = 0; col < input.dimension(1); col++) {
@@ -29,6 +32,11 @@ void Embedding::Forward(const Tensor2D &input)
             Eigen::array<Eigen::Index, 3> output_offset{row, 0, col};
             Eigen::array<Eigen::Index, 3> output_extent{1, this->w.dimension(1),
                                                         1};
+
+            std::cout << "slice:\n" << this->w.slice(
+                    vocab_offset, vocab_extent
+            ) << "\n";
+
             this->Z.slice(output_offset, output_extent) = this->w.slice(
                     vocab_offset, vocab_extent
             ).reshape(Tensor3D::Dimensions(1, this->w.dimension(1), 1));
@@ -49,13 +57,13 @@ void Embedding::Update(Optimizer &optimizer)
 }
 
 
-const Tensor3D &Embedding::GetOutput3D() const
+const Tensor<3> &Embedding::GetOutput3D() const
 {
     return this->Z;
 }
 
 
-const Tensor2D &Embedding::GetWeights() const
+const Tensor<2> &Embedding::GetWeights() const
 {
     return this->w;
 }
