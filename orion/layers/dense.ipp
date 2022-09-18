@@ -67,12 +67,10 @@ Tensor2D Dense<Activation>::operator()(const Tensor2D &tensor) const
 template<typename Activation>
 void Dense<Activation>::Backward(const Layer &next) // hidden layer backward
 {
-    // (next.weights.transpose * next.dL_dZ) hadamard (this->Z)
+    // (next.weights.transpose * next.dL_dZ) hadamard g'(this->Z)
     this->dL_dZ = next.GetWeights().contract(
-            next.GetInputGradients2D(), ContractDim{Axes{0, 0}});
-
-    // hadamard product (element-wise product)
-    this->dL_dZ *= Activation::Gradients(this->Z);
+            next.GetInputGradients2D(), ContractDim{Axes{0, 0}}) *
+                  Activation::Gradients(this->Z);
     this->Backward();
 }
 
@@ -86,6 +84,7 @@ void Dense<Activation>::Backward(const Loss &loss) // output backward
 }
 
 
+// TODO: this works for stochastic gradient descent (batch_size = 1), need to generalize for batch_size > 1
 template<typename Activation>
 void Dense<Activation>::Backward()
 {

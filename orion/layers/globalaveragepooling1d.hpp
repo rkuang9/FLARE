@@ -14,6 +14,7 @@ class GlobalAveragePooling1D : public Layer
 {
 
 public:
+
     /**
      * Create a layer that computes the average of a
      * tensor over a given dimension
@@ -30,9 +31,9 @@ public:
 
     void Backward(const Layer &next) override;
 
-    const Tensor<2> &GetOutput2D() const override;
+    void Backward(const Loss &loss_function) override;
 
-    const Tensor<3> &GetOutput3D() const override;
+    const Tensor<2> &GetOutput2D() const override;
 
     const Tensor<2> &GetInputGradients2D() const override;
 
@@ -41,7 +42,14 @@ public:
     int GetOutputRank() const override;
 
 private:
-    Eigen::Index target_dim; // dimension to average over
+    void Backward(const Tensor<2> &gradients);
+
+    Tensor<3> X; // layer input, TODO: layer probably doesn't need to store this
+    Tensor<2> Z; // layer output
+    Tensor<2> dL_dZ;
+
+    // dimension to average over, e.g.
+    Eigen::array<Eigen::Index, 1> avg_over_dim{};
 
 };
 

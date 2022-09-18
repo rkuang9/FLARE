@@ -2,7 +2,7 @@
 // Created by RKuang on 8/29/2022.
 //
 
-#include "sequential.h"
+#include "sequential.hpp"
 
 namespace orion
 {

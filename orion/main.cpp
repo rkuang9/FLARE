@@ -1,17 +1,21 @@
 #include <iostream>
 #include <orion/orion.hpp>
+#include <Eigen/Dense>
+#include <unsupported/Eigen/AutoDiff>
+
 
 void gap1d_development()
 {
     using namespace orion;
 
-    Tensor<2> tensor2(2, 3);
-    tensor2.setValues({
-        {1, 2, 3},
-        {2, 4, 6},
-    });
+    Tensor<3> tensor2(2, 3, 2);
+    tensor2.setRandom();
 
-    std::cout << tensor2.mean(Tensor<1>::Dimensions(2));
+    Print(tensor2);
+
+    GlobalAveragePooling1D gap1d(1);
+    gap1d.Forward(tensor2);
+    std::cout << gap1d.GetOutput2D() << "\n";
 }
 
 
@@ -26,7 +30,8 @@ void embedding_development()
                        {4, 4, 5}});
 
     Tensor<2> input(2, 1);
-    input.setValues({{0}, {1}});
+    input.setValues({{0},
+                     {1}});
 
     Layer *embedding = new Embedding(4, 3, 2);
     embedding->SetWeights(weights);
@@ -36,8 +41,8 @@ void embedding_development()
 
     std::cout << "embedding weights\n" << embedding->GetWeights() << "\n";
     std::cout << "embedding output\n" << embedding->GetOutput3D() << "\n";
-    std::cout << "embedding output dimensions: " << embedding->GetOutput3D().dimensions() << "\n";
-
+    std::cout << "embedding output dimensions: "
+            << embedding->GetOutput3D().dimensions() << "\n";
 
 
 }

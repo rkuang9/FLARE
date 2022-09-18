@@ -2,8 +2,8 @@
 // Created by RKuang on 8/29/2022.
 //
 
-#ifndef ORION_SEQUENTIAL_H
-#define ORION_SEQUENTIAL_H
+#ifndef ORION_SEQUENTIAL_HPP
+#define ORION_SEQUENTIAL_HPP
 
 #include "orion/orion_types.hpp"
 #include "orion/layers/include_layers.hpp"
@@ -55,4 +55,4 @@ protected:
 
 }
 
-#endif //ORION_SEQUENTIAL_H
+#endif //ORION_SEQUENTIAL_HPP

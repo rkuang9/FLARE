@@ -66,7 +66,7 @@ public:
      *
      * @param optimizer   optimizer object that performs layer parameter updates
      */
-    virtual void Update(Optimizer &optimizer) = 0;
+    virtual void Update(Optimizer &optimizer) {}
 
 
     /**
