@@ -84,8 +84,9 @@
 				12,
 				13,
 				14,
-				18,
-				19
+				15,
+				19,
+				20
 			]
 		}
 	],
@@ -124,9 +125,9 @@
 				3,
 				4,
 				5,
-				15,
 				16,
-				17
+				17,
+				18
 			]
 		},
 		{
@@ -148,8 +149,9 @@
 				12,
 				13,
 				14,
-				18,
-				19
+				15,
+				19,
+				20
 			]
 		}
 	],
@@ -194,6 +196,12 @@
 			"backtrace" : 1,
 			"compileGroupIndex" : 0,
 			"path" : "orion/layers/embedding.cpp",
+			"sourceGroupIndex" : 2
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "orion/layers/globalaveragepooling1d.cpp",
 			"sourceGroupIndex" : 2
 		},
 		{

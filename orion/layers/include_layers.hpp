@@ -8,5 +8,6 @@
 #include "layer.hpp"
 #include "dense.hpp"
 #include "embedding.hpp"
+#include "globalaveragepooling1d.hpp"
 
 #endif //ORION_INCLUDE_LAYERS_HPP

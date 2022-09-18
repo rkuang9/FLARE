@@ -2,6 +2,7 @@ set(SOURCES
         layer.hpp
         dense.ipp
         embedding.cpp
+        globalaveragepooling1d.cpp
         )
 
 set(SOURCE_DIRECTORY)

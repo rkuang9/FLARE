@@ -1,6 +1,19 @@
 #include <iostream>
 #include <orion/orion.hpp>
 
+void gap1d_development()
+{
+    using namespace orion;
+
+    Tensor<2> tensor2(2, 3);
+    tensor2.setValues({
+        {1, 2, 3},
+        {2, 4, 6},
+    });
+
+    std::cout << tensor2.mean(Tensor<1>::Dimensions(2));
+}
+
 
 void embedding_development()
 {
@@ -101,7 +114,7 @@ int main()
 {
     auto start = std::chrono::high_resolution_clock::now();
 
-    embedding_development();
+    gap1d_development();
 
     auto stop = std::chrono::high_resolution_clock::now();
     auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);

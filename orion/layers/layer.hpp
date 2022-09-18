@@ -25,7 +25,15 @@ public:
      *
      * @param inputs   rank 2 tensor training sample
      */
-    virtual void Forward(const Tensor<2> &inputs) {};
+    virtual void Forward(const Tensor<2> &inputs) {}
+
+
+    /**
+     * Forward propagation for input layers
+     *
+     * @param inputs   rank 3 tensor training sample
+     */
+    virtual void Forward(const Tensor<3> &inputs) {};
 
 
     /**
@@ -33,7 +41,7 @@ public:
      *
      * @param loss_function   loss object that calculates and records loss
      */
-    virtual void Backward(const Loss &loss_function) {};
+    virtual void Backward(const Loss &loss_function) {}
 
 
     /**
