@@ -27,6 +27,10 @@ public:
              std::vector<std::vector<Scalar>> &labels,
              int epochs, int batch_size = 1);
 
+    void Fit(const std::vector<Tensor<2>> &inputs,
+             const std::vector<Tensor<2>> &labels,
+             int epochs, int batch_size = 1);
+
     Layer &operator[](int layer_index);
 
     Tensor<2> Predict(const Tensor<2> &example);

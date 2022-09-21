@@ -3,6 +3,7 @@
 //
 
 #include "sequential.hpp"
+#include <iomanip>
 
 namespace orion
 {
@@ -35,7 +36,7 @@ void Sequential::Fit(std::vector<std::vector<Scalar>> &inputs,
                      int epochs, int batch_size)
 {
     if (inputs.size() != labels.size()) {
-        throw std::invalid_argument("inputs should batch labels 1:1");
+        //throw std::invalid_argument("inputs should batch labels 1:1");
     }
 
     if (!this->loss) {
@@ -54,6 +55,33 @@ void Sequential::Fit(std::vector<std::vector<Scalar>> &inputs,
         for (int m = 0; m < this->training_data2D.size(); m++) {
             this->Forward(this->training_data2D[m]);
             this->Backward(this->training_labels2D[m], *this->loss);
+            this->Update(*this->opt);
+        }
+    }
+}
+
+
+// currently accepts Tensor2D inputs (column vecors stacked side by side into a matrix)
+void Sequential::Fit(const std::vector<Tensor<2>> &inputs,
+                     const std::vector<Tensor<2>> &labels,
+                     int epochs, int batch_size)
+{
+    if (inputs.size() != labels.size()) {
+        throw std::invalid_argument("inputs should batch labels 1:1");
+    }
+
+    if (!this->loss) {
+        throw std::logic_error("missing loss function");
+    }
+
+    if (!this->opt) {
+        throw std::logic_error("missing optimizer");
+    }
+
+    for (int e = 0; e < epochs; e++) {
+        for (int m = 0; m < inputs.size(); m++) {
+            this->Forward(inputs[m]);
+            this->Backward(labels[m], *this->loss);
             this->Update(*this->opt);
         }
     }
@@ -157,8 +185,9 @@ Scalar Sequential::GradientCheck(const Tensor<2> &input, const Tensor<2> &label,
 
                 dtheta_approx(row, col) = (J_plus - J_minus) / (2 * epsilon);
 
-                // restore original layer weights
+                // restore original layer weights and theta
                 this->layers[i]->SetWeights(original_weights);
+                theta(row, col) += epsilon; // undo epsilon used for J+ & J-
             }
         }
 

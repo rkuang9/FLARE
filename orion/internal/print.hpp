@@ -11,7 +11,7 @@ namespace orion
 {
 
 // prints a rank 3 tensor with batch/channels as last dimension
-void Print(Tensor<3> &tensor)
+void Print(const Tensor<3> &tensor)
 {
     std::cout << "[";
     for (Eigen::Index i = 0; i < tensor.dimension(2); i++) {

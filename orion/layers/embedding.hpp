@@ -20,11 +20,17 @@ public:
 
     void Backward(const Layer &next) override;
 
+    void Backward(const Loss &loss_function) override;
+
     void Update(Optimizer &optimizer) override;
+
+    const Tensor<2> &GetInputGradients2D() const override;
 
     const Tensor<3> &GetOutput3D() const override;
 
     const Tensor<2> &GetWeights() const override;
+
+    const Tensor<2> &GetWeightGradients() const override;
 
     void SetWeights(const Tensor<2> &weights) override;
 
@@ -34,14 +40,18 @@ public:
 
     Tensor<2> operator()(const Tensor<2> &tensor) const override;
 
-protected:
+public:
+    void Backward();
+
     Tensor<2> X;
-    Tensor<3> Z; // output
+    Tensor<3> Z; // output (batch, row, col), not related to the Russian military symbol
     Tensor<2> dL_dZ;
 
     Tensor<2> w; // weights
+    Tensor<2> dL_dw; // loss gradients w.r.t. weights
 
-    int embed_dim;
+    Eigen::Index embed_dims;
+    Eigen::Index input_len;
 };
 
 } // namespace orion

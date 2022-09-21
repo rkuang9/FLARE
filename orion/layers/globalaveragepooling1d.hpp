@@ -17,11 +17,9 @@ public:
 
     /**
      * Create a layer that computes the average of a
-     * tensor over a given dimension
-     *
-     * @param dimension   the dimension to average over, defaults col-wise
+     * tensor over the column dimension
      */
-    explicit GlobalAveragePooling1D(Eigen::Index dimension = 1);
+    GlobalAveragePooling1D();
 
     ~GlobalAveragePooling1D() override = default;
 
@@ -37,20 +35,27 @@ public:
 
     const Tensor<2> &GetInputGradients2D() const override;
 
+    const Tensor<2> &GetWeights() const override;
+
     int GetInputRank() const override;
 
     int GetOutputRank() const override;
 
-private:
+public:
     void Backward(const Tensor<2> &gradients);
 
     Tensor<3> X; // layer input, TODO: layer probably doesn't need to store this
     Tensor<2> Z; // layer output
     Tensor<2> dL_dZ;
 
-    // dimension to average over, e.g.
-    Eigen::array<Eigen::Index, 1> avg_over_dim{};
+    const Tensor<2> w; // empty weights, exists so that gradient check can skip over it
 
+    // dimensions for a col-wise mean
+    Eigen::array<Eigen::Index, 1> avg_over_dim{1};
+
+    // for transposing the mean operation from a row-vector to col-vector
+    Eigen::array<Eigen::Index, 2> transpose_dim{1, 0};
+    Eigen::array<Eigen::Index, 2> undo_transpose_dim{0, 1};
 };
 
 }

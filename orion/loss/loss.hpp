@@ -45,7 +45,7 @@ public:
     virtual Tensor<2> GetGradients2D() const
     { return this->gradient_history.back(); }
 
-public:
+protected:
     Scalar epsilon = 1e-07; // numeric stability constant
     Scalar clip_min = epsilon;
     Scalar clip_max = 1 - epsilon;

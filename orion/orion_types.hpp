@@ -7,37 +7,17 @@
 
 
 #include <unsupported/Eigen/CXX11/Tensor>
+
 /**
- * Differences between Eigen and Eigen::Tensor
- Notation:
-    In Eigen::IndexPair<int>(f, s)
-        - f = dimension of the first tensor
-        - s = dimension of the second tensor
-    Tensor rank 2 dimensions
-        - (row [0], col [1])
-    Tensor rank 3 dimensions
-        - batch [0], row [1], col [2] (known as channels_first in some neural network libraries)
-
-
- Equivalent of matrix * vector operation:
-    - specify the dimensions to dot product against, typically Eigen::IndexPair<int>(1, 0)
-
-     Eigen::array<Eigen::IndexPair<int>, 1> multiply = {Eigen::IndexPair<int>(1, 0)}
-     Eigen::Tensor<double, 2> left
-     Eigen::Tensor<double, 2> right
-     left.contract(right, multiply)
-
-
- Equivalent of matrix_transposed * vector operation:
-    - e.g. tensor_left (1, 2, 3), tensor_right(2, 1)
-    - Eigen::array<Eigen::IndexPair<int>, 1> multiply = {Eigen::IndexPair<int>(1, 0)}
-    - while tensor_left is simply a matrix with batch=1, we perform the dot product
-      between tensor_left's col-axis (1) and tensor_right's col-axis(1)
-    - Eigen::Matrix equivalent is tensor_left.transpose * tensor_right
-
- Equivalent of cwiseProduct (elementwise product)
-    - Eigen::Tensor * Eigen::Tensor
-    - tensors must have same dimensions
+ * Tensor dimension convention
+ *
+ * Rank 2: (rows, cols)
+ * Rank 3: (batch, rows, cols)
+ * Rank 4: (batch, rows, cols, channels)
+ *
+ * For convolutional layers: (rows, cols, channels)
+ * For embedding layers: (batch, rows, cols)
+ * For dense layers: (rows, cols)
  */
 
 namespace orion
@@ -49,7 +29,7 @@ typedef float Scalar;
 typedef double Scalar;
 #endif
 
-template<int Rank, typename DataType = Scalar>
+template<int Rank, typename DataType = Scalar, int = Eigen::ColMajor>
 using Tensor = Eigen::Tensor<DataType, Rank, Eigen::ColMajor>;
 
 typedef Eigen::Tensor<Scalar, 4, Eigen::ColMajor> Tensor4D;

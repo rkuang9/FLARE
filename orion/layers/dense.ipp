@@ -37,6 +37,7 @@ void Dense<Activation>::Forward(const Tensor2D &input)
 
     if (this->use_bias) {
         // broadcast bias into the shape of Z
+        // TODO: broadcast accepts Tensor<2>::Dimensions()
         this->Z += this->b.broadcast(
                 Eigen::array<Eigen::Index, 2>({1, input.dimension(1)}));
     }
@@ -78,6 +79,7 @@ void Dense<Activation>::Backward(const Layer &next) // hidden layer backward
 template<typename Activation>
 void Dense<Activation>::Backward(const Loss &loss) // output backward
 {
+    // divide by num output units
     this->dL_dZ = loss.GetGradients2D() * Activation::Gradients(this->Z) /
                   (Scalar) this->w.dimension(0);
     this->Backward();

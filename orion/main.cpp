@@ -1,21 +1,39 @@
 #include <iostream>
 #include <orion/orion.hpp>
 #include <Eigen/Dense>
-#include <unsupported/Eigen/AutoDiff>
 
 
 void gap1d_development()
 {
     using namespace orion;
 
-    Tensor<3> tensor2(2, 3, 2);
-    tensor2.setRandom();
+    Tensor<2> tensor2d(2, 4);
+    tensor2d.setValues({{1, 1, 1, 1},
+                        {1, 1, 1, 2}});
 
-    Print(tensor2);
 
-    GlobalAveragePooling1D gap1d(1);
-    gap1d.Forward(tensor2);
-    std::cout << gap1d.GetOutput2D() << "\n";
+    Tensor<2> label(2, 1);
+    label.setZero();
+
+    GlobalAveragePooling1D gap1d;
+    gap1d.Forward(tensor2d.reshape(Tensor<3>::Dimensions(2, 4, 1)));
+
+    SGD opt(1);
+
+    MeanSquaredError loss;
+    loss.CalculateLoss(gap1d.GetOutput2D(), label);
+    std::cout << "loss\n" << loss.GetGradients2D() << "\n\n";
+
+    std::cout << "gap1d output\n" << gap1d.GetOutput2D() << "\n\n";
+
+    gap1d.Backward(loss);
+
+    std::cout << "gap1d dL_dZ\n" << gap1d.GetInputGradients2D() << "\ndimensions\n"
+            << gap1d.GetInputGradients2D().dimensions() << "\n\n";
+
+    Tensor<2> gap1d_grad = gap1d.GetInputGradients2D().broadcast(
+            Tensor<2>::Dimensions(1, 4));
+    std::cout << "bcast gap1d dL_dZ\n" << gap1d_grad << "\n\n";
 }
 
 
@@ -23,28 +41,68 @@ void embedding_development()
 {
     using namespace orion;
 
-    Tensor<2> weights(4, 3);
-    weights.setValues({{1, 1, 2},
-                       {2, 2, 3},
-                       {3, 3, 4},
-                       {4, 4, 5}});
+    int batch_size = 1;
+    int num_inputs = 3;
+    int label_size = 3;
 
-    Tensor<2> input(2, 1);
-    input.setValues({{0},
-                     {1}});
+    MeanSquaredError loss;
+    SGD opt(1);
 
-    Layer *embedding = new Embedding(4, 3, 2);
-    embedding->SetWeights(weights);
+    Tensor<2> embed_weights(5, 3);
+    embed_weights.setValues({{0.01246039,  0.01246468,  -0.04545361},
+                             {0.04710307,  -0.01240801, -0.03737292},
+                             {-0.02046142, 0.04035002,  -0.0373662},
+                             {-0.0009598,  -0.00118566, 0.02462603},
+                             {0.04840514,  0.01805499,  0.01568809}});
+    embed_weights.setValues({{0, 0, 0},
+                             {1, 1, 2},
+                             {2, 2, 2},
+                             {3, 3, 3},
+                             {4, 4, 4}});
+    //embed_weights.setConstant(1);
 
-    embedding->Forward(input);
+    Tensor<2> inputs(num_inputs, batch_size);
+    inputs.setValues({{0},
+                      {1},
+                      {2}});
+
+    Tensor<2> label(batch_size, label_size);
+    label.setValues({{0, 0, 0}});
 
 
-    std::cout << "embedding weights\n" << embedding->GetWeights() << "\n";
-    std::cout << "embedding output\n" << embedding->GetOutput3D() << "\n";
-    std::cout << "embedding output dimensions: "
-            << embedding->GetOutput3D().dimensions() << "\n";
+    /*Sequential model{
+            new Embedding(5, 3, 3),
+            new GlobalAveragePooling1D(),
+    };
+
+    model[0].SetWeights(embed_weights);
+
+    model.Compile(loss, opt);
+    model.Fit({inputs}, {label}, 1, 1);
+    std::cout << "loss: " << loss.GetLoss() << "\n";
+    std::cout << model[0].GetWeights() << "\n";
+    std::cout << "gradient check: " << model.GradientCheck(inputs, label, 1e-7);
+    return;*/
 
 
+    Layer *embed = new Embedding(5, 3, num_inputs);
+    Layer *gap1d = new GlobalAveragePooling1D();
+    embed->SetWeights(embed_weights);
+
+    embed->Forward(inputs);
+    std::cout << "embedding outputs\n" << embed->GetOutput3D() << "\n";
+    gap1d->Forward(*embed);
+    std::cout << "gap1d outputs\n" << gap1d->GetOutput2D() << "\n";
+    loss.CalculateLoss(gap1d->GetOutput2D(), label);
+    std::cout << "loss " << loss.GetLoss() << "\nloss gradients\n"
+            << loss.GetGradients2D() << "\n";
+    gap1d->Backward(loss);
+    embed->Backward(*gap1d);
+    embed->Update(opt);
+    std::cout << "embedding updated weights\n" << embed->GetWeights() << "\n";
+
+
+    return;
 }
 
 
@@ -119,7 +177,7 @@ int main()
 {
     auto start = std::chrono::high_resolution_clock::now();
 
-    gap1d_development();
+    embedding_development();
 
     auto stop = std::chrono::high_resolution_clock::now();
     auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);

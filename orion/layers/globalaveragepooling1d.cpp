@@ -7,15 +7,16 @@
 namespace orion
 {
 
-GlobalAveragePooling1D::GlobalAveragePooling1D(Eigen::Index dimension) :
-        avg_over_dim(Eigen::array<Eigen::Index, 1>{dimension})
-{
-}
+GlobalAveragePooling1D::GlobalAveragePooling1D() = default;
 
 
 void GlobalAveragePooling1D::Forward(const Tensor<3> &inputs)
 {
-    this->Z = inputs.mean(this->avg_over_dim);
+    this->X = inputs;
+
+    // compute mean over the 1st dimension (col-wise) and transpose
+    // the resulting row-vector into a col-vector
+    this->Z = inputs.mean(this->avg_over_dim);//.shuffle(this->transpose_dim);
 }
 
 
@@ -36,15 +37,18 @@ void GlobalAveragePooling1D::Backward(const Layer &next)
 void GlobalAveragePooling1D::Backward(const Loss &loss_function)
 {
     // pass the dL / dA term from dL / dZ = (dL / dA) * (dA / dZ)
-    this->Backward(loss_function.GetGradients2D());
+    // divide by num outputs
+    this->Backward(loss_function.GetGradients2D() / (Scalar) this->Z.dimension(1));
+    std::cout << "GAP1D divide by " << (Scalar) this->Z.dimension(1) << "\n";
 }
 
 
 void GlobalAveragePooling1D::Backward(const Tensor<2> &gradients)
 {
-    // dL / dZ = (dL / dA) * (dA / dZ) = gradients * activation gradients
-    // dA / dZ = d((x1 + x2 + ... + x_n) / n) / dZ = 1 / n
-    this->dL_dZ = gradients * (Scalar)this->X.dimension(this->avg_over_dim.front());
+    // dL / dZ = (dL / dA) * (dA / dZ) = loss gradients * activation gradients
+    // where dA / dZ = d((x1 + x2 + ... + x_n) / n) / dZ = 1 / n = input.rows
+    this->dL_dZ = gradients / (Scalar) this->X.dimension(this->avg_over_dim.front());
+    std::cout << "activation gradients divide by: " << (Scalar) this->X.dimension(this->avg_over_dim.front()) << "\n";
 }
 
 
@@ -57,6 +61,12 @@ const Tensor<2> &GlobalAveragePooling1D::GetOutput2D() const
 const Tensor<2> &GlobalAveragePooling1D::GetInputGradients2D() const
 {
     return this->dL_dZ;
+}
+
+
+const Tensor<2> &GlobalAveragePooling1D::GetWeights() const
+{
+    return this->w;
 }
 
 
