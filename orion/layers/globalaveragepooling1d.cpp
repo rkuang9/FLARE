@@ -13,10 +13,9 @@ GlobalAveragePooling1D::GlobalAveragePooling1D() = default;
 void GlobalAveragePooling1D::Forward(const Tensor<3> &inputs)
 {
     this->X = inputs;
-
-    // compute mean over the 1st dimension (col-wise) and transpose
-    // the resulting row-vector into a col-vector
-    this->Z = inputs.mean(this->avg_over_dim);//.shuffle(this->transpose_dim);
+    Tensor<2>::Dimensions(1, 1);
+    // compute mean col-wise
+    this->Z = inputs.mean(this->avg_over_dim);
 }
 
 
@@ -39,7 +38,6 @@ void GlobalAveragePooling1D::Backward(const Loss &loss_function)
     // pass the dL / dA term from dL / dZ = (dL / dA) * (dA / dZ)
     // divide by num outputs
     this->Backward(loss_function.GetGradients2D() / (Scalar) this->Z.dimension(1));
-    std::cout << "GAP1D divide by " << (Scalar) this->Z.dimension(1) << "\n";
 }
 
 
@@ -47,8 +45,23 @@ void GlobalAveragePooling1D::Backward(const Tensor<2> &gradients)
 {
     // dL / dZ = (dL / dA) * (dA / dZ) = loss gradients * activation gradients
     // where dA / dZ = d((x1 + x2 + ... + x_n) / n) / dZ = 1 / n = input.rows
-    this->dL_dZ = gradients / (Scalar) this->X.dimension(this->avg_over_dim.front());
-    std::cout << "activation gradients divide by: " << (Scalar) this->X.dimension(this->avg_over_dim.front()) << "\n";
+    Tensor<2> grad =
+            gradients / (Scalar) this->X.dimension(this->avg_over_dim.front());
+
+    this->dL_dZ.resize(this->X.dimensions());
+
+    // reshape dL_dZ into input tensor's shape, each row belongs to a batch
+    for (Eigen::Index row = 0; row < grad.dimension(0); row++) {
+        // reshape each gradient row into the dimensions of one batch
+        this->dL_dZ.chip(row, 0) = grad.chip(row, 0) // 0 = row dimension
+                .reshape(Tensor<2>::Dimensions(1, grad.dimension(1)))
+                .broadcast(Tensor<2>::Dimensions(this->X.dimension(1), 1));
+    }
+
+    orion_assert(this->dL_dZ.dimensions() == this->X.dimensions(), this->name <<
+            " GlobalAveragePooling1D::Backward loss gradients dimensions " <<
+            this->dL_dZ.dimensions() << " do not match input tensor dimensions " <<
+            this->X.dimensions());
 }
 
 
@@ -58,7 +71,7 @@ const Tensor<2> &GlobalAveragePooling1D::GetOutput2D() const
 }
 
 
-const Tensor<2> &GlobalAveragePooling1D::GetInputGradients2D() const
+const Tensor<3> &GlobalAveragePooling1D::GetInputGradients3D() const
 {
     return this->dL_dZ;
 }

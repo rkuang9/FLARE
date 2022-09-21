@@ -24,7 +24,7 @@ public:
 
     void Update(Optimizer &optimizer) override;
 
-    const Tensor<2> &GetInputGradients2D() const override;
+    const Tensor<3> &GetInputGradients3D() const override;
 
     const Tensor<3> &GetOutput3D() const override;
 
@@ -45,7 +45,7 @@ public:
 
     Tensor<2> X;
     Tensor<3> Z; // output (batch, row, col), not related to the Russian military symbol
-    Tensor<2> dL_dZ;
+    Tensor<3> dL_dZ;
 
     Tensor<2> w; // weights
     Tensor<2> dL_dw; // loss gradients w.r.t. weights

@@ -86,11 +86,12 @@ void Dense<Activation>::Backward(const Loss &loss) // output backward
 }
 
 
-// TODO: this works for stochastic gradient descent (batch_size = 1), need to generalize for batch_size > 1
 template<typename Activation>
 void Dense<Activation>::Backward()
 {
-    this->dL_dw = this->dL_dZ.contract(this->X, ContractDim{Axes(1, 1)});
+    // dL / dw = (dL / dZ) * (dZ / dw) * (1 / m) where m = batch size
+    this->dL_dw = this->dL_dZ.contract(this->X, ContractDim{Axes(1, 1)})
+                  / (Scalar) this->X.dimension(1); // divide by batch size
 
 
     orion_assert(this->w.dimensions() == this->dL_dw.dimensions(), this->name <<

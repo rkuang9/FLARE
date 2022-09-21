@@ -33,7 +33,7 @@ public:
 
     const Tensor<2> &GetOutput2D() const override;
 
-    const Tensor<2> &GetInputGradients2D() const override;
+    const Tensor<3> &GetInputGradients3D() const override;
 
     const Tensor<2> &GetWeights() const override;
 
@@ -46,16 +46,12 @@ public:
 
     Tensor<3> X; // layer input, TODO: layer probably doesn't need to store this
     Tensor<2> Z; // layer output
-    Tensor<2> dL_dZ;
+    Tensor<3> dL_dZ;
 
     const Tensor<2> w; // empty weights, exists so that gradient check can skip over it
 
     // dimensions for a col-wise mean
     Eigen::array<Eigen::Index, 1> avg_over_dim{1};
-
-    // for transposing the mean operation from a row-vector to col-vector
-    Eigen::array<Eigen::Index, 2> transpose_dim{1, 0};
-    Eigen::array<Eigen::Index, 2> undo_transpose_dim{0, 1};
 };
 
 }

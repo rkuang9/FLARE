@@ -80,6 +80,7 @@ public:
      * @return   layer's loss gradients w.r.t. pre-activated output (dL / dZ))
      */
     virtual const Tensor<2> &GetInputGradients2D() const {}
+    virtual const Tensor<3> &GetInputGradients3D() const {}
 
 
     /**

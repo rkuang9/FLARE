@@ -25,12 +25,16 @@ void BinaryCrossEntropy::CalculateLoss(const Tensor<2> &predict,
                  "predict dimensions " << predict.dimensions() <<
                          " don't match label dimensions " <<
                          label.dimensions());
+    // there must be one feature per batch and values in range [0, 1]
+    orion_assert(predict.dimension(0) == 1,
+                 "BinaryCrossEntropy expects 1 output feature");
 
     this->loss_history.push_back((*this)(predict, label));
 
     this->gradient_history.emplace_back(
-            (-label / ((predict  + this->epsilon))) +
-            (1 - label) / ((1 - predict + this->epsilon)));
+            ((-label / ((predict + this->epsilon))) +
+             (1 - label) / ((1 - predict + this->epsilon)))
+    );
 }
 
 
@@ -46,11 +50,3 @@ Scalar BinaryCrossEntropy::operator()(const Tensor<2> &predict,
 }
 
 } // namespace orion
-
-/*
-def BinaryCrossEntropy(y_true, y_pred):
-    y_pred = np.clip(y_pred, 1e-7, 1 - 1e-7)
-    term_0 = (1-y_true) * np.log(1-y_pred + 1e-7)
-    term_1 = y_true * np.log(y_pred + 1e-7)
-    return -np.mean(term_0+term_1, axis=0)
- */

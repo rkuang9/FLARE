@@ -54,8 +54,7 @@ void Embedding::Forward(const Tensor<2> &input)
 void Embedding::Backward(const Layer &next)
 {
     // divide by the batch size
-    this->dL_dZ = next.GetInputGradients2D() / (Scalar) this->Z.dimension(0);
-    std::cout << "received gradients\n" << next.GetInputGradients2D() << "\n";
+    this->dL_dZ = next.GetInputGradients3D();
     this->Backward();
 }
 
@@ -63,6 +62,8 @@ void Embedding::Backward(const Layer &next)
 // TODO: not tested yet
 void Embedding::Backward(const Loss &loss_function)
 {
+    throw std::logic_error("Embedding as output layer not supported");
+    // TODO: implement loss_function.GetGradients3D()
     this->dL_dZ = loss_function.GetGradients2D() / (Scalar) this->X.dimension(0);
     this->Backward();
 }
@@ -70,18 +71,22 @@ void Embedding::Backward(const Loss &loss_function)
 
 void Embedding::Backward()
 {
-    /*orion_assert(this->dL_dZ.dimensions() == this->X.dimensions(),
-                 this->name + " Embedding::Backward expected gradient dimension "
-                         << this->X.dimensions() << ", received "
-                         << this->dL_dZ.dimensions());*/
+    orion_assert(this->dL_dZ.dimensions() == this->Z.dimensions(),
+                 this->name << " Embedding::Backward expected gradient dimensions "
+                         << this->Z.dimensions() <<
+                         ", instead got " << this->dL_dZ.dimensions());
 
     this->dL_dw.setZero();
 
-    for (Eigen::Index col = 0; col < this->X.dimension(1); col++) {
-        for (Eigen::Index row = 0; row < this->X.dimension(0); row++) {
-            this->dL_dw.chip(Eigen::Index(this->X(row, col)), 0) =
-                    this->dL_dw.chip(Eigen::Index(this->X(row, col)), 0) +
-                    this->dL_dZ(row, col);
+    // dimension(0), dimension(1) of dL_dZ denote the batch size, input length
+    // dimension(0) is also tied to the input tensor X's dimension(1) (aka batch size)
+    for (Eigen::Index batch = 0; batch < this->dL_dZ.dimension(0); batch++) {
+        for (Eigen::Index row = 0; row < this->dL_dZ.dimension(1); row++) {
+            // each row of dL_dZ is added to dL_dw w.r.t. the input tensor's
+            // and divided by batch size
+            this->dL_dw.chip((Eigen::Index) this->X(row, batch), 0) +=
+                    this->dL_dZ.chip(batch, 0).chip(row, 0) /
+                    (Scalar) this->X.dimension(1);
         }
     }
 }
@@ -93,7 +98,7 @@ void Embedding::Update(Optimizer &optimizer)
 }
 
 
-const Tensor<2> &Embedding::GetInputGradients2D() const
+const Tensor<3> &Embedding::GetInputGradients3D() const
 {
     return this->dL_dZ;
 }

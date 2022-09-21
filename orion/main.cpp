@@ -1,39 +1,29 @@
 #include <iostream>
 #include <orion/orion.hpp>
-#include <Eigen/Dense>
+#include <iomanip>
 
 
-void gap1d_development()
+void dense_batch_test()
 {
     using namespace orion;
 
-    Tensor<2> tensor2d(2, 4);
-    tensor2d.setValues({{1, 1, 1, 1},
-                        {1, 1, 1, 2}});
+    Tensor<2> input(3, 2);
+    input.setRandom();
 
+    Tensor<2> label(1, 2);
+    label.setRandom();
 
-    Tensor<2> label(2, 1);
-    label.setZero();
+    Sequential model{
+            new Dense<Sigmoid>(3, 2, false),
+            new Dense<Sigmoid>(2, 1, false),
+    };
 
-    GlobalAveragePooling1D gap1d;
-    gap1d.Forward(tensor2d.reshape(Tensor<3>::Dimensions(2, 4, 1)));
+    BinaryCrossEntropy loss;
+    Adam opt;
 
-    SGD opt(1);
-
-    MeanSquaredError loss;
-    loss.CalculateLoss(gap1d.GetOutput2D(), label);
-    std::cout << "loss\n" << loss.GetGradients2D() << "\n\n";
-
-    std::cout << "gap1d output\n" << gap1d.GetOutput2D() << "\n\n";
-
-    gap1d.Backward(loss);
-
-    std::cout << "gap1d dL_dZ\n" << gap1d.GetInputGradients2D() << "\ndimensions\n"
-            << gap1d.GetInputGradients2D().dimensions() << "\n\n";
-
-    Tensor<2> gap1d_grad = gap1d.GetInputGradients2D().broadcast(
-            Tensor<2>::Dimensions(1, 4));
-    std::cout << "bcast gap1d dL_dZ\n" << gap1d_grad << "\n\n";
+    model.Compile(loss, opt);
+    model.Fit({input}, {label}, 1, 1);
+    std::cout << "gradient check\n" << model.GradientCheck(input, label, 1e-7);
 }
 
 
@@ -41,68 +31,38 @@ void embedding_development()
 {
     using namespace orion;
 
-    int batch_size = 1;
-    int num_inputs = 3;
-    int label_size = 3;
 
-    MeanSquaredError loss;
-    SGD opt(1);
+    BinaryCrossEntropy loss;
+    Adam opt(1);
 
-    Tensor<2> embed_weights(5, 3);
-    embed_weights.setValues({{0.01246039,  0.01246468,  -0.04545361},
-                             {0.04710307,  -0.01240801, -0.03737292},
-                             {-0.02046142, 0.04035002,  -0.0373662},
-                             {-0.0009598,  -0.00118566, 0.02462603},
-                             {0.04840514,  0.01805499,  0.01568809}});
-    embed_weights.setValues({{0, 0, 0},
-                             {1, 1, 2},
-                             {2, 2, 2},
-                             {3, 3, 3},
-                             {4, 4, 4}});
-    //embed_weights.setConstant(1);
+    Tensor<2> embed_weights(5, 1);
+    embed_weights.setRandom();
+    std::cout << "embed weights\n" << embed_weights << "\n";
 
-    Tensor<2> inputs(num_inputs, batch_size);
+
+    Tensor<2> inputs(3, 1);
     inputs.setValues({{0},
                       {1},
                       {2}});
 
-    Tensor<2> label(batch_size, label_size);
-    label.setValues({{0, 0, 0}});
+    Tensor<2> label(1, 1);
+    label.setValues({{0}});
 
 
-    /*Sequential model{
-            new Embedding(5, 3, 3),
+    Sequential model{
+            new Embedding(5, 1, 3),
             new GlobalAveragePooling1D(),
     };
-
+    std::cout << "predict " << model.Predict(inputs) << "\n";
     model[0].SetWeights(embed_weights);
-
     model.Compile(loss, opt);
     model.Fit({inputs}, {label}, 1, 1);
-    std::cout << "loss: " << loss.GetLoss() << "\n";
-    std::cout << model[0].GetWeights() << "\n";
-    std::cout << "gradient check: " << model.GradientCheck(inputs, label, 1e-7);
-    return;*/
 
+    std::cout << "updated weights\n" << model[0].GetWeights() << "\n";
+    std::cout << std::setprecision(13) << "loss " << loss.GetLoss() << "\n";
+    std::cout << "loss gradients " << loss.GetGradients2D() << "\n";
+    std::cout << "gradient check: " << model.GradientCheck(inputs, label, 1e-7) << "\n";
 
-    Layer *embed = new Embedding(5, 3, num_inputs);
-    Layer *gap1d = new GlobalAveragePooling1D();
-    embed->SetWeights(embed_weights);
-
-    embed->Forward(inputs);
-    std::cout << "embedding outputs\n" << embed->GetOutput3D() << "\n";
-    gap1d->Forward(*embed);
-    std::cout << "gap1d outputs\n" << gap1d->GetOutput2D() << "\n";
-    loss.CalculateLoss(gap1d->GetOutput2D(), label);
-    std::cout << "loss " << loss.GetLoss() << "\nloss gradients\n"
-            << loss.GetGradients2D() << "\n";
-    gap1d->Backward(loss);
-    embed->Backward(*gap1d);
-    embed->Update(opt);
-    std::cout << "embedding updated weights\n" << embed->GetWeights() << "\n";
-
-
-    return;
 }
 
 
