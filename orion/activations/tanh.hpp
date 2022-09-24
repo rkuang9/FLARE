@@ -12,15 +12,27 @@ namespace orion {
 class TanH
 {
 public:
-    static Tensor2D Activate(const Tensor2D &Z)
+    static Tensor<2> Activate(const Tensor<2> &features)
     {
-        return Z.tanh();
+        return features.tanh();
     }
 
 
-    static Tensor2D Gradients(const Tensor2D &Z)
+    static Tensor<3> Activate(const Tensor<3> &features)
     {
-        return 1 - Z.tanh().square();
+        return features.tanh();
+    }
+
+
+    static Tensor<2> Gradients(const Tensor<2> &features)
+    {
+        return 1 - features.tanh().square();
+    }
+
+
+    static Tensor<3> Gradients(const Tensor<3> &features)
+    {
+        return 1 - features.tanh().square();
     }
 };
 

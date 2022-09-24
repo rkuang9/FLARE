@@ -13,15 +13,27 @@ namespace orion
 class Linear
 {
 public:
-    static Tensor2D Activate(const Tensor2D &Z)
+    static Tensor<2> Activate(const Tensor<2> &features)
     {
-        return Z;
+        return features;
     }
 
 
-    static Tensor2D Gradients(const Tensor2D &Z)
+    static Tensor<3> Activate(const Tensor<3> &features)
     {
-        return Tensor2D(Z.dimensions()).setConstant(1);
+        return features;
+    }
+
+
+    static Tensor<2> Gradients(const Tensor<2> &features)
+    {
+        return Tensor<2>(features.dimensions()).setConstant(1);
+    }
+
+
+    static Tensor<3> Gradients(const Tensor<3> &features)
+    {
+        return Tensor<3>(features.dimensions()).setConstant(1);
     }
 };
 

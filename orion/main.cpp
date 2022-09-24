@@ -3,27 +3,42 @@
 #include <iomanip>
 
 
+
 void dense_batch_test()
 {
     using namespace orion;
 
-    Tensor<2> input(3, 2);
+    Tensor<2> input(1, 1);
     input.setRandom();
+    input.setValues({{0.01}});
+    std::cout << "input\n" << input << "\n";
 
-    Tensor<2> label(1, 2);
+    Tensor<2> label(1, 1);
     label.setRandom();
+    label.setValues({{0.8}});
+    std::cout << "label\n" << label << "\n";
+
+    Tensor<2> cweights(1, 1);
+    //cweights.setValues({{0.00002}});
 
     Sequential model{
-            new Dense<Sigmoid>(3, 2, false),
-            new Dense<Sigmoid>(2, 1, false),
+            new Dense<Swish>(1, 1, false, GlorotUniform()),
     };
+    //model[0].SetWeights(cweights);
+    std::cout << "preweights\n" << model[0].GetWeights() << "\n";
 
-    BinaryCrossEntropy loss;
-    Adam opt;
+    std::cout << "initial predict\n" << model.Predict(input) << "\n";
+
+    MeanSquaredError loss;
+    SGD opt(0.001);
 
     model.Compile(loss, opt);
     model.Fit({input}, {label}, 1, 1);
-    std::cout << "gradient check\n" << model.GradientCheck(input, label, 1e-7);
+    std::cout << "weights\n" << model[0].GetWeights() << "\n";
+    std::cout << "loss: " << loss.GetLoss() << "\n";
+    std::cout << "loss gradients: " << loss.GetGradients2D() << "\n";
+    std::cout << "\n\n\ngradient check\n" << model.GradientCheck(input, label, 1e-7) << "\n";
+
 }
 
 
@@ -106,10 +121,10 @@ void adam_compare_with_tf()
     w_temp2.setConstant(0.7);
 
     Sequential model{
-            new Dense<Sigmoid>(input_features, input_features, false),
+            /*new Dense<Sigmoid>(input_features, input_features, false),
             new Dense<Sigmoid>(input_features, 13, false),
             new Dense<Sigmoid>(13, input_features, false),
-            new Dense<Sigmoid>(input_features, label_features, false),
+            new Dense<Sigmoid>(input_features, label_features, false),*/
     };
 
     model[0].SetWeights(w1);
@@ -137,7 +152,7 @@ int main()
 {
     auto start = std::chrono::high_resolution_clock::now();
 
-    embedding_development();
+    dense_batch_test();
 
     auto stop = std::chrono::high_resolution_clock::now();
     auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);

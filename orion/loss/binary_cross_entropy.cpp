@@ -5,6 +5,7 @@
 #include "binary_cross_entropy.hpp"
 #include <iostream>
 #include <cmath>
+#include <algorithm>
 
 namespace orion
 {
@@ -30,11 +31,11 @@ void BinaryCrossEntropy::CalculateLoss(const Tensor<2> &predict,
                  "BinaryCrossEntropy expects 1 output feature");
 
     this->loss_history.push_back((*this)(predict, label));
+    Tensor<2> gradients = ((-label / ((predict + this->epsilon))) +
+                           (1 - label) / ((1 - predict + this->epsilon)));
+    //gradients = gradients.cwiseMax(this->clip_min).cwiseMin(this->clip_max); // this breaks sigmoid gradient check
 
-    this->gradient_history.emplace_back(
-            ((-label / ((predict + this->epsilon))) +
-             (1 - label) / ((1 - predict + this->epsilon)))
-    );
+    this->gradient_history.emplace_back(std::move(gradients));
 }
 
 

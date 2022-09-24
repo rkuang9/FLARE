@@ -13,15 +13,31 @@ namespace orion
 class Softmax
 {
 public:
-    static Tensor2D Activate(const Tensor2D &Z)
+    static Tensor<2> Activate(const Tensor<2> &features)
     {
-        return Z.exp() / Z.exp().sum();
+        throw std::logic_error("softmax has issues, not working yet");
+        return features.exp() / features.exp().sum();
     }
 
 
-    static Tensor2D Gradients(const Tensor2D &Z)
+    static Tensor<3> Activate(const Tensor<3> &features)
     {
-        return (Z >= 0).select(Z.constant(1.0), Z.constant(0.0));
+        throw std::logic_error("softmax has issues, not working yet");
+        return features.exp() / features.exp().sum();
+    }
+
+
+    static Tensor<3> Gradients(const Tensor<2> &features)
+    {
+        throw std::logic_error("softmax has issues, not working yet");
+        return (features >= 0).select(features.constant(1.0), features.constant(0.0));
+    }
+
+
+    static Tensor<3> Gradients(const Tensor<3> &features)
+    {
+        throw std::logic_error("softmax has issues, not working yet");
+        return (features >= 0).select(features.constant(1.0), features.constant(0.0));
     }
 };
 

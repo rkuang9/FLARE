@@ -41,7 +41,7 @@ void Dense<Activation>::Forward(const Tensor2D &input)
         this->Z += this->b.broadcast(
                 Eigen::array<Eigen::Index, 2>({1, input.dimension(1)}));
     }
-
+    std::cout << "forward Z " << Z << "\n";
     this->A = Activation::Activate(this->Z);
 }
 
@@ -60,8 +60,8 @@ Tensor2D Dense<Activation>::operator()(const Tensor2D &tensor) const
                  "Dense::Forward EXPECTED " << this->w.dimension(1)
                          << " INPUT FEATURES, GOT " << tensor.dimension(0));
     std::cerr << "overloaded operator () forward does not use bias\n";
-    return Activation::Activate(
-            this->w.contract(tensor, ContractDim{Axes(1, 0)}));
+    Tensor<2> z = this->w.contract(tensor, ContractDim{Axes(1, 0)});
+    return Activation::Activate(z);
 }
 
 
