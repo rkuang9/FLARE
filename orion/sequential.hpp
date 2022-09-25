@@ -41,15 +41,15 @@ public:
     std::vector<Layer *> layers;
 protected:
 
-    void Forward(const Tensor2D &training_sample);
+    void Forward(const Tensor<2> &training_sample);
 
-    void Backward(const Tensor2D &training_label, Loss &loss_function);
+    void Backward(const Tensor<2> &training_label, Loss &loss_function);
 
     void Update(Optimizer &optimizer);
 
 
-    std::vector<Tensor2D> training_data2D;
-    std::vector<Tensor2D> training_labels2D;
+    std::vector<Tensor<2>> training_data2D;
+    std::vector<Tensor<2>> training_labels2D;
 
     Loss *loss = nullptr;
     Optimizer *opt = nullptr;

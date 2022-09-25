@@ -19,9 +19,9 @@ public:
 
     void Step() override;
 
-    void Minimize(Tensor2D &w, const Tensor2D &dL_dw) override;
+    void Minimize(Tensor<2> &w, const Tensor<2> &dL_dw) override;
 
-    void Minimize(Tensor1D &b, const Tensor1D &dL_db) override;
+    void Minimize(Tensor<1> &b, const Tensor<1> &dL_db) override;
 
 private:
     Scalar beta1; // momentum
@@ -35,8 +35,8 @@ private:
 
     // holds moving averages per layer, stored using Tensor.data() pointer as key
     // is unordered_map faster?
-    std::map<const Scalar *, Tensor2D> momentum;
-    std::map<const Scalar *, Tensor2D> rmsprop;
+    std::map<const Scalar *, Tensor<2>> momentum;
+    std::map<const Scalar *, Tensor<2>> rmsprop;
 };
 
 } // namespace orion

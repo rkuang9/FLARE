@@ -19,12 +19,8 @@
 #include "orion/optimizers/include_optimizers.hpp"
 #include "orion/loss/include_loss.hpp"
 
+
 #include "orion/sequential.hpp"
-#include "orion/internal/print.hpp"
-
-
-
-
 
 
 #endif //ORION_ORION_HPP

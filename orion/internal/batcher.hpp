@@ -8,10 +8,10 @@
 #include "orion/orion_types.hpp"
 #include <vector>
 
-namespace orion::internal
+namespace orion
 {
 
-std::vector<Tensor2D>
+std::vector<Tensor<2>>
 VectorToBatch(std::vector<std::vector<Scalar>> &dataset, int batch_size);
 
 }

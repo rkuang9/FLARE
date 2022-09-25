@@ -17,7 +17,7 @@ public:
 
     explicit BinaryCrossEntropy(Scalar epsilon, int history_size = 1000);
 
-    void CalculateLoss(const Tensor2D &predict, const Tensor2D &label) override;
+    void CalculateLoss(const Tensor<2> &predict, const Tensor<2> &label) override;
 
     Scalar operator()(const Tensor<2> &predict,
                       const Tensor<2> &label) const override;

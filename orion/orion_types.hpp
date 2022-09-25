@@ -33,26 +33,14 @@ typedef double Scalar;
 template<int Rank, typename DataType = Scalar, int Storage = Eigen::ColMajor>
 using Tensor = Eigen::Tensor<DataType, Rank, Storage>;
 
-// these hardcoded typedefs are no longer used
-typedef Eigen::Tensor<Scalar, 4, Eigen::ColMajor> Tensor4D;
-typedef Eigen::Tensor<Scalar, 3, Eigen::ColMajor> Tensor3D;
-typedef Eigen::Tensor<Scalar, 2, Eigen::ColMajor> Tensor2D;
-typedef Eigen::Tensor<Scalar, 1, Eigen::ColMajor> Tensor1D;
-
-
 
 // a different view on an existing Tensor, doesn't copy
 template<int Rank>
 using TensorMap = Eigen::TensorMap<Tensor<Rank>>;
 
+
 template<int Rank>
 using TensorMapConst = Eigen::TensorMap<const Tensor<Rank>>;
-
-// these hardcoded typedefs are no longer used
-typedef Eigen::TensorMap<Tensor4D> Tensor4DMap;
-typedef Eigen::TensorMap<Tensor3D> Tensor3DMap;
-typedef Eigen::TensorMap<Tensor2D> Tensor2DMap;
-typedef Eigen::TensorMap<Tensor1D> Tensor1DMap;
 
 
 typedef Eigen::array<Eigen::IndexPair<int>, 1> ContractDim;

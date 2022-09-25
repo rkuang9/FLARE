@@ -28,10 +28,10 @@ void Adam::Step()
 
 
 // applies optimization variant in section 2 of the paper
-void Adam::Minimize(Tensor2D &w, const Tensor2D &g)
+void Adam::Minimize(Tensor<2> &w, const Tensor<2> &g)
 {
-    Tensor2D &m = this->momentum[w.data()]; // momentum
-    Tensor2D &v = this->rmsprop[w.data()]; // RMSprop
+    Tensor<2> &m = this->momentum[w.data()]; // momentum
+    Tensor<2> &v = this->rmsprop[w.data()]; // RMSprop
 
     // on first run, initialize zero matrix with same shape as weights
     if (m.size() == 0) {
@@ -51,7 +51,7 @@ void Adam::Minimize(Tensor2D &w, const Tensor2D &g)
 }
 
 
-void Adam::Minimize(Tensor1D &b, const Tensor1D &dL_db)
+void Adam::Minimize(Tensor<1> &b, const Tensor<1> &dL_db)
 {
     throw std::logic_error("BIAS OPTIMIZATION NOT IMPLEMENTED YET");
 }

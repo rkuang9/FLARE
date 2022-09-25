@@ -15,8 +15,8 @@ MeanSquaredError::MeanSquaredError(int history_size)
 }
 
 
-void MeanSquaredError::CalculateLoss(const Tensor2D &predict,
-                                     const Tensor2D &label)
+void MeanSquaredError::CalculateLoss(const Tensor<2> &predict,
+                                     const Tensor<2> &label)
 {
     orion_assert(predict.dimensions() == label.dimensions(),
                  "predict dimensions " << predict.dimensions() <<
@@ -26,7 +26,6 @@ void MeanSquaredError::CalculateLoss(const Tensor2D &predict,
     this->loss_history.push_back((*this)(predict, label));
 
     this->gradient_history.emplace_back(2 * (predict - label));
-    std::cout << "loss gradients\n" << this->gradient_history.back() << "\n";
 }
 
 

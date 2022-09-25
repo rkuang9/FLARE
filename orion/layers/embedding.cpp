@@ -10,14 +10,14 @@ namespace orion
 Embedding::Embedding(int vocab_size, int embedding_dim, int input_length,
                      const Initializer &initializer)
         : embed_dims(embedding_dim),
-          input_len(input_length),
-          w(initializer.Initialize(
-                  Tensor<2>::Dimensions(vocab_size, embedding_dim),
-                  input_length, embedding_dim))
+          input_len(input_length)
 {
     this->name = "embedding";
-    this->dL_dw.resize(w.dimensions());
     this->dL_dw.setZero();
+    this->w = initializer.Initialize(
+            Tensor<2>::Dimensions(vocab_size, embedding_dim),
+            input_length, embedding_dim);
+    this->dL_dw.resize(w.dimensions());
 }
 
 
@@ -150,7 +150,7 @@ int Embedding::GetOutputRank() const
 }
 
 
-Tensor2D Embedding::operator()(const Tensor2D &tensor) const
+Tensor<2> Embedding::operator()(const Tensor<2> &tensor) const
 {
 
 }

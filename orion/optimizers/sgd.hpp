@@ -19,9 +19,9 @@ public:
 
     void Step() override;
 
-    void Minimize(Tensor2D &W, const Tensor2D &dL_dW) override;
+    void Minimize(Tensor<2> &W, const Tensor<2> &dL_dW) override;
 
-    void Minimize(Tensor1D &b, const Tensor1D &dL_db) override;
+    void Minimize(Tensor<1> &b, const Tensor<1> &dL_db) override;
 
     Scalar GetMomentum() const;
 
@@ -29,8 +29,8 @@ private:
     Scalar momentum; // default 0 means no momentum
 
     // holds moving averages per layer, stored using Tensor.data() pointer as key
-    std::map<const Scalar *, Tensor2D> v_dw;
-    std::map<const Scalar *, Tensor1D> v_db;
+    std::map<const Scalar *, Tensor<2>> v_dw;
+    std::map<const Scalar *, Tensor<1>> v_db;
 };
 
 } // namespace orion

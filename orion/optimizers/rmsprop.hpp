@@ -15,16 +15,16 @@ class RMSprop : public Optimizer
 public:
     explicit RMSprop(Scalar learning_rate = 0.001, Scalar momentum = 0.9);
 
-    void Minimize(Tensor2D &W, const Tensor2D &dL_dW) override;
+    void Minimize(Tensor<2> &W, const Tensor<2> &dL_dW) override;
 
-    void Minimize(Tensor1D &b, const Tensor1D &dL_db) override;
+    void Minimize(Tensor<1> &b, const Tensor<1> &dL_db) override;
 
 private:
     Scalar momentum = 0.9;
     Scalar epsilon = 1e-7; // prevent divison by zero
 
-    std::map<const Scalar *, Tensor2D> s_dw;
-    std::map<const Scalar *, Tensor1D> s_db;
+    std::map<const Scalar *, Tensor<2>> s_dw;
+    std::map<const Scalar *, Tensor<1>> s_db;
 };
 
 } // orion

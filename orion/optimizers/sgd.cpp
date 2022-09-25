@@ -13,9 +13,9 @@ SGD::SGD(Scalar learning_rate, Scalar momentum) : Optimizer(learning_rate),
 }
 
 
-void SGD::Minimize(Tensor2D &W, const Tensor2D &dL_dW)
+void SGD::Minimize(Tensor<2> &W, const Tensor<2> &dL_dW)
 {
-    Tensor2D &velocity = this->v_dw[W.data()];
+    Tensor<2> &velocity = this->v_dw[W.data()];
 
     if (velocity.size() == 0) {
         // on first run, initialize zero matrix with same shape as weights
@@ -36,9 +36,9 @@ void SGD::Step()
 }
 
 
-void SGD::Minimize(Tensor1D &b, const Tensor1D &dL_db)
+void SGD::Minimize(Tensor<1> &b, const Tensor<1> &dL_db)
 {
-    Tensor1D &velocity = this->v_db[b.data()];
+    Tensor<1> &velocity = this->v_db[b.data()];
 
     if (velocity.size() == 0) {
         // on first run, initialize zero matrix with same shape as bias

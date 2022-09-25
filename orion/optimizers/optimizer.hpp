@@ -21,9 +21,9 @@ public:
     virtual void Step() = 0;
 
     // skip bias correction for most implementations
-    virtual void Minimize(Tensor2D &W, const Tensor2D &dL_dW) = 0;
+    virtual void Minimize(Tensor<2> &W, const Tensor<2> &dL_dW) = 0;
 
-    virtual void Minimize(Tensor1D &b, const Tensor1D &dL_db) = 0;
+    virtual void Minimize(Tensor<1> &b, const Tensor<1> &dL_db) = 0;
 
     Scalar GetLearningRate() const { return this->learning_rate; };
 

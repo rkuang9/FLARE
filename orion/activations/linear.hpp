@@ -35,7 +35,7 @@ public:
     static Tensor<3> Gradients(const Tensor<3> &features)
     {
         auto one = static_cast<Scalar>(1.0);
-        return Tensor<2>(features.dimensions()).setConstant(one);
+        return Tensor<3>(features.dimensions()).setConstant(one);
     }
 };
 

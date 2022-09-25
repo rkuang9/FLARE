@@ -30,7 +30,7 @@ void Sequential::Compile(Loss &loss_function, Optimizer &optimizer)
 }
 
 
-// currently accepts Tensor2D inputs (column vecors stacked side by side into a matrix)
+// currently accepts Tensor<2> inputs (column vecors stacked side by side into a matrix)
 void Sequential::Fit(std::vector<std::vector<Scalar>> &inputs,
                      std::vector<std::vector<Scalar>> &labels,
                      int epochs, int batch_size)
@@ -47,8 +47,8 @@ void Sequential::Fit(std::vector<std::vector<Scalar>> &inputs,
         throw std::logic_error("missing optimizer");
     }
 
-    this->training_data2D = orion::internal::VectorToBatch(inputs, batch_size);
-    this->training_labels2D = orion::internal::VectorToBatch(labels,
+    this->training_data2D = orion::VectorToBatch(inputs, batch_size);
+    this->training_labels2D = orion::VectorToBatch(labels,
                                                              batch_size);
 
     for (int e = 0; e < epochs; e++) {
@@ -61,7 +61,7 @@ void Sequential::Fit(std::vector<std::vector<Scalar>> &inputs,
 }
 
 
-// currently accepts Tensor2D inputs (column vecors stacked side by side into a matrix)
+// currently accepts Tensor<2> inputs (column vecors stacked side by side into a matrix)
 void Sequential::Fit(const std::vector<Tensor<2>> &inputs,
                      const std::vector<Tensor<2>> &labels,
                      int epochs, int batch_size)
@@ -88,7 +88,7 @@ void Sequential::Fit(const std::vector<Tensor<2>> &inputs,
 }
 
 
-void Sequential::Forward(const Tensor2D &training_sample)
+void Sequential::Forward(const Tensor<2> &training_sample)
 {
     this->layers.front()->Forward(training_sample);
 
@@ -98,7 +98,7 @@ void Sequential::Forward(const Tensor2D &training_sample)
 }
 
 
-void Sequential::Backward(const Tensor2D &training_label, Loss &loss_function)
+void Sequential::Backward(const Tensor<2> &training_label, Loss &loss_function)
 {
     loss_function.CalculateLoss(this->layers.back()->GetOutput2D(),
                                 training_label);
@@ -119,7 +119,7 @@ void Sequential::Update(Optimizer &optimizer)
     }
 
     // let the optimizer know to move to the next iteration t
-    // where some optimizers need to update their internal parameters
+    // since some optimizers need to update their internal parameters
     optimizer.Step();
 }
 

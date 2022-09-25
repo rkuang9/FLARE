@@ -14,9 +14,9 @@ RMSprop::RMSprop(Scalar learning_rate, Scalar momentum) :
 }
 
 
-void RMSprop::Minimize(Tensor2D &W, const Tensor2D &dL_dW)
+void RMSprop::Minimize(Tensor<2> &W, const Tensor<2> &dL_dW)
 {
-    Tensor2D &velocity = this->s_dw[W.data()];
+    Tensor<2> &velocity = this->s_dw[W.data()];
 
     if (velocity.size() == 0) {
         velocity.resize(W.dimensions());
@@ -29,9 +29,9 @@ void RMSprop::Minimize(Tensor2D &W, const Tensor2D &dL_dW)
 }
 
 
-void RMSprop::Minimize(Tensor1D &b, const Tensor1D &dL_db)
+void RMSprop::Minimize(Tensor<1> &b, const Tensor<1> &dL_db)
 {
-    Tensor1D &velocity = this->s_db[b.data()];
+    Tensor<1> &velocity = this->s_db[b.data()];
 
     if (velocity.size() == 0) {
         velocity.resize(b.dimensions());

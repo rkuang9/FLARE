@@ -25,7 +25,7 @@ Dense<Activation>::Dense(int inputs, int outputs, bool use_bias,
 
 
 template<typename Activation>
-void Dense<Activation>::Forward(const Tensor2D &input)
+void Dense<Activation>::Forward(const Tensor<2> &input)
 {
     orion_assert(this->w.dimension(1) == input.dimension(0), this->name <<
             " Dense::Forward EXPECTED " << this->w.dimension(1)
@@ -42,7 +42,7 @@ void Dense<Activation>::Forward(const Tensor2D &input)
         this->Z += this->b.broadcast(
                 Eigen::array<Eigen::Index, 2>({1, input.dimension(1)}));
     }
-    std::cout << "forward Z " << Z << "\n";
+
     this->A = Activation::Activate(this->Z);
 }
 
@@ -55,7 +55,7 @@ void Dense<Activation>::Forward(const Layer &prev)
 
 
 template<typename Activation>
-Tensor2D Dense<Activation>::operator()(const Tensor2D &tensor) const
+Tensor<2> Dense<Activation>::operator()(const Tensor<2> &tensor) const
 {
     orion_assert(this->w.dimension(1) == tensor.dimension(0),
                  "Dense::Forward EXPECTED " << this->w.dimension(1)
@@ -127,7 +127,7 @@ void Dense<Activation>::Update(Optimizer &optimizer)
 
 
 template<typename Activation>
-const Tensor2D &Dense<Activation>::GetOutput2D() const
+const Tensor<2> &Dense<Activation>::GetOutput2D() const
 {
     return this->A;
 }
@@ -141,7 +141,7 @@ const Tensor<2> &Dense<Activation>::GetInputGradients2D() const
 
 
 template<typename Activation>
-const Tensor2D &Dense<Activation>::GetWeights() const
+const Tensor<2> &Dense<Activation>::GetWeights() const
 {
     return this->w;
 }
