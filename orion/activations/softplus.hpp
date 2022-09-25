@@ -15,13 +15,15 @@ class Softplus
 public:
     static Tensor<2> Activate(const Tensor<2> &features)
     {
-        return (1 + features.exp()).log();
+        auto one = static_cast<Scalar>(1.0);
+        return (one + features.exp()).log();
     }
 
 
     static Tensor<3> Activate(const Tensor<3> &features)
     {
-        return (1 + features.exp()).log();
+        auto one = static_cast<Scalar>(1.0);
+        return (one + features.exp()).log();
     }
 
 

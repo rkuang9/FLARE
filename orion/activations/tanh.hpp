@@ -26,13 +26,15 @@ public:
 
     static Tensor<2> Gradients(const Tensor<2> &features)
     {
-        return 1 - features.tanh().square();
+        auto one = static_cast<Scalar>(1.0);
+        return one - features.tanh().square();
     }
 
 
     static Tensor<3> Gradients(const Tensor<3> &features)
     {
-        return 1 - features.tanh().square();
+        auto one = static_cast<Scalar>(1.0);
+        return one - features.tanh().square();
     }
 };
 

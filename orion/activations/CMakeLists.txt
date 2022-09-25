@@ -4,6 +4,11 @@ set(SOURCES
         relu.hpp
         softmax.hpp
         linear.hpp
+        swish.hpp
+        softplus.hpp
+        softsign.hpp
+        selu.hpp
+        elu.hpp
         )
 
 set(SOURCE_DIRECTORY)

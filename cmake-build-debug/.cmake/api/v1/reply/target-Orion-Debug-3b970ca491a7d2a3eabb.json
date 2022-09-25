@@ -1,0 +1,300 @@
+{
+	"artifacts" : 
+	[
+		{
+			"path" : "/home/macross/Desktop/OrionNN/bin/Orion"
+		}
+	],
+	"backtrace" : 1,
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"add_executable",
+			"include_directories"
+		],
+		"files" : 
+		[
+			"CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 19,
+				"parent" : 0
+			},
+			{
+				"command" : 1,
+				"file" : 0,
+				"line" : 15,
+				"parent" : 0
+			},
+			{
+				"command" : 1,
+				"file" : 0,
+				"line" : 16,
+				"parent" : 0
+			}
+		]
+	},
+	"compileGroups" : 
+	[
+		{
+			"compileCommandFragments" : 
+			[
+				{
+					"fragment" : "-O0  -Wno-return-type -Wreturn-local-addr -static -g"
+				},
+				{
+					"fragment" : "-std=gnu++17"
+				}
+			],
+			"includes" : 
+			[
+				{
+					"backtrace" : 2,
+					"path" : "/home/macross/Desktop/OrionNN/lib/Eigen"
+				},
+				{
+					"backtrace" : 3,
+					"path" : "/home/macross/Desktop/OrionNN"
+				}
+			],
+			"language" : "CXX",
+			"languageStandard" : 
+			{
+				"backtraces" : 
+				[
+					1
+				],
+				"standard" : "17"
+			},
+			"sourceIndexes" : 
+			[
+				12,
+				13,
+				14,
+				15,
+				16,
+				17,
+				18,
+				19,
+				23,
+				24
+			]
+		}
+	],
+	"id" : "Orion::@6890427a1f51a3e7e1df",
+	"link" : 
+	{
+		"commandFragments" : 
+		[
+			{
+				"fragment" : "-O0  -Wno-return-type -Wreturn-local-addr -static -g",
+				"role" : "flags"
+			},
+			{
+				"fragment" : "",
+				"role" : "flags"
+			}
+		],
+		"language" : "CXX"
+	},
+	"name" : "Orion",
+	"nameOnDisk" : "Orion",
+	"paths" : 
+	{
+		"build" : ".",
+		"source" : "."
+	},
+	"sourceGroups" : 
+	[
+		{
+			"name" : "Header Files",
+			"sourceIndexes" : 
+			[
+				0,
+				1,
+				2,
+				3,
+				4,
+				5,
+				6,
+				7,
+				8,
+				9,
+				10,
+				20,
+				21,
+				22
+			]
+		},
+		{
+			"name" : "",
+			"sourceIndexes" : 
+			[
+				11
+			]
+		},
+		{
+			"name" : "Source Files",
+			"sourceIndexes" : 
+			[
+				12,
+				13,
+				14,
+				15,
+				16,
+				17,
+				18,
+				19,
+				23,
+				24
+			]
+		}
+	],
+	"sources" : 
+	[
+		{
+			"backtrace" : 1,
+			"path" : "orion/activations/sigmoid.hpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "orion/activations/tanh.hpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "orion/activations/relu.hpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "orion/activations/softmax.hpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "orion/activations/linear.hpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "orion/activations/swish.hpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "orion/activations/softplus.hpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "orion/activations/softsign.hpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "orion/activations/selu.hpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "orion/activations/elu.hpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "orion/layers/layer.hpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "orion/layers/dense.ipp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "orion/layers/embedding.cpp",
+			"sourceGroupIndex" : 2
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "orion/layers/globalaveragepooling1d.cpp",
+			"sourceGroupIndex" : 2
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "orion/optimizers/adam.cpp",
+			"sourceGroupIndex" : 2
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "orion/optimizers/sgd.cpp",
+			"sourceGroupIndex" : 2
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "orion/optimizers/rmsprop.cpp",
+			"sourceGroupIndex" : 2
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "orion/loss/binary_cross_entropy.cpp",
+			"sourceGroupIndex" : 2
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "orion/loss/mean_squared_error.cpp",
+			"sourceGroupIndex" : 2
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "orion/internal/batcher.cpp",
+			"sourceGroupIndex" : 2
+		},
+		{
+			"backtrace" : 1,
+			"path" : "orion/orion_types.hpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "orion/orion.hpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "orion/orion_assert.hpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "orion/main.cpp",
+			"sourceGroupIndex" : 2
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "orion/sequential.cpp",
+			"sourceGroupIndex" : 2
+		}
+	],
+	"type" : "EXECUTABLE"
+}

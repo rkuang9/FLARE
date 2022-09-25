@@ -10,6 +10,7 @@
 namespace orion
 {
 
+// https://arxiv.org/abs/1412.6980
 class Adam : public Optimizer
 {
 public:

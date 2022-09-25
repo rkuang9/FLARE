@@ -5,8 +5,9 @@
 #ifndef ORION_INCLUDE_WEIGHTS_HPP
 #define ORION_INCLUDE_WEIGHTS_HPP
 
-#include "random_generator.hpp"
 #include "weights.hpp"
-#include <map>
+#include "glorot.hpp"
+#include "he.hpp"
+#include "lecun.hpp"
 
 #endif //ORION_INCLUDE_WEIGHTS_HPP

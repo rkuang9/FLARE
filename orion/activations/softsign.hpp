@@ -14,25 +14,29 @@ class Softsign
 public:
     static Tensor<2> Activate(const Tensor<2> &features)
     {
-        return features / (1 + features.abs());
+        auto one = static_cast<Scalar>(1.0);
+        return features / (one + features.abs());
     }
 
 
     static Tensor<3> Activate(const Tensor<3> &features)
     {
-        return features / (1 + features.abs());
+        auto one = static_cast<Scalar>(1.0);
+        return features / (one + features.abs());
     }
 
 
     static Tensor<2> Gradients(const Tensor<2> &features)
     {
-        return 1 / (1 + features.abs()).square();
+        auto one = static_cast<Scalar>(1.0);
+        return one / (one + features.abs()).square();
     }
 
 
     static Tensor<3> Gradients(const Tensor<3> &features)
     {
-        return 1 / (1 + features.abs()).square();
+        auto one = static_cast<Scalar>(1.0);
+        return one / (one + features.abs()).square();
     }
 };
 

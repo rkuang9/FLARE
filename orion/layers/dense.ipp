@@ -10,10 +10,11 @@ namespace orion
 template<typename Activation>
 Dense<Activation>::Dense(int inputs, int outputs, bool use_bias,
                          const Initializer &initializer) :
-        use_bias(use_bias)
+        use_bias(use_bias),
+        w(initializer.Initialize(
+                Tensor<2>::Dimensions(outputs, inputs), inputs, outputs))
 {
     this->name = "dense";
-    this->w = initializer.Initialize(outputs, inputs);
 
     if (this->use_bias) {
         throw std::invalid_argument("bias not available");

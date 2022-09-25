@@ -13,5 +13,7 @@
 #include "swish.hpp"
 #include "softplus.hpp"
 #include "softsign.hpp"
+#include "selu.hpp"
+#include "elu.hpp"
 
 #endif //ORION_INCLUDE_ACTIVATIONS_HPP

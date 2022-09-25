@@ -6,93 +6,68 @@
 #define ORION_WEIGHTS_HPP
 
 #include "orion/orion_types.hpp"
-#include "random_generator.hpp"
 
 namespace orion
 {
 
-class Initializer {
-public:
-    virtual Tensor2D Initialize(int rows, int cols) const = 0;
-};
-
-
-class GlorotUniform: public Initializer
-{
-    /**
-     * Initialize a matrix with shape (rows, cols) on a uniform distribution
-     *
-     * @param rows number of rows, also the number of layer output units
-     * @param cols number of cols, also the number of layer input units
-     * @return
-     */
-    Tensor2D Initialize(int rows, int cols) const override
-    {
-        Scalar limit = std::sqrt(6.0 / (cols + rows));
-        return random::RandomUniform(rows, cols, -limit, limit);
-    }
-};
-
-
-class GlorotNormal: public Initializer
-{
-    /**
-     * Initialize a matrix with shape (rows, cols) on a normal distribution
-     *
-     * @param rows number of rows, also the number of layer output units
-     * @param cols number of cols, also the number of layer input units
-     * @return
-     */
-    Tensor2D Initialize(int rows, int cols) const override
-    {
-        Scalar stddev = std::sqrt(2 / (cols + rows));
-        return random::RandomNormal(rows, cols, 0, stddev);
-    }
-};
-
-using XavierUniform = GlorotUniform; // also known as Xavier
-using XavierNormal = GlorotNormal;
-
-
-class HeUniform: public Initializer
-{
-    Tensor2D Initialize(int rows, int cols) const override
-    {
-        Scalar limit = std::sqrt(6.0 / cols);
-        return random::RandomUniform(rows, cols, -limit, limit);
-    }
-};
-
-
-class HeNormal: public Initializer
+/**
+ * Base class for weight initialization
+ */
+class Initializer
 {
 public:
-    Tensor2D Initialize(int rows, int cols) const override
-    {
-        Scalar stddev = std::sqrt(2.0 / cols);
-        return random::RandomNormal(rows, cols, 0, stddev);
-    }
+    virtual Tensor<2> Initialize(Tensor<2>::Dimensions dims,
+                                 int fan_in, int fan_out) const = 0;
+
+    virtual Tensor<3> Initialize(Tensor<3>::Dimensions dims,
+                                 int fan_in, int fan_out) const = 0;
 };
 
 
-class LecunUniform: public Initializer
+/**
+ * Creates a tensor on a uniform distribution within range min, max
+ * Used by the various weight initializers
+ *
+ * @tparam Rank   tensor rank
+ * @param dims    tensor dimensions
+ * @param min     maximum value
+ * @param max     minimum value
+ * @return Tensor<Rank>
+ */
+template<int Rank>
+Tensor<Rank> RandomUniform(typename Tensor<Rank>::Dimensions dims,
+                           Scalar min, Scalar max)
 {
-    Tensor2D Initialize(int rows, int cols) const override
-    {
-        Scalar limit = std::sqrt(3.0 / cols);
-        return random::RandomUniform(rows, cols, -limit, limit);
-    }
-};
+    std::random_device random;
+    std::mt19937_64 mt(random());
+
+    return Tensor<Rank>(dims).template nullaryExpr([&]() {
+        return std::uniform_real_distribution<Scalar>(min, max)(mt);
+    });
+}
 
 
-class LecunNormal: public Initializer
+/**
+ * Creates a tensor on a real distribution within with mean 0, standard deviation stddev
+ * Used by the various weight initializers
+ *
+ * @tparam Rank    tensor rank
+ * @param dims     tensor dimensions
+ * @param mean     mean value
+ * @param stddev   standard deviation
+ * @return
+ */
+template<int Rank>
+Tensor<Rank> RandomNormal(typename Tensor<Rank>::Dimensions dims,
+                          Scalar mean, Scalar stddev)
 {
-    Tensor2D Initialize(int rows, int cols) const override
-    {
-        Scalar stddev = std::sqrt(1.0 / cols);
-        return random::RandomNormal(rows, cols, 0, stddev);
-    }
-};
+    std::random_device random;
+    std::mt19937_64 mt(random());
+
+    return Tensor<Rank>(dims).template nullaryExpr([&]() {
+        return std::normal_distribution<Scalar>(mean, stddev)(mt);
+    });
+}
 
 } // namespace orion
 

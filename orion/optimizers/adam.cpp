@@ -27,7 +27,7 @@ void Adam::Step()
 }
 
 
-// https://arxiv.org/pdf/1412.6980.pdf, applies optimization variant in section 2
+// applies optimization variant in section 2 of the paper
 void Adam::Minimize(Tensor2D &w, const Tensor2D &g)
 {
     Tensor2D &m = this->momentum[w.data()]; // momentum

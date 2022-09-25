@@ -26,13 +26,19 @@ public:
 
     static Tensor<2> Gradients(const Tensor<2> &features)
     {
-        return features.sigmoid() * (1 - features.sigmoid());
+        auto one = static_cast<Scalar>(1.0);
+
+        Tensor<2> sigmoid = features.sigmoid();
+        return sigmoid * (one - sigmoid);
     }
 
 
     static Tensor<3> Gradients(const Tensor<3> &features)
     {
-        return features.sigmoid() * (1 - features.sigmoid());
+        auto one = static_cast<Scalar>(1.0);
+
+        Tensor<2> sigmoid = features.sigmoid();
+        return sigmoid * (one - sigmoid);
     }
 };
 

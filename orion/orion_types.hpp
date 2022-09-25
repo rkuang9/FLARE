@@ -29,9 +29,11 @@ typedef float Scalar;
 typedef double Scalar;
 #endif
 
-template<int Rank, typename DataType = Scalar, int = Eigen::ColMajor>
-using Tensor = Eigen::Tensor<DataType, Rank, Eigen::ColMajor>;
 
+template<int Rank, typename DataType = Scalar, int Storage = Eigen::ColMajor>
+using Tensor = Eigen::Tensor<DataType, Rank, Storage>;
+
+// these hardcoded typedefs are no longer used
 typedef Eigen::Tensor<Scalar, 4, Eigen::ColMajor> Tensor4D;
 typedef Eigen::Tensor<Scalar, 3, Eigen::ColMajor> Tensor3D;
 typedef Eigen::Tensor<Scalar, 2, Eigen::ColMajor> Tensor2D;
@@ -46,7 +48,7 @@ using TensorMap = Eigen::TensorMap<Tensor<Rank>>;
 template<int Rank>
 using TensorMapConst = Eigen::TensorMap<const Tensor<Rank>>;
 
-
+// these hardcoded typedefs are no longer used
 typedef Eigen::TensorMap<Tensor4D> Tensor4DMap;
 typedef Eigen::TensorMap<Tensor3D> Tensor3DMap;
 typedef Eigen::TensorMap<Tensor2D> Tensor2DMap;

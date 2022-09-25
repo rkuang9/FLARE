@@ -26,6 +26,7 @@ void BinaryCrossEntropy::CalculateLoss(const Tensor<2> &predict,
                  "predict dimensions " << predict.dimensions() <<
                          " don't match label dimensions " <<
                          label.dimensions());
+
     // there must be one feature per batch and values in range [0, 1]
     orion_assert(predict.dimension(0) == 1,
                  "BinaryCrossEntropy expects 1 output feature");
@@ -33,7 +34,6 @@ void BinaryCrossEntropy::CalculateLoss(const Tensor<2> &predict,
     this->loss_history.push_back((*this)(predict, label));
     Tensor<2> gradients = ((-label / ((predict + this->epsilon))) +
                            (1 - label) / ((1 - predict + this->epsilon)));
-    //gradients = gradients.cwiseMax(this->clip_min).cwiseMin(this->clip_max); // this breaks sigmoid gradient check
 
     this->gradient_history.emplace_back(std::move(gradients));
 }

@@ -9,9 +9,11 @@ namespace orion
 
 Embedding::Embedding(int vocab_size, int embedding_dim, int input_length,
                      const Initializer &initializer)
-        : w(initializer.Initialize(vocab_size, embedding_dim)),
-          embed_dims(embedding_dim),
-          input_len(input_length)
+        : embed_dims(embedding_dim),
+          input_len(input_length),
+          w(initializer.Initialize(
+                  Tensor<2>::Dimensions(vocab_size, embedding_dim),
+                  input_length, embedding_dim))
 {
     this->name = "embedding";
     this->dL_dw.resize(w.dimensions());

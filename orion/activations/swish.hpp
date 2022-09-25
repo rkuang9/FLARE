@@ -10,7 +10,8 @@
 
 namespace orion
 {
-// TODO: prone to exploding gradients, need to clip optimizers
+// TODO: prone to exploding gradients, need to find a way to clip in optimizers
+// https://arxiv.org/pdf/1710.05941.pdf
 class Swish
 {
 public:
@@ -29,15 +30,19 @@ public:
 
     static Tensor<2> Gradients(const Tensor<2> &features)
     {
+        auto one = static_cast<Scalar>(1.0);
+
         Tensor<2> swish = features * features.sigmoid();
-        return swish + features.sigmoid() * (1.0 - swish);
+        return swish + features.sigmoid() * (one - swish);
     }
 
 
     static Tensor<3> Gradients(const Tensor<3> &features)
     {
+        auto one = static_cast<Scalar>(1.0);
+
         Tensor<3> swish = features * features.sigmoid();
-        return swish + features.sigmoid() * (1.0 - swish);
+        return swish + features.sigmoid() * (one - swish);
     }
 };
 

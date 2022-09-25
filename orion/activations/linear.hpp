@@ -27,13 +27,15 @@ public:
 
     static Tensor<2> Gradients(const Tensor<2> &features)
     {
-        return Tensor<2>(features.dimensions()).setConstant(1);
+        auto one = static_cast<Scalar>(1.0);
+        return Tensor<2>(features.dimensions()).setConstant(one);
     }
 
 
     static Tensor<3> Gradients(const Tensor<3> &features)
     {
-        return Tensor<3>(features.dimensions()).setConstant(1);
+        auto one = static_cast<Scalar>(1.0);
+        return Tensor<2>(features.dimensions()).setConstant(one);
     }
 };
 
