@@ -5,12 +5,12 @@
 #ifndef ORION_MEAN_SQUARED_ERROR_HPP
 #define ORION_MEAN_SQUARED_ERROR_HPP
 
-#include "loss.hpp"
+#include "loss_function.hpp"
 
 namespace orion
 {
 
-class MeanSquaredError : public Loss
+class MeanSquaredError : public LossFunction
 {
 public:
     explicit MeanSquaredError(int history_size = 1000);

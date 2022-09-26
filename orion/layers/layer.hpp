@@ -41,7 +41,7 @@ public:
      *
      * @param loss_function   loss object that calculates and records loss
      */
-    virtual void Backward(const Loss &loss_function) {}
+    virtual void Backward(const LossFunction &loss_function) {}
 
 
     /**

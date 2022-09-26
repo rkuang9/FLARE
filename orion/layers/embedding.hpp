@@ -20,7 +20,7 @@ public:
 
     void Backward(const Layer &next) override;
 
-    void Backward(const Loss &loss_function) override;
+    void Backward(const LossFunction &loss_function) override;
 
     void Update(Optimizer &optimizer) override;
 

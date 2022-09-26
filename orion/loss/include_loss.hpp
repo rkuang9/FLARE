@@ -5,7 +5,7 @@
 #ifndef ORION_INCLUDE_LOSS_HPP
 #define ORION_INCLUDE_LOSS_HPP
 
-#include "loss.hpp"
+#include "loss_function.hpp"
 #include "binary_cross_entropy.hpp"
 #include "mean_squared_error.hpp"
 

@@ -78,7 +78,7 @@ void Dense<Activation>::Backward(const Layer &next) // hidden layer backward
 
 
 template<typename Activation>
-void Dense<Activation>::Backward(const Loss &loss) // output backward
+void Dense<Activation>::Backward(const LossFunction &loss) // output backward
 {
     // divide by num output units
     this->dL_dZ = loss.GetGradients2D() * Activation::Gradients(this->Z) /

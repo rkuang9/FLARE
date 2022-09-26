@@ -5,7 +5,6 @@
 #ifndef ORION_ORION_HPP
 #define ORION_ORION_HPP
 
-//#include <Eigen/Dense> // using Eigen::Tensor instead
 #include <unsupported/Eigen/CXX11/Tensor>
 
 
@@ -18,6 +17,7 @@
 #include "orion/weights/include_weights.hpp"
 #include "orion/optimizers/include_optimizers.hpp"
 #include "orion/loss/include_loss.hpp"
+#include "orion/metrics/include_metrics.hpp"
 
 
 #include "orion/sequential.hpp"

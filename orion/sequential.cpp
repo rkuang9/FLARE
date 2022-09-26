@@ -23,7 +23,7 @@ void Sequential::Add(Layer *layer)
 }
 
 
-void Sequential::Compile(Loss &loss_function, Optimizer &optimizer)
+void Sequential::Compile(LossFunction &loss_function, Optimizer &optimizer)
 {
     this->loss = &loss_function;
     this->opt = &optimizer;
@@ -48,8 +48,11 @@ void Sequential::Fit(std::vector<std::vector<Scalar>> &inputs,
     }
 
     this->training_data2D = orion::VectorToBatch(inputs, batch_size);
-    this->training_labels2D = orion::VectorToBatch(labels,
-                                                             batch_size);
+    this->training_labels2D = orion::VectorToBatch(labels, batch_size);
+
+    this->epochs = epochs;
+    this->batch_size = batch_size;
+    this->total_samples = inputs.size();
 
     for (int e = 0; e < epochs; e++) {
         for (int m = 0; m < this->training_data2D.size(); m++) {
@@ -78,6 +81,10 @@ void Sequential::Fit(const std::vector<Tensor<2>> &inputs,
         throw std::logic_error("missing optimizer");
     }
 
+    this->epochs = epochs;
+    this->batch_size = batch_size;
+    this->total_samples = inputs.size();
+
     for (int e = 0; e < epochs; e++) {
         for (int m = 0; m < inputs.size(); m++) {
             this->Forward(inputs[m]);
@@ -98,7 +105,7 @@ void Sequential::Forward(const Tensor<2> &training_sample)
 }
 
 
-void Sequential::Backward(const Tensor<2> &training_label, Loss &loss_function)
+void Sequential::Backward(const Tensor<2> &training_label, LossFunction &loss_function)
 {
     loss_function.CalculateLoss(this->layers.back()->GetOutput2D(),
                                 training_label);
@@ -210,6 +217,26 @@ Scalar Sequential::GradientCheck(const Tensor<2> &input, const Tensor<2> &label,
     Tensor<0> result = nominator.sqrt() /
                        (denominator_left.sqrt() + denominator_right.sqrt());
     return result(0);
+}
+
+
+const LossFunction *Sequential::GetLossFunction() const {
+    return this->loss;
+}
+
+
+int Sequential::GetEpochs() const {
+    return this->epochs;
+}
+
+
+int Sequential::GetBatchSize() const {
+    return this->batch_size;
+}
+
+
+int Sequential::GetTotalSamples() const {
+
 }
 
 } // namespace orion

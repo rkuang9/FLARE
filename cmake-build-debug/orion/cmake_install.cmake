@@ -72,3 +72,8 @@ if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   include("/home/macross/Desktop/OrionNN/cmake-build-debug/orion/internal/cmake_install.cmake")
 endif()
 
+if(NOT CMAKE_INSTALL_LOCAL_ONLY)
+  # Include the install script for the subdirectory.
+  include("/home/macross/Desktop/OrionNN/cmake-build-debug/orion/metrics/cmake_install.cmake")
+endif()
+

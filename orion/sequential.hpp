@@ -10,6 +10,7 @@
 #include "orion/loss/include_loss.hpp"
 #include "orion/optimizers/include_optimizers.hpp"
 #include "orion/internal/batcher.hpp"
+#include "orion/metrics/include_metrics.hpp"
 
 namespace orion
 {
@@ -21,7 +22,7 @@ public:
 
     void Add(Layer *layer);
 
-    void Compile(Loss &loss_function, Optimizer &optimizer);
+    void Compile(LossFunction &loss_function, Optimizer &optimizer);
 
     void Fit(std::vector<std::vector<Scalar>> &inputs,
              std::vector<std::vector<Scalar>> &labels,
@@ -39,11 +40,24 @@ public:
                        Scalar epsilon = 1e-7);
 
     std::vector<Layer *> layers;
+
+    const LossFunction *GetLossFunction() const;
+
+    int GetEpochs() const;
+
+    int GetBatchSize() const;
+
+    int GetTotalSamples() const;
+
+    void Compile(LossFunction &loss_function, Optimizer &optimizer, std::vector<Metric*> metrics) {
+
+    }
+
 protected:
 
     void Forward(const Tensor<2> &training_sample);
 
-    void Backward(const Tensor<2> &training_label, Loss &loss_function);
+    void Backward(const Tensor<2> &training_label, LossFunction &loss_function);
 
     void Update(Optimizer &optimizer);
 
@@ -51,10 +65,12 @@ protected:
     std::vector<Tensor<2>> training_data2D;
     std::vector<Tensor<2>> training_labels2D;
 
-    Loss *loss = nullptr;
+    LossFunction *loss = nullptr;
     Optimizer *opt = nullptr;
     int epochs = 0; // not in use
     int batch_size = 32; // not in use
+    int total_samples = 0;
+    
 };
 
 }

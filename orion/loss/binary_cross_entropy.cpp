@@ -12,7 +12,7 @@ namespace orion
 
 
 BinaryCrossEntropy::BinaryCrossEntropy(Scalar epsilon, int history_size)
-        : Loss(epsilon)
+        : LossFunction(epsilon)
 {
     this->gradient_history.reserve(history_size);
     this->loss_history.reserve(history_size);

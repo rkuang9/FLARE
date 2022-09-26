@@ -52,7 +52,7 @@ public:
      *
      * @param loss_function   a reference to the loss object
      */
-    void Backward(const Loss &loss_function) override;
+    void Backward(const LossFunction &loss_function) override;
 
 
     /**

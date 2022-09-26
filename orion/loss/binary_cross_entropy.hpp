@@ -5,12 +5,12 @@
 #ifndef ORION_BINARY_CROSS_ENTROPY_HPP
 #define ORION_BINARY_CROSS_ENTROPY_HPP
 
-#include "loss.hpp"
+#include "loss_function.hpp"
 
 namespace orion
 {
 
-class BinaryCrossEntropy : public Loss
+class BinaryCrossEntropy : public LossFunction
 {
 public:
     BinaryCrossEntropy() = default;

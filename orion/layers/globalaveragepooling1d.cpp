@@ -33,7 +33,7 @@ void GlobalAveragePooling1D::Backward(const Layer &next)
 }
 
 
-void GlobalAveragePooling1D::Backward(const Loss &loss_function)
+void GlobalAveragePooling1D::Backward(const LossFunction &loss_function)
 {
     // pass the dL / dA term from dL / dZ = (dL / dA) * (dA / dZ)
     // divide by num outputs

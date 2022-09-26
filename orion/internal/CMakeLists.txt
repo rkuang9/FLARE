@@ -1,5 +1,5 @@
 set(SOURCES
-     batcher.cpp
+        batcher.cpp
         )
 
 set(SOURCE_DIRECTORY)

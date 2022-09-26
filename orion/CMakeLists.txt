@@ -14,6 +14,7 @@ add_subdirectory(weights)
 add_subdirectory(optimizers)
 add_subdirectory(loss)
 add_subdirectory(internal)
+add_subdirectory(metrics)
 
 
 # add directory to files

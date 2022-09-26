@@ -62,7 +62,7 @@ void Embedding::Backward(const Layer &next)
 
 
 // TODO: not tested yet
-void Embedding::Backward(const Loss &loss_function)
+void Embedding::Backward(const LossFunction &loss_function)
 {
     throw std::logic_error("Embedding as output layer not supported");
     // TODO: implement loss_function.GetGradients3D()

@@ -15,5 +15,7 @@
 /home/macross/Desktop/OrionNN/cmake-build-debug/orion/loss/CMakeFiles/rebuild_cache.dir
 /home/macross/Desktop/OrionNN/cmake-build-debug/orion/internal/CMakeFiles/edit_cache.dir
 /home/macross/Desktop/OrionNN/cmake-build-debug/orion/internal/CMakeFiles/rebuild_cache.dir
+/home/macross/Desktop/OrionNN/cmake-build-debug/orion/metrics/CMakeFiles/edit_cache.dir
+/home/macross/Desktop/OrionNN/cmake-build-debug/orion/metrics/CMakeFiles/rebuild_cache.dir
 /home/macross/Desktop/OrionNN/cmake-build-debug/examples/CMakeFiles/edit_cache.dir
 /home/macross/Desktop/OrionNN/cmake-build-debug/examples/CMakeFiles/rebuild_cache.dir
