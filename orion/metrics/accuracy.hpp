@@ -10,13 +10,13 @@
 namespace orion
 {
 
-// binary accuracy initially
+// initially as binary accuracy
 class Accuracy : public Metric
 {
 public:
-    Accuracy(Scalar threshold);
+    explicit Accuracy(Scalar threshold);
 
-    void Compute(const Sequential &model) const override;
+    Scalar Compute(Sequential &model) const override;
 
 private:
     Scalar threshold;

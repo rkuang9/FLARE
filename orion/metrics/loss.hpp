@@ -2,8 +2,8 @@
 // Created by RKuang on 9/25/2022.
 //
 
-#ifndef ORION_LOSS_H
-#define ORION_LOSS_H
+#ifndef ORION_LOSS_HPP
+#define ORION_LOSS_HPP
 
 #include "metric.hpp"
 
@@ -15,9 +15,9 @@ class Loss : public Metric
 public:
     Loss();
 
-    Scalar Compute(const Sequential &model) const override;
+    Scalar Compute(Sequential &model) const override;
 };
 
 }
 
-#endif //ORION_LOSS_H
+#endif //ORION_LOSS_HPP

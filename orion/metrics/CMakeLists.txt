@@ -1,5 +1,4 @@
 set(SOURCES
-        metric.cpp
         accuracy.cpp
         loss.cpp
         )

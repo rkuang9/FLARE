@@ -9,13 +9,13 @@ namespace orion
 
 Accuracy::Accuracy(Scalar threshold) : threshold(threshold)
 {
-
+    // nothing to do here
 }
 
 
-void Accuracy::Compute(const Sequential &model) const
+Scalar Accuracy::Compute(Sequential &model) const
 {
-
+    throw std::invalid_argument("Accuracy metrics not implemented");
 }
 
 }

@@ -12,6 +12,7 @@
 #include "orion/internal/batcher.hpp"
 #include "orion/metrics/include_metrics.hpp"
 
+
 namespace orion
 {
 
@@ -37,7 +38,7 @@ public:
     Tensor<2> Predict(const Tensor<2> &example);
 
     Scalar GradientCheck(const Tensor<2> &input, const Tensor<2> &label,
-                       Scalar epsilon = 1e-7);
+                         Scalar epsilon = 1e-7);
 
     std::vector<Layer *> layers;
 
@@ -49,9 +50,8 @@ public:
 
     int GetTotalSamples() const;
 
-    void Compile(LossFunction &loss_function, Optimizer &optimizer, std::vector<Metric*> metrics) {
-
-    }
+    void Compile(LossFunction &loss_function, Optimizer &optimizer,
+                 const std::vector<Metric *>& metrics);
 
 protected:
 
@@ -70,7 +70,8 @@ protected:
     int epochs = 0; // not in use
     int batch_size = 32; // not in use
     int total_samples = 0;
-    
+    std::vector<Metric*> metrics;
+
 };
 
 }

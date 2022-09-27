@@ -7,16 +7,20 @@
 
 #include <string>
 #include "orion/orion_types.hpp"
-#include "orion/sequential.hpp"
+
 
 namespace orion
 {
 
+// forward declaration
+class Sequential;
+
 class Metric
 {
 public:
-    virtual Scalar Compute(const Sequential &model) const = 0;
-    std::string name = "callback";
+    virtual Scalar Compute(Sequential &model) const = 0;
+
+    std::string name = "metric";
 };
 
 } // namespace orion

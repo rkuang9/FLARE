@@ -17,8 +17,6 @@ file(REMOVE_RECURSE
   "CMakeFiles/Orion.dir/orion/metrics/accuracy.cpp.o.d"
   "CMakeFiles/Orion.dir/orion/metrics/loss.cpp.o"
   "CMakeFiles/Orion.dir/orion/metrics/loss.cpp.o.d"
-  "CMakeFiles/Orion.dir/orion/metrics/metric.cpp.o"
-  "CMakeFiles/Orion.dir/orion/metrics/metric.cpp.o.d"
   "CMakeFiles/Orion.dir/orion/optimizers/adam.cpp.o"
   "CMakeFiles/Orion.dir/orion/optimizers/adam.cpp.o.d"
   "CMakeFiles/Orion.dir/orion/optimizers/rmsprop.cpp.o"

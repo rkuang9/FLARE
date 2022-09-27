@@ -16,7 +16,6 @@ set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/home/macross/Desktop/OrionNN/orion/main.cpp" "CMakeFiles/Orion.dir/orion/main.cpp.o" "gcc" "CMakeFiles/Orion.dir/orion/main.cpp.o.d"
   "/home/macross/Desktop/OrionNN/orion/metrics/accuracy.cpp" "CMakeFiles/Orion.dir/orion/metrics/accuracy.cpp.o" "gcc" "CMakeFiles/Orion.dir/orion/metrics/accuracy.cpp.o.d"
   "/home/macross/Desktop/OrionNN/orion/metrics/loss.cpp" "CMakeFiles/Orion.dir/orion/metrics/loss.cpp.o" "gcc" "CMakeFiles/Orion.dir/orion/metrics/loss.cpp.o.d"
-  "/home/macross/Desktop/OrionNN/orion/metrics/metric.cpp" "CMakeFiles/Orion.dir/orion/metrics/metric.cpp.o" "gcc" "CMakeFiles/Orion.dir/orion/metrics/metric.cpp.o.d"
   "/home/macross/Desktop/OrionNN/orion/optimizers/adam.cpp" "CMakeFiles/Orion.dir/orion/optimizers/adam.cpp.o" "gcc" "CMakeFiles/Orion.dir/orion/optimizers/adam.cpp.o.d"
   "/home/macross/Desktop/OrionNN/orion/optimizers/rmsprop.cpp" "CMakeFiles/Orion.dir/orion/optimizers/rmsprop.cpp.o" "gcc" "CMakeFiles/Orion.dir/orion/optimizers/rmsprop.cpp.o.d"
   "/home/macross/Desktop/OrionNN/orion/optimizers/sgd.cpp" "CMakeFiles/Orion.dir/orion/optimizers/sgd.cpp.o" "gcc" "CMakeFiles/Orion.dir/orion/optimizers/sgd.cpp.o.d"

@@ -60,6 +60,16 @@ void Sequential::Fit(std::vector<std::vector<Scalar>> &inputs,
             this->Backward(this->training_labels2D[m], *this->loss);
             this->Update(*this->opt);
         }
+
+        if (!this->metrics.empty()) {
+            std::cout << "Epoch " << std::right << std::setw(std::to_string(epochs).length()) << e + 1;
+
+            for (auto *metric: this->metrics) {
+                std::cout << " - " << metric->name << ": " << metric->Compute(*this) << " ";
+            }
+
+            std::cout << "\n";
+        }
     }
 }
 
@@ -105,7 +115,8 @@ void Sequential::Forward(const Tensor<2> &training_sample)
 }
 
 
-void Sequential::Backward(const Tensor<2> &training_label, LossFunction &loss_function)
+void
+Sequential::Backward(const Tensor<2> &training_label, LossFunction &loss_function)
 {
     loss_function.CalculateLoss(this->layers.back()->GetOutput2D(),
                                 training_label);
@@ -220,23 +231,36 @@ Scalar Sequential::GradientCheck(const Tensor<2> &input, const Tensor<2> &label,
 }
 
 
-const LossFunction *Sequential::GetLossFunction() const {
+const LossFunction *Sequential::GetLossFunction() const
+{
     return this->loss;
 }
 
 
-int Sequential::GetEpochs() const {
+int Sequential::GetEpochs() const
+{
     return this->epochs;
 }
 
 
-int Sequential::GetBatchSize() const {
+int Sequential::GetBatchSize() const
+{
     return this->batch_size;
 }
 
 
-int Sequential::GetTotalSamples() const {
+int Sequential::GetTotalSamples() const
+{
+    return this->total_samples;
+}
 
+
+void Sequential::Compile(LossFunction &loss_function, Optimizer &optimizer,
+                         const std::vector<Metric *> &metrics)
+{
+    this->loss = &loss_function;
+    this->opt = &optimizer;
+    this->metrics = metrics;
 }
 
 } // namespace orion

@@ -321,30 +321,6 @@ orion/metrics/loss.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Orion.dir/build.make CMakeFiles/Orion.dir/orion/metrics/loss.cpp.s
 .PHONY : orion/metrics/loss.cpp.s
 
-orion/metrics/metric.o: orion/metrics/metric.cpp.o
-.PHONY : orion/metrics/metric.o
-
-# target to build an object file
-orion/metrics/metric.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Orion.dir/build.make CMakeFiles/Orion.dir/orion/metrics/metric.cpp.o
-.PHONY : orion/metrics/metric.cpp.o
-
-orion/metrics/metric.i: orion/metrics/metric.cpp.i
-.PHONY : orion/metrics/metric.i
-
-# target to preprocess a source file
-orion/metrics/metric.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Orion.dir/build.make CMakeFiles/Orion.dir/orion/metrics/metric.cpp.i
-.PHONY : orion/metrics/metric.cpp.i
-
-orion/metrics/metric.s: orion/metrics/metric.cpp.s
-.PHONY : orion/metrics/metric.s
-
-# target to generate assembly for a file
-orion/metrics/metric.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Orion.dir/build.make CMakeFiles/Orion.dir/orion/metrics/metric.cpp.s
-.PHONY : orion/metrics/metric.cpp.s
-
 orion/optimizers/adam.o: orion/optimizers/adam.cpp.o
 .PHONY : orion/optimizers/adam.o
 
@@ -474,9 +450,6 @@ help:
 	@echo "... orion/metrics/loss.o"
 	@echo "... orion/metrics/loss.i"
 	@echo "... orion/metrics/loss.s"
-	@echo "... orion/metrics/metric.o"
-	@echo "... orion/metrics/metric.i"
-	@echo "... orion/metrics/metric.s"
 	@echo "... orion/optimizers/adam.o"
 	@echo "... orion/optimizers/adam.i"
 	@echo "... orion/optimizers/adam.s"

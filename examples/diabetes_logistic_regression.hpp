@@ -67,14 +67,16 @@ void DiabetesDetection()
     BinaryCrossEntropy loss;
     Adam opt(0.005);
 
-    model.Compile(loss, opt);
-    model.Fit(training_samples, training_labels, 90, 16);
+    model.Compile(loss, opt, {new Loss});
+    model.Fit(training_samples, training_labels, 15, 16);
 
     for (int i = 0; i < 10; i++) {
         std::cout << "predict: "
                 << model.Predict(TensorMap<2>(training_samples[i].data(), 8, 1))
                 << ", actual: " << training_labels[i].front() << "\n";
     }
+
+    std::cout << "history size: " << loss.LossHistory().size();
 }
 
 

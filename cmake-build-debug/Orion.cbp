@@ -170,12 +170,6 @@
 		<Unit filename="/home/macross/Desktop/OrionNN/orion/metrics/loss.hpp">
 			<Option target="Orion"/>
 		</Unit>
-		<Unit filename="/home/macross/Desktop/OrionNN/orion/metrics/metric.cpp">
-			<Option target="Orion"/>
-		</Unit>
-		<Unit filename="/home/macross/Desktop/OrionNN/orion/metrics/metric.hpp">
-			<Option target="Orion"/>
-		</Unit>
 		<Unit filename="/home/macross/Desktop/OrionNN/orion/optimizers/adam.cpp">
 			<Option target="Orion"/>
 		</Unit>
