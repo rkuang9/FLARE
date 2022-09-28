@@ -9,5 +9,6 @@
 #include "dense.hpp"
 #include "embedding.hpp"
 #include "globalaveragepooling1d.hpp"
+#include "conv2d.hpp"
 
 #endif //ORION_INCLUDE_LAYERS_HPP

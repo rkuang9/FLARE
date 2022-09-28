@@ -86,8 +86,9 @@
 				19,
 				20,
 				21,
-				25,
-				26
+				22,
+				26,
+				27
 			]
 		}
 	],
@@ -131,10 +132,10 @@
 				8,
 				9,
 				10,
-				22,
 				23,
 				24,
-				27
+				25,
+				28
 			]
 		},
 		{
@@ -158,8 +159,9 @@
 				19,
 				20,
 				21,
-				25,
-				26
+				22,
+				26,
+				27
 			]
 		}
 	],
@@ -235,6 +237,12 @@
 			"backtrace" : 1,
 			"compileGroupIndex" : 0,
 			"path" : "orion/layers/globalaveragepooling1d.cpp",
+			"sourceGroupIndex" : 2
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "orion/layers/conv2d.cpp",
 			"sourceGroupIndex" : 2
 		},
 		{

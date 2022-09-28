@@ -37,6 +37,14 @@ public:
 
 
     /**
+     * Forward propagation for input layers
+     *
+     * @param inputs   rank 3 tensor training sample
+     */
+    virtual void Forward(const Tensor<4> &inputs) {};
+
+
+    /**
      * Backward propagation for output layers
      *
      * @param loss_function   loss object that calculates and records loss
@@ -74,6 +82,7 @@ public:
      */
     virtual const Tensor<2> &GetOutput2D() const {}
     virtual const Tensor<3> &GetOutput3D() const {}
+    virtual const Tensor<4> &GetOutput4D() const {}
 
 
     /**
@@ -81,26 +90,30 @@ public:
      */
     virtual const Tensor<2> &GetInputGradients2D() const {}
     virtual const Tensor<3> &GetInputGradients3D() const {}
+    virtual const Tensor<4> &GetInputGradients4D() const {}
 
 
     /**
      * @return   layer's weights
      */
     virtual const Tensor<2> &GetWeights() const {}
+    virtual const Tensor<3> &GetWeights3D() const {}
 
 
     /**
      * @return   layer's loss gradients w.r.t weights (dL / dw)
      */
     virtual const Tensor<2> &GetWeightGradients() const {}
+    virtual const Tensor<3> &GetWeightGradients3D() const {}
 
 
     /**
      * Set the layer's weights
      *
-     * @param weights   a rank 2 tensor
+     * @param weights   a rank 2/3 tensor
      */
     virtual void SetWeights(const Tensor<2> &weights) {}
+    virtual void SetWeights(const Tensor<3> &weights) {}
 
 
     /**
@@ -114,6 +127,7 @@ public:
      * @param bias   a rank 2 tensor with dimensions (n, 1)
      */
     virtual void SetBias(const Tensor<2> &bias) {}
+    virtual void SetBias(const Tensor<3> &bias) {}
 
 
     /**

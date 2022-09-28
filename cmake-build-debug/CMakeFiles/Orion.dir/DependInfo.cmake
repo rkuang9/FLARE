@@ -9,6 +9,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/home/macross/Desktop/OrionNN/orion/internal/batcher.cpp" "CMakeFiles/Orion.dir/orion/internal/batcher.cpp.o" "gcc" "CMakeFiles/Orion.dir/orion/internal/batcher.cpp.o.d"
+  "/home/macross/Desktop/OrionNN/orion/layers/conv2d.cpp" "CMakeFiles/Orion.dir/orion/layers/conv2d.cpp.o" "gcc" "CMakeFiles/Orion.dir/orion/layers/conv2d.cpp.o.d"
   "/home/macross/Desktop/OrionNN/orion/layers/embedding.cpp" "CMakeFiles/Orion.dir/orion/layers/embedding.cpp.o" "gcc" "CMakeFiles/Orion.dir/orion/layers/embedding.cpp.o.d"
   "/home/macross/Desktop/OrionNN/orion/layers/globalaveragepooling1d.cpp" "CMakeFiles/Orion.dir/orion/layers/globalaveragepooling1d.cpp.o" "gcc" "CMakeFiles/Orion.dir/orion/layers/globalaveragepooling1d.cpp.o.d"
   "/home/macross/Desktop/OrionNN/orion/loss/binary_cross_entropy.cpp" "CMakeFiles/Orion.dir/orion/loss/binary_cross_entropy.cpp.o" "gcc" "CMakeFiles/Orion.dir/orion/loss/binary_cross_entropy.cpp.o.d"
