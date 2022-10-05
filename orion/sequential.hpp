@@ -9,7 +9,7 @@
 #include "orion/layers/include_layers.hpp"
 #include "orion/loss/include_loss.hpp"
 #include "orion/optimizers/include_optimizers.hpp"
-#include "orion/internal/batcher.hpp"
+#include "orion/internal/include_internal.hpp"
 #include "orion/metrics/include_metrics.hpp"
 
 

@@ -480,8 +480,6 @@ CMakeFiles/Orion.dir/orion/metrics/loss.cpp.o: \
  /home/macross/Desktop/OrionNN/orion/weights/include_weights.hpp \
  /home/macross/Desktop/OrionNN/orion/weights/weights.hpp \
  /home/macross/Desktop/OrionNN/orion/weights/glorot.hpp \
- /home/macross/Desktop/OrionNN/orion/weights/he.hpp \
- /home/macross/Desktop/OrionNN/orion/weights/lecun.hpp \
  /home/macross/Desktop/OrionNN/orion/optimizers/include_optimizers.hpp \
  /home/macross/Desktop/OrionNN/orion/optimizers/optimizer.hpp \
  /usr/include/c++/11/map /usr/include/c++/11/bits/stl_tree.h \
@@ -498,6 +496,9 @@ CMakeFiles/Orion.dir/orion/metrics/loss.cpp.o: \
  /home/macross/Desktop/OrionNN/orion/layers/dense.ipp \
  /home/macross/Desktop/OrionNN/orion/layers/embedding.hpp \
  /home/macross/Desktop/OrionNN/orion/layers/globalaveragepooling1d.hpp \
+ /home/macross/Desktop/OrionNN/orion/layers/conv2d.hpp \
+ /home/macross/Desktop/OrionNN/orion/internal/include_internal.hpp \
  /home/macross/Desktop/OrionNN/orion/internal/batcher.hpp \
+ /home/macross/Desktop/OrionNN/orion/internal/print_tensor.hpp \
  /home/macross/Desktop/OrionNN/orion/metrics/include_metrics.hpp \
  /home/macross/Desktop/OrionNN/orion/metrics/accuracy.hpp

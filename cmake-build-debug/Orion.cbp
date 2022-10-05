@@ -125,6 +125,12 @@
 		<Unit filename="/home/macross/Desktop/OrionNN/orion/internal/batcher.hpp">
 			<Option target="Orion"/>
 		</Unit>
+		<Unit filename="/home/macross/Desktop/OrionNN/orion/internal/print_tensor.cpp">
+			<Option target="Orion"/>
+		</Unit>
+		<Unit filename="/home/macross/Desktop/OrionNN/orion/internal/print_tensor.hpp">
+			<Option target="Orion"/>
+		</Unit>
 		<Unit filename="/home/macross/Desktop/OrionNN/orion/layers/conv2d.cpp">
 			<Option target="Orion"/>
 		</Unit>

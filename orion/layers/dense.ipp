@@ -9,7 +9,7 @@ namespace orion
 
 template<typename Activation>
 Dense<Activation>::Dense(int inputs, int outputs, bool use_bias,
-                         const Initializer &initializer) :
+                         const Initializer<2> &initializer) :
         use_bias(use_bias),
         w(initializer.Initialize(
                 Tensor<2>::Dimensions(outputs, inputs), inputs, outputs))

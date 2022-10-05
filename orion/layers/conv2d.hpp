@@ -16,7 +16,8 @@ enum class Padding
 };
 
 /**
- * Uses data format "NCHW" (batch, channels, rows cols)
+ * Uses data format CHWN (channels, height, width, batch) since
+ * extract_image_patches returns this format
  */
 template<typename Activation>
 class Conv2D : public Layer
@@ -24,10 +25,14 @@ class Conv2D : public Layer
 public:
     Conv2D(int filters, int kernel_height, int kernel_width,
            const Tensor<2>::Dimensions &input_dims,
-           const Initializer &initializer = GlorotUniform());
+           const Initializer<2> &initializer = GlorotUniform<2>());
 
     ~Conv2D() override = default;
 
+    /**
+     * Uses the im2col method to convolve an input image
+     * @param inputs
+     */
     void Forward(const Tensor<4> &inputs) override;
 
     void Backward(const LossFunction &loss_function) override;
@@ -53,11 +58,26 @@ public:
     int GetOutputRank() const override;
 
 private:
+    /**
+     * Rotate image tensor clockwise 90 degrees, necessary for
+     * extract_image_patches() which expects NWHC format
+     *
+     * @param tensor   a tensor in format NHWC
+     * @return Tensor<4>
+     */
+    static auto NHWCToNWHC(const Tensor<4> &tensor);
+
+    /**
+     * Rotate image tensor counter-clockwise 90 degrees
+     * @param tensor   a tensor in format NWHC
+     * @return Tensor<4>
+     */
+    static auto NWHCToNHWC(const Tensor<4> &tensor);
+
     Tensor<4> X;
     Tensor<4> Z;
     Tensor<4> A;
     Tensor<4> filters;
-
 };
 
 }

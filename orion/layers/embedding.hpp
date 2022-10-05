@@ -14,7 +14,7 @@ class Embedding : public Layer
 {
 public:
     Embedding(int vocab_size, int embedding_dim, int input_len,
-              const Initializer &initializer = GlorotUniform());
+              const Initializer<2> &initializer = GlorotUniform());
 
     void Forward(const Tensor<2> &input) override;
 

@@ -8,7 +8,7 @@ namespace orion
 {
 
 Embedding::Embedding(int vocab_size, int embedding_dim, int input_length,
-                     const Initializer &initializer)
+                     const Initializer<2> &initializer)
         : embed_dims(embedding_dim),
           input_len(input_length)
 {

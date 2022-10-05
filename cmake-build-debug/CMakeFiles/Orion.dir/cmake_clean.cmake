@@ -3,6 +3,8 @@ file(REMOVE_RECURSE
   "../bin/Orion.pdb"
   "CMakeFiles/Orion.dir/orion/internal/batcher.cpp.o"
   "CMakeFiles/Orion.dir/orion/internal/batcher.cpp.o.d"
+  "CMakeFiles/Orion.dir/orion/internal/print_tensor.cpp.o"
+  "CMakeFiles/Orion.dir/orion/internal/print_tensor.cpp.o.d"
   "CMakeFiles/Orion.dir/orion/layers/conv2d.cpp.o"
   "CMakeFiles/Orion.dir/orion/layers/conv2d.cpp.o.d"
   "CMakeFiles/Orion.dir/orion/layers/embedding.cpp.o"

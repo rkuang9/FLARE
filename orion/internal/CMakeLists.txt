@@ -1,5 +1,6 @@
 set(SOURCES
         batcher.cpp
+        print_tensor.cpp
         )
 
 set(SOURCE_DIRECTORY)

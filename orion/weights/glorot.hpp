@@ -10,7 +10,8 @@
 namespace orion
 {
 
-class GlorotUniform : public Initializer
+template<Eigen::Index Rank = 2>
+class GlorotUniform : public Initializer<Rank>
 {
 public:
     /**
@@ -20,9 +21,9 @@ public:
      * @param dims      tensor dimensions e.g. Tensor<2>::Dimensions(2, 4)
      * @param fan_in    number of layer input units
      * @param fan_out   number of layer output units
-     * @return Tensor<2>
+     * @return Tensor<Rank>
      */
-    Tensor<2> Initialize(Tensor<2>::Dimensions dims,
+    Tensor<Rank> Initialize(typename Tensor<Rank>::Dimensions dims,
                          int fan_in, int fan_out) const override
     {
         Scalar limit = std::sqrt(6.0 / (fan_in + fan_out));
@@ -33,16 +34,17 @@ public:
     /**
      * Rank 3 equivalent
      */
-    Tensor<3> Initialize(Tensor<3>::Dimensions dims,
+    /*Tensor<3> Initialize(Tensor<3>::Dimensions dims,
                          int fan_in, int fan_out) const override
     {
         Scalar limit = std::sqrt(6.0 / (fan_in + fan_out));
         return RandomUniform<3>(dims, -limit, limit);
-    }
+    }*/
 };
 
 
-class GlorotNormal : public Initializer
+template<Eigen::Index Rank = 2>
+class GlorotNormal : public Initializer<Rank>
 {
 public:
     /**
@@ -54,7 +56,7 @@ public:
      * @param fan_out   number of layer output units
      * @return Tensor<3>
      */
-    Tensor<2> Initialize(Tensor<2>::Dimensions dims,
+    Tensor<Rank> Initialize(typename Tensor<Rank>::Dimensions dims,
                          int fan_in, int fan_out) const override
     {
         Scalar stddev = std::sqrt(2.0 / (fan_in + fan_out));
@@ -65,16 +67,13 @@ public:
     /**
      * Rank 3 equivalent
      */
-    Tensor<3> Initialize(Tensor<3>::Dimensions dims,
+    /*Tensor<3> Initialize(Tensor<3>::Dimensions dims,
                          int fan_in, int fan_out) const override
     {
         Scalar stddev = std::sqrt(2.0 / (fan_in + fan_out));
         return RandomNormal<3>(dims, 0.0, stddev);
-    }
+    }*/
 };
-
-using XavierUniform = GlorotUniform; // also known as Xavier
-using XavierNormal = GlorotNormal;
 
 }
 

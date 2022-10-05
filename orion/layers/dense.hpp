@@ -15,7 +15,7 @@ class Dense : public Layer
 {
 public:
     explicit Dense(int inputs, int outputs, bool use_bias,
-                   const Initializer &initializer = GlorotUniform());
+                   const Initializer<2> &initializer = GlorotUniform<2>());
 
     ~Dense() override = default;
 

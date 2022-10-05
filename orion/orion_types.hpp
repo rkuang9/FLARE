@@ -29,9 +29,21 @@ typedef float Scalar;
 typedef double Scalar;
 #endif
 
-
+#ifdef ORION_COLMAJOR
 template<int Rank, typename DataType = Scalar, int Storage = Eigen::ColMajor>
+#else
+template<int Rank, typename DataType = Scalar, int Storage = Eigen::RowMajor>
+#endif
 using Tensor = Eigen::Tensor<DataType, Rank, Storage>;
+
+#ifdef ORION_COLMAJOR
+template<int Rank, typename DataType = Scalar, int Storage = Eigen::ColMajor>
+#else
+template<int Rank, typename DataType = Scalar, int Storage = Eigen::RowMajor>
+#endif
+using Dims = typename Eigen::Tensor<DataType, Rank, Storage>::Dimensions;
+
+
 
 
 // a different view on an existing Tensor, doesn't copy
