@@ -4,6 +4,7 @@
 
 #include "sequential.hpp"
 #include <iomanip>
+#include <iostream>
 
 namespace orion
 {

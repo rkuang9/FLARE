@@ -5,6 +5,10 @@
 
 using namespace orion;
 
+void test_dim(const Stride &stride)
+{
+
+}
 
 /**
  * RowMajor expects NWHC (batch, width, height, channels)
@@ -12,6 +16,10 @@ using namespace orion;
  */
 void im2col_convolution()
 {
+    Kernel t(5, 2);
+    std::cout << t.TotalSize() << "\n";
+    std::cout << t.size();
+    return;
     int batch = 5;
     int channels = 3;
     int filters = 10;

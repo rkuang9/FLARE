@@ -30,33 +30,37 @@ typedef double Scalar;
 #endif
 
 #ifdef ORION_COLMAJOR
-template<int Rank, typename DataType = Scalar, int Storage = Eigen::ColMajor>
+template<int Rank, typename DataType = Scalar, int StorageType = Eigen::ColMajor>
 #else
-template<int Rank, typename DataType = Scalar, int Storage = Eigen::RowMajor>
+template<int Rank, typename DataType = Scalar, int StorageType = Eigen::RowMajor>
 #endif
-using Tensor = Eigen::Tensor<DataType, Rank, Storage>;
+using Tensor = Eigen::Tensor<DataType, Rank, StorageType>;
 
 #ifdef ORION_COLMAJOR
-template<int Rank, typename DataType = Scalar, int Storage = Eigen::ColMajor>
+template<int Rank, typename DataType = Scalar, int StorageType = Eigen::ColMajor>
 #else
-template<int Rank, typename DataType = Scalar, int Storage = Eigen::RowMajor>
+template<int Rank, typename DataType = Scalar, int StorageType = Eigen::RowMajor>
 #endif
-using Dims = typename Eigen::Tensor<DataType, Rank, Storage>::Dimensions;
+using Dims = typename Eigen::Tensor<DataType, Rank, StorageType>::Dimensions;
 
 
-
-
-// a different view on an existing Tensor, doesn't copy
+// Maps, create tensors on existing data
 template<int Rank>
 using TensorMap = Eigen::TensorMap<Tensor<Rank>>;
-
 
 template<int Rank>
 using TensorMapConst = Eigen::TensorMap<const Tensor<Rank>>;
 
-
+// contraction dimensions
 typedef Eigen::array<Eigen::IndexPair<int>, 1> ContractDim;
 typedef Eigen::IndexPair<int> Axes;
+
+
+// convolution typedefs
+typedef Eigen::PaddingType PaddingType;
+typedef Tensor<2>::Dimensions Stride;
+typedef Tensor<2>::Dimensions Kernel;
+typedef Tensor<2>::Dimensions Dilation;
 
 }
 

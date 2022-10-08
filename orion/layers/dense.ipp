@@ -60,7 +60,6 @@ Tensor<2> Dense<Activation>::operator()(const Tensor<2> &tensor) const
     orion_assert(this->w.dimension(1) == tensor.dimension(0),
                  "Dense::Forward EXPECTED " << this->w.dimension(1)
                          << " INPUT FEATURES, GOT " << tensor.dimension(0));
-    std::cerr << "overloaded operator () forward does not use bias\n";
     Tensor<2> z = this->w.contract(tensor, ContractDim{Axes(1, 0)});
     return Activation::Activate(z);
 }
@@ -183,11 +182,6 @@ void Dense<Activation>::SetBias(const Tensor<2> &bias)
         error_msg << this->name << " Dense::SetBias EXPECTED DIMENSIONS " <<
                 this->b.dimensions() << ", GOT " << bias.dimensions();
         throw std::invalid_argument(error_msg.str());
-    }
-
-    if (!this->use_bias) {
-        std::cerr << this->name << " use_bias is false, Dense::SetBias skipped\n";
-        return;
     }
 
     this->b = bias;

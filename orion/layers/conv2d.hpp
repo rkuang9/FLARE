@@ -10,21 +10,13 @@
 namespace orion
 {
 
-enum class Padding
-{
 
-};
-
-/**
- * Uses data format CHWN (channels, height, width, batch) since
- * extract_image_patches returns this format
- */
 template<typename Activation>
 class Conv2D : public Layer
 {
 public:
-    Conv2D(int filters, int kernel_height, int kernel_width,
-           const Tensor<2>::Dimensions &input_dims,
+    Conv2D(int filters, Kernel kernel, Stride stride,
+           Dilation dilation, PaddingType padding = PaddingType::PADDING_VALID,
            const Initializer<2> &initializer = GlorotUniform<2>());
 
     ~Conv2D() override = default;
@@ -78,6 +70,15 @@ private:
     Tensor<4> Z;
     Tensor<4> A;
     Tensor<4> filters;
+
+    Eigen::Index padding_w = 0;
+    Eigen::Index padding_h = 0;
+
+
+    PaddingType padding;
+    Kernel kernel;
+    Stride stride;
+    Dilation dilation;
 };
 
 }
