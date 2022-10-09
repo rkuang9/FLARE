@@ -497,6 +497,7 @@ CMakeFiles/Orion.dir/orion/metrics/loss.cpp.o: \
  /home/macross/Desktop/OrionNN/orion/layers/embedding.hpp \
  /home/macross/Desktop/OrionNN/orion/layers/globalaveragepooling1d.hpp \
  /home/macross/Desktop/OrionNN/orion/layers/conv2d.hpp \
+ /home/macross/Desktop/OrionNN/orion/layers/conv2d.ipp \
  /home/macross/Desktop/OrionNN/orion/internal/include_internal.hpp \
  /home/macross/Desktop/OrionNN/orion/internal/batcher.hpp \
  /home/macross/Desktop/OrionNN/orion/internal/print_tensor.hpp \

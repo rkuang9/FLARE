@@ -10,10 +10,11 @@
 namespace orion
 {
 
-template<Eigen::Index Rank = 2>
+template<int Rank = 2>
 class GlorotUniform : public Initializer<Rank>
 {
 public:
+    GlorotUniform() = default;
     /**
      * Glorot uniform initialization, creates a tensor on a uniform distribution
      * in range +- sqrt(6 / (fan_in + fan_out))
@@ -27,7 +28,7 @@ public:
                          int fan_in, int fan_out) const override
     {
         Scalar limit = std::sqrt(6.0 / (fan_in + fan_out));
-        return RandomUniform<2>(dims, -limit, limit);
+        return RandomUniform<Rank>(dims, -limit, limit);
     }
 
 
@@ -43,7 +44,7 @@ public:
 };
 
 
-template<Eigen::Index Rank = 2>
+template<int Rank = 2>
 class GlorotNormal : public Initializer<Rank>
 {
 public:
@@ -60,7 +61,7 @@ public:
                          int fan_in, int fan_out) const override
     {
         Scalar stddev = std::sqrt(2.0 / (fan_in + fan_out));
-        return RandomNormal<2>(dims, 0.0, stddev);
+        return RandomNormal<Rank>(dims, 0.0, stddev);
     }
 
 

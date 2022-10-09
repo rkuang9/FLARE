@@ -3,7 +3,7 @@ set(SOURCES
         dense.ipp
         embedding.cpp
         globalaveragepooling1d.cpp
-        conv2d.cpp
+        conv2d.ipp
         )
 
 set(SOURCE_DIRECTORY)

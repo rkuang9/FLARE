@@ -5,24 +5,45 @@
 
 using namespace orion;
 
-void test_dim(const Stride &stride)
-{
 
+void convolve_test()
+{
+    int batch = 2;
+    int channels = 3;
+    int filters = 3;
+    int filter_size = 2;
+
+    Tensor<3> preimage(1, 3, 3);
+    preimage.setValues({{{1, 1, 3}, {1, 1, 2}, {2, 4, 0}}});
+    Tensor<3> prekernel(1, 2, 2);
+    prekernel.setValues({{{1, 0}, {2, 1}}});
+
+    Tensor<4> image = preimage.reshape(Dims<4>(1, 3, 3, 1)).broadcast(
+            Dims<4>(batch, 1, 1, channels));
+    Tensor<4> kernel = prekernel.reshape(
+            Dims<4>(1, filter_size, filter_size, 1)).broadcast(
+            Dims<4>(filters, 1, 1, channels));
+    Sequential model {
+            new Conv2D<ReLU>(filters, Input(3, 3, 3), Kernel(2, 2), VALID),
+            new Conv2D<ReLU>(filters, Input(3, 3, 3), Kernel(2, 2), VALID),
+    };
+    Layer *conv2d = new Conv2D<ReLU>(filters, Input(3, 3, 3), Kernel(2, 2), VALID);
+    conv2d->SetWeights(kernel);
+    conv2d->Forward(image);
+    Tensor<4> conv = conv2d->GetOutput4D();
+    std::cout << "layer convolution result\n" << conv.shuffle(Dims<4>(0, 3, 1, 2)) << "\n " << conv.dimensions() << "\n-------END--------\n\n\n";
 }
 
+
 /**
- * RowMajor expects NWHC (batch, width, height, channels)
- * Need data format NHWC (batch, height, width, channels)
+ * An example of im2col where the kernel patches are extracted from the input,
+ * the patches and kernels are unrolled
  */
 void im2col_convolution()
 {
-    Kernel t(5, 2);
-    std::cout << t.TotalSize() << "\n";
-    std::cout << t.size();
-    return;
-    int batch = 5;
+    int batch = 2;
     int channels = 3;
-    int filters = 10;
+    int filters = 3;
     int filter_size = 2;
     int stride = 1;
     int output_w_h = 2;
@@ -74,9 +95,13 @@ void im2col_convolution()
     // inspiration from https://stackoverflow.com/questions/55532819/replicating-tensorflows-conv2d-operating-using-eigen-tensors
     // and the tensorflow file eigen_spatial_convolutions.h
     Tensor<4> conv = image
-            .extract_image_patches(filter_size, filter_size, stride, stride, stride, stride, Eigen::PADDING_VALID)
-            .reshape(Dims<3>(batch, patch_count, filter_size * filter_size * channels))
-            .contract(kernel.reshape(Dims<2>(filters, filter_size * filter_size * channels)), ContractDim{Axes(2, 1)})
+            .extract_image_patches(filter_size, filter_size, stride, stride, stride,
+                                   stride, Eigen::PADDING_VALID)
+            .reshape(Dims<3>(batch, patch_count,
+                             filter_size * filter_size * channels))
+            .contract(kernel.reshape(
+                              Dims<2>(filters, filter_size * filter_size * channels)),
+                      ContractDim{Axes(2, 1)})
             .reshape(Dims<4>(batch, output_w_h, output_w_h, filters));
 
     std::cout << "one liner compact, convolution result:\n"
@@ -92,6 +117,7 @@ int main()
 
 //https://github.com/nlohmann/json
     //extract_img_patches_testing();
+    convolve_test();
     im2col_convolution();
 
     auto stop = std::chrono::high_resolution_clock::now();

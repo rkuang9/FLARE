@@ -55,13 +55,6 @@ using TensorMapConst = Eigen::TensorMap<const Tensor<Rank>>;
 typedef Eigen::array<Eigen::IndexPair<int>, 1> ContractDim;
 typedef Eigen::IndexPair<int> Axes;
 
-
-// convolution typedefs
-typedef Eigen::PaddingType PaddingType;
-typedef Tensor<2>::Dimensions Stride;
-typedef Tensor<2>::Dimensions Kernel;
-typedef Tensor<2>::Dimensions Dilation;
-
 }
 
 

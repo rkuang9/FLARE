@@ -13,10 +13,11 @@ namespace orion
 /**
  * Base class for weight initialization
  */
-template<Eigen::Index Rank = 2>
+template<int Rank = 2>
 class Initializer
 {
 public:
+    Initializer() = default;
     virtual Tensor<Rank> Initialize(typename Tensor<Rank>::Dimensions dims,
                                  int fan_in, int fan_out) const = 0;
 };

@@ -97,14 +97,14 @@ public:
      * @return   layer's weights
      */
     virtual const Tensor<2> &GetWeights() const {}
-    virtual const Tensor<3> &GetWeights3D() const {}
+    virtual const Tensor<4> &GetWeights4D() const {}
 
 
     /**
      * @return   layer's loss gradients w.r.t weights (dL / dw)
      */
     virtual const Tensor<2> &GetWeightGradients() const {}
-    virtual const Tensor<3> &GetWeightGradients3D() const {}
+    virtual const Tensor<4> &GetWeightGradients4D() const {}
 
 
     /**
@@ -113,7 +113,7 @@ public:
      * @param weights   a rank 2/3 tensor
      */
     virtual void SetWeights(const Tensor<2> &weights) {}
-    virtual void SetWeights(const Tensor<3> &weights) {}
+    virtual void SetWeights(const Tensor<4> &weights) {}
 
 
     /**
@@ -127,7 +127,7 @@ public:
      * @param bias   a rank 2 tensor with dimensions (n, 1)
      */
     virtual void SetBias(const Tensor<2> &bias) {}
-    virtual void SetBias(const Tensor<3> &bias) {}
+    virtual void SetBias(const Tensor<4> &bias) {}
 
 
     /**

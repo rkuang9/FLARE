@@ -487,6 +487,7 @@ CMakeFiles/Orion.dir/orion/main.cpp.o: \
  /home/macross/Desktop/OrionNN/orion/layers/embedding.hpp \
  /home/macross/Desktop/OrionNN/orion/layers/globalaveragepooling1d.hpp \
  /home/macross/Desktop/OrionNN/orion/layers/conv2d.hpp \
+ /home/macross/Desktop/OrionNN/orion/layers/conv2d.ipp \
  /home/macross/Desktop/OrionNN/orion/metrics/include_metrics.hpp \
  /home/macross/Desktop/OrionNN/orion/metrics/metric.hpp \
  /home/macross/Desktop/OrionNN/orion/metrics/accuracy.hpp \

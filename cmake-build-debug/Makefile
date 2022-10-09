@@ -177,30 +177,6 @@ orion/internal/print_tensor.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Orion.dir/build.make CMakeFiles/Orion.dir/orion/internal/print_tensor.cpp.s
 .PHONY : orion/internal/print_tensor.cpp.s
 
-orion/layers/conv2d.o: orion/layers/conv2d.cpp.o
-.PHONY : orion/layers/conv2d.o
-
-# target to build an object file
-orion/layers/conv2d.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Orion.dir/build.make CMakeFiles/Orion.dir/orion/layers/conv2d.cpp.o
-.PHONY : orion/layers/conv2d.cpp.o
-
-orion/layers/conv2d.i: orion/layers/conv2d.cpp.i
-.PHONY : orion/layers/conv2d.i
-
-# target to preprocess a source file
-orion/layers/conv2d.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Orion.dir/build.make CMakeFiles/Orion.dir/orion/layers/conv2d.cpp.i
-.PHONY : orion/layers/conv2d.cpp.i
-
-orion/layers/conv2d.s: orion/layers/conv2d.cpp.s
-.PHONY : orion/layers/conv2d.s
-
-# target to generate assembly for a file
-orion/layers/conv2d.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Orion.dir/build.make CMakeFiles/Orion.dir/orion/layers/conv2d.cpp.s
-.PHONY : orion/layers/conv2d.cpp.s
-
 orion/layers/embedding.o: orion/layers/embedding.cpp.o
 .PHONY : orion/layers/embedding.o
 
@@ -480,9 +456,6 @@ help:
 	@echo "... orion/internal/print_tensor.o"
 	@echo "... orion/internal/print_tensor.i"
 	@echo "... orion/internal/print_tensor.s"
-	@echo "... orion/layers/conv2d.o"
-	@echo "... orion/layers/conv2d.i"
-	@echo "... orion/layers/conv2d.s"
 	@echo "... orion/layers/embedding.o"
 	@echo "... orion/layers/embedding.i"
 	@echo "... orion/layers/embedding.s"

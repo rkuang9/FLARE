@@ -5,8 +5,6 @@ file(REMOVE_RECURSE
   "CMakeFiles/Orion.dir/orion/internal/batcher.cpp.o.d"
   "CMakeFiles/Orion.dir/orion/internal/print_tensor.cpp.o"
   "CMakeFiles/Orion.dir/orion/internal/print_tensor.cpp.o.d"
-  "CMakeFiles/Orion.dir/orion/layers/conv2d.cpp.o"
-  "CMakeFiles/Orion.dir/orion/layers/conv2d.cpp.o.d"
   "CMakeFiles/Orion.dir/orion/layers/embedding.cpp.o"
   "CMakeFiles/Orion.dir/orion/layers/embedding.cpp.o.d"
   "CMakeFiles/Orion.dir/orion/layers/globalaveragepooling1d.cpp.o"
