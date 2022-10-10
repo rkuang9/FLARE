@@ -10,25 +10,13 @@
 namespace orion
 {
 
-// convolution typedefs
-typedef Tensor<3>::Dimensions Input;
-typedef Tensor<2>::Dimensions Kernel;
-typedef Tensor<2>::Dimensions Stride;
-typedef Tensor<2>::Dimensions Dilation;
-using Padding = Eigen::PaddingType;
-
-enum {
-    SAME = Eigen::PADDING_SAME,
-    VALID = Eigen::PADDING_VALID,
-};
-
 template<typename Activation>
 class Conv2D : public Layer
 {
 
 public:
     Conv2D(int num_filters, const Input &input, const Kernel &kernel,
-           //Padding padding = Padding::PADDING_VALID,
+            //Padding padding = Padding::PADDING_VALID,
            int padding,
            const Stride &stride = Stride(1, 1),
            const Initializer<4> &initializer = GlorotUniform<4>(),
@@ -66,12 +54,18 @@ public:
 
     int GetOutputRank() const override;
 
+    /**
+     * Convolve a batch of images with a batch of kernels
+     * @param input     Tensor<4> in format NHWC
+     * @param kernels   Tensor<4> in format NHWC, where N = # filters
+     * @param stride    Stride dimensions (h, w)
+     * @param dilation  Dilation dimensions (h, w)
+     * @param padding   Padding enum, PADDING_VALID or PADDING_SAME
+     * @return          Tensor<4> in format NHWC
+     */
     static Tensor<4> Convolve(const Tensor<4> &input, const Tensor<4> &kernels,
-                              Eigen::Index stride_h, Eigen::Index stride_w,
-                              Eigen::Index dilation_h, Eigen::Index dilation_w,
-                              Eigen::PaddingType padding,
-                              Eigen::Index num_patches,
-                              Eigen::Index output_h, Eigen::Index output_w);
+                              const Stride &stride, Padding padding,
+                              const Dilation &dilation = Dilation(1, 1));
 
 private:
     Tensor<4> X;

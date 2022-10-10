@@ -15,33 +15,20 @@ namespace orion
 class Swish
 {
 public:
-    static Tensor<2> Activate(const Tensor<2> &features)
+    template <int TensorRank>
+    static Tensor<TensorRank> Activate(const Tensor<TensorRank> &features)
     {
         // a = z/(1 + e^-z) = z * sigmoid(z)
         return features * features.sigmoid();
     }
 
 
-    static Tensor<3> Activate(const Tensor<3> &features)
-    {
-        return features * features.sigmoid();
-    }
-
-
-    static Tensor<2> Gradients(const Tensor<2> &features)
+    template <int TensorRank>
+    static Tensor<TensorRank> Gradients(const Tensor<TensorRank> &features)
     {
         auto one = static_cast<Scalar>(1.0);
 
-        Tensor<2> swish = features * features.sigmoid();
-        return swish + features.sigmoid() * (one - swish);
-    }
-
-
-    static Tensor<3> Gradients(const Tensor<3> &features)
-    {
-        auto one = static_cast<Scalar>(1.0);
-
-        Tensor<3> swish = features * features.sigmoid();
+        Tensor<TensorRank> swish = features * features.sigmoid();
         return swish + features.sigmoid() * (one - swish);
     }
 };

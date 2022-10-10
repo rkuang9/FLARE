@@ -4,6 +4,7 @@ set(SOURCES
         embedding.cpp
         globalaveragepooling1d.cpp
         conv2d.ipp
+        maxpooling2d.cpp
         )
 
 set(SOURCE_DIRECTORY)

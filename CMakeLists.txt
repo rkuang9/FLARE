@@ -8,6 +8,8 @@ set(CMAKE_CXX_STANDARD 17)
 #add_compile_definitions("ORION_NO_DEBUG") # uncomment for release builds
 #add_compile_definitions("EIGEN_NO_DEBUG") # uncomment for release builds
 
+# TODO: use simdjson for parsing datasets that come as JSON
+
 
 # ignore warning for virtual functions returning nothing
 set(CMAKE_CXX_FLAGS "-O2 -Wno-return-type -Wreturn-local-addr -static")

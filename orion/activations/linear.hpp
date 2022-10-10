@@ -13,29 +13,18 @@ namespace orion
 class Linear
 {
 public:
-    static Tensor<2> Activate(const Tensor<2> &features)
+    template<int TensorRank>
+    static Tensor<TensorRank> Activate(const Tensor<TensorRank> &features)
     {
         return features;
     }
 
 
-    static Tensor<3> Activate(const Tensor<3> &features)
-    {
-        return features;
-    }
-
-
-    static Tensor<2> Gradients(const Tensor<2> &features)
+    template<int TensorRank>
+    static Tensor<TensorRank> Gradients(const Tensor<TensorRank> &features)
     {
         auto one = static_cast<Scalar>(1.0);
-        return Tensor<2>(features.dimensions()).setConstant(one);
-    }
-
-
-    static Tensor<3> Gradients(const Tensor<3> &features)
-    {
-        auto one = static_cast<Scalar>(1.0);
-        return Tensor<3>(features.dimensions()).setConstant(one);
+        return Tensor<TensorRank>(features.dimensions()).setConstant(one);
     }
 };
 

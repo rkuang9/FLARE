@@ -7,7 +7,7 @@
 
 #include "weights.hpp"
 #include "glorot.hpp"
-//#include "he.hpp"
-//#include "lecun.hpp"
+#include "he.hpp"
+#include "lecun.hpp"
 
 #endif //ORION_INCLUDE_WEIGHTS_HPP

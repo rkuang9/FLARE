@@ -13,12 +13,14 @@ namespace orion
 /**
  * Base class for weight initialization
  */
-template<int Rank = 2>
+
+template<int TensorRank>
 class Initializer
 {
 public:
     Initializer() = default;
-    virtual Tensor<Rank> Initialize(typename Tensor<Rank>::Dimensions dims,
+
+    virtual Tensor<TensorRank> Initialize(const Dims<TensorRank> &dims,
                                  int fan_in, int fan_out) const = 0;
 };
 
@@ -27,20 +29,20 @@ public:
  * Creates a tensor on a uniform distribution within range min, max
  * Used by the various weight initializers
  *
- * @tparam Rank   tensor rank
+ * @tparam TensorRank   tensor rank
  * @param dims    tensor dimensions
  * @param min     maximum value
  * @param max     minimum value
  * @return Tensor<Rank>
  */
-template<int Rank>
-Tensor<Rank> RandomUniform(typename Tensor<Rank>::Dimensions dims,
+template<int TensorRank>
+Tensor<TensorRank> RandomUniform(const Dims<TensorRank> &dims,
                            Scalar min, Scalar max)
 {
     std::random_device random;
     std::mt19937_64 mt(random());
 
-    return Tensor<Rank>(dims).template nullaryExpr([&]() {
+    return Tensor<TensorRank>(dims).template nullaryExpr([&]() {
         return std::uniform_real_distribution<Scalar>(min, max)(mt);
     });
 }
@@ -50,20 +52,20 @@ Tensor<Rank> RandomUniform(typename Tensor<Rank>::Dimensions dims,
  * Creates a tensor on a real distribution within with mean 0, standard deviation stddev
  * Used by the various weight initializers
  *
- * @tparam Rank    tensor rank
+ * @tparam TensorRank    tensor rank
  * @param dims     tensor dimensions
  * @param mean     mean value
  * @param stddev   standard deviation
  * @return
  */
-template<int Rank>
-Tensor<Rank> RandomNormal(typename Tensor<Rank>::Dimensions dims,
+template<int TensorRank>
+Tensor<TensorRank> RandomNormal(const Dims<TensorRank> &dims,
                           Scalar mean, Scalar stddev)
 {
     std::random_device random;
     std::mt19937_64 mt(random());
 
-    return Tensor<Rank>(dims).template nullaryExpr([&]() {
+    return Tensor<TensorRank>(dims).template nullaryExpr([&]() {
         return std::normal_distribution<Scalar>(mean, stddev)(mt);
     });
 }

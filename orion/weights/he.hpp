@@ -10,7 +10,8 @@
 namespace orion
 {
 
-class HeUniform : public Initializer
+template<int TensorRank>
+class HeUniform : public Initializer<TensorRank>
 {
 public:
     /**
@@ -22,27 +23,17 @@ public:
      * @param fan_out   number of layer output units
      * @return Tensor<2>
      */
-    Tensor<2> Initialize(Tensor<2>::Dimensions dims,
+    Tensor<TensorRank> Initialize(const Dims<TensorRank> &dims,
                          int fan_in, int fan_out) const override
     {
         Scalar limit = std::sqrt(6.0 / fan_in);
-        return RandomUniform<2>(dims, -limit, limit);
-    }
-
-
-    /**
-     * Rank 3 equivalent
-     */
-    Tensor<3> Initialize(Tensor<3>::Dimensions dims,
-                         int fan_in, int fan_out) const override
-    {
-        Scalar limit = std::sqrt(6.0 / fan_in);
-        return RandomUniform<3>(dims, -limit, limit);
+        return RandomUniform<TensorRank>(dims, -limit, limit);
     }
 };
 
 
-class HeNormal : public Initializer
+template <int TensorRank>
+class HeNormal : public Initializer<TensorRank>
 {
 public:
     /**
@@ -54,22 +45,11 @@ public:
      * @param fan_out   number of layer output units
      * @return Tensor<3>
      */
-    Tensor<2> Initialize(Tensor<2>::Dimensions dims,
+    Tensor<TensorRank> Initialize(const Dims<TensorRank> &dims,
                          int fan_in, int fan_out) const override
     {
         Scalar stddev = std::sqrt(2.0 / fan_in);
-        return RandomNormal<2>(dims, 0.0, stddev);
-    }
-
-
-    /**
-     * Rank 3 equivalent
-     */
-    Tensor<3> Initialize(Tensor<3>::Dimensions dims,
-                         int fan_in, int fan_out) const override
-    {
-        Scalar stddev = std::sqrt(2.0 / fan_in);
-        return RandomNormal<3>(dims, 0.0, stddev);
+        return RandomNormal<TensorRank>(dims, 0.0, stddev);
     }
 };
 

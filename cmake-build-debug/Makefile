@@ -225,6 +225,30 @@ orion/layers/globalaveragepooling1d.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Orion.dir/build.make CMakeFiles/Orion.dir/orion/layers/globalaveragepooling1d.cpp.s
 .PHONY : orion/layers/globalaveragepooling1d.cpp.s
 
+orion/layers/maxpooling2d.o: orion/layers/maxpooling2d.cpp.o
+.PHONY : orion/layers/maxpooling2d.o
+
+# target to build an object file
+orion/layers/maxpooling2d.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Orion.dir/build.make CMakeFiles/Orion.dir/orion/layers/maxpooling2d.cpp.o
+.PHONY : orion/layers/maxpooling2d.cpp.o
+
+orion/layers/maxpooling2d.i: orion/layers/maxpooling2d.cpp.i
+.PHONY : orion/layers/maxpooling2d.i
+
+# target to preprocess a source file
+orion/layers/maxpooling2d.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Orion.dir/build.make CMakeFiles/Orion.dir/orion/layers/maxpooling2d.cpp.i
+.PHONY : orion/layers/maxpooling2d.cpp.i
+
+orion/layers/maxpooling2d.s: orion/layers/maxpooling2d.cpp.s
+.PHONY : orion/layers/maxpooling2d.s
+
+# target to generate assembly for a file
+orion/layers/maxpooling2d.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Orion.dir/build.make CMakeFiles/Orion.dir/orion/layers/maxpooling2d.cpp.s
+.PHONY : orion/layers/maxpooling2d.cpp.s
+
 orion/loss/binary_cross_entropy.o: orion/loss/binary_cross_entropy.cpp.o
 .PHONY : orion/loss/binary_cross_entropy.o
 
@@ -462,6 +486,9 @@ help:
 	@echo "... orion/layers/globalaveragepooling1d.o"
 	@echo "... orion/layers/globalaveragepooling1d.i"
 	@echo "... orion/layers/globalaveragepooling1d.s"
+	@echo "... orion/layers/maxpooling2d.o"
+	@echo "... orion/layers/maxpooling2d.i"
+	@echo "... orion/layers/maxpooling2d.s"
 	@echo "... orion/loss/binary_cross_entropy.o"
 	@echo "... orion/loss/binary_cross_entropy.i"
 	@echo "... orion/loss/binary_cross_entropy.s"

@@ -14,7 +14,8 @@ namespace orion
 class SELU
 {
 public:
-    static Tensor<2> Activate(const Tensor<2> &features)
+    template<int TensorRank>
+    static Tensor<TensorRank> Activate(const Tensor<TensorRank> &features)
     {
         // values from the paper, but tensorflow uses alpha=1.7580993408473768599402175208123
         auto alpha = static_cast<Scalar>(1.6732632423543772848170429916717);
@@ -28,33 +29,8 @@ public:
     }
 
 
-    static Tensor<3> Activate(const Tensor<3> &features)
-    {
-        auto alpha = static_cast<Scalar>(1.6732632423543772848170429916717);
-        auto scale = static_cast<Scalar>(1.0507009873554804934193349852946);
-        auto zero = static_cast<Scalar>(0.0);
-        auto one = static_cast<Scalar>(1.0);
-
-        return scale * (features > zero).select(
-                features,
-                alpha * (features.exp() - features.constant(one)));
-    }
-
-
-    static Tensor<2> Gradients(const Tensor<2> &features)
-    {
-        auto alpha = static_cast<Scalar>(1.6732632423543772848170429916717);
-        auto scale = static_cast<Scalar>(1.0507009873554804934193349852946);
-        auto zero = static_cast<Scalar>(0.0);
-        auto one = static_cast<Scalar>(1.0);
-
-        return scale * (features > zero).select(
-                features.constant(one),
-                alpha * features.exp());
-    }
-
-
-    static Tensor<3> Gradients(const Tensor<3> &features)
+    template<int TensorRank>
+    static Tensor<TensorRank> Gradients(const Tensor<TensorRank> &features)
     {
         auto alpha = static_cast<Scalar>(1.6732632423543772848170429916717);
         auto scale = static_cast<Scalar>(1.0507009873554804934193349852946);

@@ -35,8 +35,8 @@ void XOR()
 
     model.Compile(loss, opt);
 
-    // train for 30 epochs with batch size 1, larger batch sizes will not work well
-    model.Fit(training_set, labels, 30, 32);
+    // batch size > 1 does not perform well for this example
+    model.Fit(training_set, labels, 30, 1);
 
     Tensor<2> p1(2, 1), p2(2, 1), p3(2, 1), p4(2, 1);
     p1.setValues({{1}, {1}});

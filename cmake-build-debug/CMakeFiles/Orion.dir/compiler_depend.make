@@ -1555,6 +1555,8 @@ CMakeFiles/Orion.dir/orion/layers/embedding.cpp.o: ../orion/layers/embedding.cpp
   ../orion/weights/include_weights.hpp \
   ../orion/weights/weights.hpp \
   ../orion/weights/glorot.hpp \
+  ../orion/weights/he.hpp \
+  ../orion/weights/lecun.hpp \
   ../orion/optimizers/include_optimizers.hpp \
   ../orion/optimizers/optimizer.hpp \
   /usr/include/c++/11/map \
@@ -2097,6 +2099,552 @@ CMakeFiles/Orion.dir/orion/layers/globalaveragepooling1d.cpp.o: ../orion/layers/
   ../orion/weights/include_weights.hpp \
   ../orion/weights/weights.hpp \
   ../orion/weights/glorot.hpp \
+  ../orion/weights/he.hpp \
+  ../orion/weights/lecun.hpp \
+  ../orion/optimizers/include_optimizers.hpp \
+  ../orion/optimizers/optimizer.hpp \
+  /usr/include/c++/11/map \
+  /usr/include/c++/11/bits/stl_tree.h \
+  /usr/include/c++/11/bits/stl_map.h \
+  /usr/include/c++/11/bits/stl_multimap.h \
+  ../orion/optimizers/adam.hpp \
+  ../orion/optimizers/sgd.hpp \
+  ../orion/optimizers/rmsprop.hpp \
+  ../orion/loss/include_loss.hpp \
+  ../orion/loss/loss_function.hpp \
+  ../orion/loss/binary_cross_entropy.hpp \
+  ../orion/loss/mean_squared_error.hpp
+
+CMakeFiles/Orion.dir/orion/layers/maxpooling2d.cpp.o: ../orion/layers/maxpooling2d.cpp \
+  /usr/include/stdc-predef.h \
+  ../orion/layers/maxpooling2d.hpp \
+  ../orion/layers/layer.hpp \
+  ../orion/orion_types.hpp \
+  ../lib/Eigen/unsupported/Eigen/CXX11/Tensor \
+  ../lib/Eigen/Eigen/Core \
+  ../lib/Eigen/Eigen/src/Core/util/DisableStupidWarnings.h \
+  ../lib/Eigen/Eigen/src/Core/util/Macros.h \
+  ../lib/Eigen/Eigen/src/Core/InternalHeaderCheck.h \
+  /usr/include/c++/11/cmath \
+  /usr/include/x86_64-linux-gnu/c++/11/bits/c++config.h \
+  /usr/include/x86_64-linux-gnu/c++/11/bits/os_defines.h \
+  /usr/include/features.h \
+  /usr/include/features-time64.h \
+  /usr/include/x86_64-linux-gnu/bits/wordsize.h \
+  /usr/include/x86_64-linux-gnu/bits/timesize.h \
+  /usr/include/x86_64-linux-gnu/sys/cdefs.h \
+  /usr/include/x86_64-linux-gnu/bits/long-double.h \
+  /usr/include/x86_64-linux-gnu/gnu/stubs.h \
+  /usr/include/x86_64-linux-gnu/gnu/stubs-64.h \
+  /usr/include/x86_64-linux-gnu/c++/11/bits/cpu_defines.h \
+  /usr/include/c++/11/pstl/pstl_config.h \
+  /usr/include/c++/11/bits/cpp_type_traits.h \
+  /usr/include/c++/11/ext/type_traits.h \
+  /usr/include/math.h \
+  /usr/include/x86_64-linux-gnu/bits/libc-header-start.h \
+  /usr/include/x86_64-linux-gnu/bits/types.h \
+  /usr/include/x86_64-linux-gnu/bits/typesizes.h \
+  /usr/include/x86_64-linux-gnu/bits/time64.h \
+  /usr/include/x86_64-linux-gnu/bits/math-vector.h \
+  /usr/include/x86_64-linux-gnu/bits/libm-simd-decl-stubs.h \
+  /usr/include/x86_64-linux-gnu/bits/floatn.h \
+  /usr/include/x86_64-linux-gnu/bits/floatn-common.h \
+  /usr/include/x86_64-linux-gnu/bits/flt-eval-method.h \
+  /usr/include/x86_64-linux-gnu/bits/fp-logb.h \
+  /usr/include/x86_64-linux-gnu/bits/fp-fast.h \
+  /usr/include/x86_64-linux-gnu/bits/mathcalls-helper-functions.h \
+  /usr/include/x86_64-linux-gnu/bits/mathcalls.h \
+  /usr/include/x86_64-linux-gnu/bits/mathcalls-narrow.h \
+  /usr/include/x86_64-linux-gnu/bits/iscanonical.h \
+  /usr/include/c++/11/bits/std_abs.h \
+  /usr/include/stdlib.h \
+  /usr/lib/gcc/x86_64-linux-gnu/11/include/stddef.h \
+  /usr/include/x86_64-linux-gnu/bits/waitflags.h \
+  /usr/include/x86_64-linux-gnu/bits/waitstatus.h \
+  /usr/include/x86_64-linux-gnu/bits/types/locale_t.h \
+  /usr/include/x86_64-linux-gnu/bits/types/__locale_t.h \
+  /usr/include/x86_64-linux-gnu/sys/types.h \
+  /usr/include/x86_64-linux-gnu/bits/types/clock_t.h \
+  /usr/include/x86_64-linux-gnu/bits/types/clockid_t.h \
+  /usr/include/x86_64-linux-gnu/bits/types/time_t.h \
+  /usr/include/x86_64-linux-gnu/bits/types/timer_t.h \
+  /usr/include/x86_64-linux-gnu/bits/stdint-intn.h \
+  /usr/include/endian.h \
+  /usr/include/x86_64-linux-gnu/bits/endian.h \
+  /usr/include/x86_64-linux-gnu/bits/endianness.h \
+  /usr/include/x86_64-linux-gnu/bits/byteswap.h \
+  /usr/include/x86_64-linux-gnu/bits/uintn-identity.h \
+  /usr/include/x86_64-linux-gnu/sys/select.h \
+  /usr/include/x86_64-linux-gnu/bits/select.h \
+  /usr/include/x86_64-linux-gnu/bits/types/sigset_t.h \
+  /usr/include/x86_64-linux-gnu/bits/types/__sigset_t.h \
+  /usr/include/x86_64-linux-gnu/bits/types/struct_timeval.h \
+  /usr/include/x86_64-linux-gnu/bits/types/struct_timespec.h \
+  /usr/include/x86_64-linux-gnu/bits/select2.h \
+  /usr/include/x86_64-linux-gnu/bits/pthreadtypes.h \
+  /usr/include/x86_64-linux-gnu/bits/thread-shared-types.h \
+  /usr/include/x86_64-linux-gnu/bits/pthreadtypes-arch.h \
+  /usr/include/x86_64-linux-gnu/bits/atomic_wide_counter.h \
+  /usr/include/x86_64-linux-gnu/bits/struct_mutex.h \
+  /usr/include/x86_64-linux-gnu/bits/struct_rwlock.h \
+  /usr/include/alloca.h \
+  /usr/include/x86_64-linux-gnu/bits/stdlib-bsearch.h \
+  /usr/include/x86_64-linux-gnu/bits/stdlib-float.h \
+  /usr/include/x86_64-linux-gnu/bits/stdlib.h \
+  /usr/include/c++/11/bits/specfun.h \
+  /usr/include/c++/11/bits/stl_algobase.h \
+  /usr/include/c++/11/bits/functexcept.h \
+  /usr/include/c++/11/bits/exception_defines.h \
+  /usr/include/c++/11/ext/numeric_traits.h \
+  /usr/include/c++/11/bits/stl_pair.h \
+  /usr/include/c++/11/bits/move.h \
+  /usr/include/c++/11/type_traits \
+  /usr/include/c++/11/bits/stl_iterator_base_types.h \
+  /usr/include/c++/11/bits/stl_iterator_base_funcs.h \
+  /usr/include/c++/11/bits/concept_check.h \
+  /usr/include/c++/11/debug/assertions.h \
+  /usr/include/c++/11/bits/stl_iterator.h \
+  /usr/include/c++/11/bits/ptr_traits.h \
+  /usr/include/c++/11/debug/debug.h \
+  /usr/include/c++/11/bits/predefined_ops.h \
+  /usr/include/c++/11/limits \
+  /usr/include/c++/11/tr1/gamma.tcc \
+  /usr/include/c++/11/tr1/special_function_util.h \
+  /usr/include/c++/11/tr1/bessel_function.tcc \
+  /usr/include/c++/11/tr1/beta_function.tcc \
+  /usr/include/c++/11/tr1/ell_integral.tcc \
+  /usr/include/c++/11/tr1/exp_integral.tcc \
+  /usr/include/c++/11/tr1/hypergeometric.tcc \
+  /usr/include/c++/11/tr1/legendre_function.tcc \
+  /usr/include/c++/11/tr1/modified_bessel_func.tcc \
+  /usr/include/c++/11/tr1/poly_hermite.tcc \
+  /usr/include/c++/11/tr1/poly_laguerre.tcc \
+  /usr/include/c++/11/tr1/riemann_zeta.tcc \
+  ../lib/Eigen/Eigen/src/Core/util/ConfigureVectorization.h \
+  /usr/lib/gcc/x86_64-linux-gnu/11/include/mmintrin.h \
+  /usr/lib/gcc/x86_64-linux-gnu/11/include/emmintrin.h \
+  /usr/lib/gcc/x86_64-linux-gnu/11/include/xmmintrin.h \
+  /usr/lib/gcc/x86_64-linux-gnu/11/include/mm_malloc.h \
+  /usr/include/c++/11/stdlib.h \
+  /usr/include/c++/11/cstdlib \
+  /usr/include/c++/11/new \
+  /usr/include/c++/11/bits/exception.h \
+  /usr/include/c++/11/complex \
+  /usr/include/c++/11/sstream \
+  /usr/include/c++/11/istream \
+  /usr/include/c++/11/ios \
+  /usr/include/c++/11/iosfwd \
+  /usr/include/c++/11/bits/stringfwd.h \
+  /usr/include/c++/11/bits/memoryfwd.h \
+  /usr/include/c++/11/bits/postypes.h \
+  /usr/include/c++/11/cwchar \
+  /usr/include/wchar.h \
+  /usr/lib/gcc/x86_64-linux-gnu/11/include/stdarg.h \
+  /usr/include/x86_64-linux-gnu/bits/wchar.h \
+  /usr/include/x86_64-linux-gnu/bits/types/wint_t.h \
+  /usr/include/x86_64-linux-gnu/bits/types/mbstate_t.h \
+  /usr/include/x86_64-linux-gnu/bits/types/__mbstate_t.h \
+  /usr/include/x86_64-linux-gnu/bits/types/__FILE.h \
+  /usr/include/x86_64-linux-gnu/bits/types/FILE.h \
+  /usr/include/x86_64-linux-gnu/bits/wchar2.h \
+  /usr/include/c++/11/exception \
+  /usr/include/c++/11/bits/exception_ptr.h \
+  /usr/include/c++/11/bits/cxxabi_init_exception.h \
+  /usr/include/c++/11/typeinfo \
+  /usr/include/c++/11/bits/hash_bytes.h \
+  /usr/include/c++/11/bits/nested_exception.h \
+  /usr/include/c++/11/bits/char_traits.h \
+  /usr/include/c++/11/cstdint \
+  /usr/lib/gcc/x86_64-linux-gnu/11/include/stdint.h \
+  /usr/include/stdint.h \
+  /usr/include/x86_64-linux-gnu/bits/stdint-uintn.h \
+  /usr/include/c++/11/bits/localefwd.h \
+  /usr/include/x86_64-linux-gnu/c++/11/bits/c++locale.h \
+  /usr/include/c++/11/clocale \
+  /usr/include/locale.h \
+  /usr/include/x86_64-linux-gnu/bits/locale.h \
+  /usr/include/c++/11/cctype \
+  /usr/include/ctype.h \
+  /usr/include/c++/11/bits/ios_base.h \
+  /usr/include/c++/11/ext/atomicity.h \
+  /usr/include/x86_64-linux-gnu/c++/11/bits/gthr.h \
+  /usr/include/x86_64-linux-gnu/c++/11/bits/gthr-default.h \
+  /usr/include/pthread.h \
+  /usr/include/sched.h \
+  /usr/include/x86_64-linux-gnu/bits/sched.h \
+  /usr/include/x86_64-linux-gnu/bits/types/struct_sched_param.h \
+  /usr/include/x86_64-linux-gnu/bits/cpu-set.h \
+  /usr/include/time.h \
+  /usr/include/x86_64-linux-gnu/bits/time.h \
+  /usr/include/x86_64-linux-gnu/bits/timex.h \
+  /usr/include/x86_64-linux-gnu/bits/types/struct_tm.h \
+  /usr/include/x86_64-linux-gnu/bits/types/struct_itimerspec.h \
+  /usr/include/x86_64-linux-gnu/bits/setjmp.h \
+  /usr/include/x86_64-linux-gnu/bits/types/struct___jmp_buf_tag.h \
+  /usr/include/x86_64-linux-gnu/bits/pthread_stack_min-dynamic.h \
+  /usr/include/x86_64-linux-gnu/c++/11/bits/atomic_word.h \
+  /usr/include/x86_64-linux-gnu/sys/single_threaded.h \
+  /usr/include/c++/11/bits/locale_classes.h \
+  /usr/include/c++/11/string \
+  /usr/include/c++/11/bits/allocator.h \
+  /usr/include/x86_64-linux-gnu/c++/11/bits/c++allocator.h \
+  /usr/include/c++/11/ext/new_allocator.h \
+  /usr/include/c++/11/bits/ostream_insert.h \
+  /usr/include/c++/11/bits/cxxabi_forced.h \
+  /usr/include/c++/11/bits/stl_function.h \
+  /usr/include/c++/11/backward/binders.h \
+  /usr/include/c++/11/bits/range_access.h \
+  /usr/include/c++/11/initializer_list \
+  /usr/include/c++/11/bits/basic_string.h \
+  /usr/include/c++/11/ext/alloc_traits.h \
+  /usr/include/c++/11/bits/alloc_traits.h \
+  /usr/include/c++/11/bits/stl_construct.h \
+  /usr/include/c++/11/string_view \
+  /usr/include/c++/11/bits/functional_hash.h \
+  /usr/include/c++/11/bits/string_view.tcc \
+  /usr/include/c++/11/ext/string_conversions.h \
+  /usr/include/c++/11/cstdio \
+  /usr/include/stdio.h \
+  /usr/include/x86_64-linux-gnu/bits/types/__fpos_t.h \
+  /usr/include/x86_64-linux-gnu/bits/types/__fpos64_t.h \
+  /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h \
+  /usr/include/x86_64-linux-gnu/bits/types/cookie_io_functions_t.h \
+  /usr/include/x86_64-linux-gnu/bits/stdio_lim.h \
+  /usr/include/x86_64-linux-gnu/bits/stdio.h \
+  /usr/include/x86_64-linux-gnu/bits/stdio2.h \
+  /usr/include/c++/11/cerrno \
+  /usr/include/errno.h \
+  /usr/include/x86_64-linux-gnu/bits/errno.h \
+  /usr/include/linux/errno.h \
+  /usr/include/x86_64-linux-gnu/asm/errno.h \
+  /usr/include/asm-generic/errno.h \
+  /usr/include/asm-generic/errno-base.h \
+  /usr/include/x86_64-linux-gnu/bits/types/error_t.h \
+  /usr/include/c++/11/bits/charconv.h \
+  /usr/include/c++/11/bits/basic_string.tcc \
+  /usr/include/c++/11/bits/locale_classes.tcc \
+  /usr/include/c++/11/system_error \
+  /usr/include/x86_64-linux-gnu/c++/11/bits/error_constants.h \
+  /usr/include/c++/11/stdexcept \
+  /usr/include/c++/11/streambuf \
+  /usr/include/c++/11/bits/streambuf.tcc \
+  /usr/include/c++/11/bits/basic_ios.h \
+  /usr/include/c++/11/bits/locale_facets.h \
+  /usr/include/c++/11/cwctype \
+  /usr/include/wctype.h \
+  /usr/include/x86_64-linux-gnu/bits/wctype-wchar.h \
+  /usr/include/x86_64-linux-gnu/c++/11/bits/ctype_base.h \
+  /usr/include/c++/11/bits/streambuf_iterator.h \
+  /usr/include/x86_64-linux-gnu/c++/11/bits/ctype_inline.h \
+  /usr/include/c++/11/bits/locale_facets.tcc \
+  /usr/include/c++/11/bits/basic_ios.tcc \
+  /usr/include/c++/11/ostream \
+  /usr/include/c++/11/bits/ostream.tcc \
+  /usr/include/c++/11/bits/istream.tcc \
+  /usr/include/c++/11/bits/sstream.tcc \
+  ../lib/Eigen/Eigen/src/Core/util/MKL_support.h \
+  /usr/include/c++/11/cstddef \
+  /usr/include/c++/11/cassert \
+  /usr/include/assert.h \
+  /usr/include/c++/11/functional \
+  /usr/include/c++/11/tuple \
+  /usr/include/c++/11/utility \
+  /usr/include/c++/11/bits/stl_relops.h \
+  /usr/include/c++/11/array \
+  /usr/include/c++/11/bits/uses_allocator.h \
+  /usr/include/c++/11/bits/invoke.h \
+  /usr/include/c++/11/bits/refwrap.h \
+  /usr/include/c++/11/bits/std_function.h \
+  /usr/include/c++/11/unordered_map \
+  /usr/include/c++/11/ext/aligned_buffer.h \
+  /usr/include/c++/11/bits/hashtable.h \
+  /usr/include/c++/11/bits/hashtable_policy.h \
+  /usr/include/c++/11/bits/enable_special_members.h \
+  /usr/include/c++/11/bits/node_handle.h \
+  /usr/include/c++/11/bits/unordered_map.h \
+  /usr/include/c++/11/bits/erase_if.h \
+  /usr/include/c++/11/vector \
+  /usr/include/c++/11/bits/stl_uninitialized.h \
+  /usr/include/c++/11/bits/stl_vector.h \
+  /usr/include/c++/11/bits/stl_bvector.h \
+  /usr/include/c++/11/bits/vector.tcc \
+  /usr/include/c++/11/bits/stl_algo.h \
+  /usr/include/c++/11/bits/algorithmfwd.h \
+  /usr/include/c++/11/bits/stl_heap.h \
+  /usr/include/c++/11/bits/stl_tempbuf.h \
+  /usr/include/c++/11/bits/uniform_int_dist.h \
+  /usr/include/c++/11/cstring \
+  /usr/include/string.h \
+  /usr/include/strings.h \
+  /usr/include/x86_64-linux-gnu/bits/strings_fortified.h \
+  /usr/include/x86_64-linux-gnu/bits/string_fortified.h \
+  /usr/include/c++/11/climits \
+  /usr/lib/gcc/x86_64-linux-gnu/11/include/limits.h \
+  /usr/lib/gcc/x86_64-linux-gnu/11/include/syslimits.h \
+  /usr/include/limits.h \
+  /usr/include/x86_64-linux-gnu/bits/posix1_lim.h \
+  /usr/include/x86_64-linux-gnu/bits/local_lim.h \
+  /usr/include/linux/limits.h \
+  /usr/include/x86_64-linux-gnu/bits/posix2_lim.h \
+  /usr/include/x86_64-linux-gnu/bits/xopen_lim.h \
+  /usr/include/x86_64-linux-gnu/bits/uio_lim.h \
+  /usr/include/c++/11/algorithm \
+  /usr/include/c++/11/pstl/glue_algorithm_defs.h \
+  /usr/include/c++/11/pstl/execution_defs.h \
+  ../lib/Eigen/Eigen/src/Core/util/Constants.h \
+  ../lib/Eigen/Eigen/src/Core/util/Meta.h \
+  ../lib/Eigen/Eigen/src/Core/util/ForwardDeclarations.h \
+  ../lib/Eigen/Eigen/src/Core/util/StaticAssert.h \
+  ../lib/Eigen/Eigen/src/Core/util/XprHelper.h \
+  ../lib/Eigen/Eigen/src/Core/util/Memory.h \
+  ../lib/Eigen/Eigen/src/Core/util/IntegralConstant.h \
+  ../lib/Eigen/Eigen/src/Core/util/Serializer.h \
+  ../lib/Eigen/Eigen/src/Core/util/SymbolicIndex.h \
+  ../lib/Eigen/Eigen/src/Core/NumTraits.h \
+  ../lib/Eigen/Eigen/src/Core/InternalHeaderCheck.h \
+  ../lib/Eigen/Eigen/src/Core/MathFunctions.h \
+  ../lib/Eigen/Eigen/src/Core/GenericPacketMath.h \
+  ../lib/Eigen/Eigen/src/Core/MathFunctionsImpl.h \
+  ../lib/Eigen/Eigen/src/Core/arch/Default/ConjHelper.h \
+  ../lib/Eigen/Eigen/src/Core/InternalHeaderCheck.h \
+  ../lib/Eigen/Eigen/src/Core/arch/Default/Half.h \
+  ../lib/Eigen/Eigen/src/Core/arch/Default/BFloat16.h \
+  ../lib/Eigen/Eigen/src/Core/arch/Default/TypeCasting.h \
+  ../lib/Eigen/Eigen/src/Core/arch/Default/GenericPacketMathFunctionsFwd.h \
+  ../lib/Eigen/Eigen/src/Core/arch/SSE/PacketMath.h \
+  ../lib/Eigen/Eigen/src/Core/InternalHeaderCheck.h \
+  ../lib/Eigen/Eigen/src/Core/arch/SSE/TypeCasting.h \
+  ../lib/Eigen/Eigen/src/Core/arch/SSE/MathFunctions.h \
+  ../lib/Eigen/Eigen/src/Core/arch/SSE/Complex.h \
+  ../lib/Eigen/Eigen/src/Core/arch/Default/Settings.h \
+  ../lib/Eigen/Eigen/src/Core/arch/Default/GenericPacketMathFunctions.h \
+  ../lib/Eigen/Eigen/src/Core/functors/TernaryFunctors.h \
+  ../lib/Eigen/Eigen/src/Core/InternalHeaderCheck.h \
+  ../lib/Eigen/Eigen/src/Core/functors/BinaryFunctors.h \
+  ../lib/Eigen/Eigen/src/Core/functors/UnaryFunctors.h \
+  ../lib/Eigen/Eigen/src/Core/functors/NullaryFunctors.h \
+  ../lib/Eigen/Eigen/src/Core/functors/StlFunctors.h \
+  ../lib/Eigen/Eigen/src/Core/functors/AssignmentFunctors.h \
+  ../lib/Eigen/Eigen/src/Core/util/IndexedViewHelper.h \
+  ../lib/Eigen/Eigen/src/Core/util/ReshapedHelper.h \
+  ../lib/Eigen/Eigen/src/Core/ArithmeticSequence.h \
+  ../lib/Eigen/Eigen/src/Core/IO.h \
+  ../lib/Eigen/Eigen/src/Core/DenseCoeffsBase.h \
+  ../lib/Eigen/Eigen/src/Core/DenseBase.h \
+  ../lib/Eigen/Eigen/src/plugins/CommonCwiseUnaryOps.h \
+  ../lib/Eigen/Eigen/src/plugins/BlockMethods.h \
+  ../lib/Eigen/Eigen/src/plugins/IndexedViewMethods.h \
+  ../lib/Eigen/Eigen/src/plugins/IndexedViewMethods.h \
+  ../lib/Eigen/Eigen/src/plugins/ReshapedMethods.h \
+  ../lib/Eigen/Eigen/src/plugins/ReshapedMethods.h \
+  ../lib/Eigen/Eigen/src/Core/MatrixBase.h \
+  ../lib/Eigen/Eigen/src/plugins/CommonCwiseBinaryOps.h \
+  ../lib/Eigen/Eigen/src/plugins/MatrixCwiseUnaryOps.h \
+  ../lib/Eigen/Eigen/src/plugins/MatrixCwiseBinaryOps.h \
+  ../lib/Eigen/Eigen/src/Core/EigenBase.h \
+  ../lib/Eigen/Eigen/src/Core/Product.h \
+  ../lib/Eigen/Eigen/src/Core/CoreEvaluators.h \
+  ../lib/Eigen/Eigen/src/Core/AssignEvaluator.h \
+  ../lib/Eigen/Eigen/src/Core/Assign.h \
+  ../lib/Eigen/Eigen/src/Core/ArrayBase.h \
+  ../lib/Eigen/Eigen/src/plugins/ArrayCwiseUnaryOps.h \
+  ../lib/Eigen/Eigen/src/plugins/ArrayCwiseBinaryOps.h \
+  ../lib/Eigen/Eigen/src/Core/util/BlasUtil.h \
+  ../lib/Eigen/Eigen/src/Core/DenseStorage.h \
+  ../lib/Eigen/Eigen/src/Core/NestByValue.h \
+  ../lib/Eigen/Eigen/src/Core/ReturnByValue.h \
+  ../lib/Eigen/Eigen/src/Core/NoAlias.h \
+  ../lib/Eigen/Eigen/src/Core/PlainObjectBase.h \
+  ../lib/Eigen/Eigen/src/Core/Matrix.h \
+  ../lib/Eigen/Eigen/src/Core/Array.h \
+  ../lib/Eigen/Eigen/src/Core/CwiseTernaryOp.h \
+  ../lib/Eigen/Eigen/src/Core/CwiseBinaryOp.h \
+  ../lib/Eigen/Eigen/src/Core/CwiseUnaryOp.h \
+  ../lib/Eigen/Eigen/src/Core/CwiseNullaryOp.h \
+  ../lib/Eigen/Eigen/src/Core/CwiseUnaryView.h \
+  ../lib/Eigen/Eigen/src/Core/SelfCwiseBinaryOp.h \
+  ../lib/Eigen/Eigen/src/Core/Dot.h \
+  ../lib/Eigen/Eigen/src/Core/StableNorm.h \
+  ../lib/Eigen/Eigen/src/Core/Stride.h \
+  ../lib/Eigen/Eigen/src/Core/MapBase.h \
+  ../lib/Eigen/Eigen/src/Core/Map.h \
+  ../lib/Eigen/Eigen/src/Core/Ref.h \
+  ../lib/Eigen/Eigen/src/Core/Block.h \
+  ../lib/Eigen/Eigen/src/Core/VectorBlock.h \
+  ../lib/Eigen/Eigen/src/Core/IndexedView.h \
+  ../lib/Eigen/Eigen/src/Core/Reshaped.h \
+  ../lib/Eigen/Eigen/src/Core/Transpose.h \
+  ../lib/Eigen/Eigen/src/Core/DiagonalMatrix.h \
+  ../lib/Eigen/Eigen/src/Core/Diagonal.h \
+  ../lib/Eigen/Eigen/src/Core/DiagonalProduct.h \
+  ../lib/Eigen/Eigen/src/Core/Redux.h \
+  ../lib/Eigen/Eigen/src/Core/Visitor.h \
+  ../lib/Eigen/Eigen/src/Core/Fuzzy.h \
+  ../lib/Eigen/Eigen/src/Core/Swap.h \
+  ../lib/Eigen/Eigen/src/Core/CommaInitializer.h \
+  ../lib/Eigen/Eigen/src/Core/GeneralProduct.h \
+  ../lib/Eigen/Eigen/src/Core/Solve.h \
+  ../lib/Eigen/Eigen/src/Core/Inverse.h \
+  ../lib/Eigen/Eigen/src/Core/SolverBase.h \
+  ../lib/Eigen/Eigen/src/Core/PermutationMatrix.h \
+  ../lib/Eigen/Eigen/src/Core/Transpositions.h \
+  ../lib/Eigen/Eigen/src/Core/TriangularMatrix.h \
+  ../lib/Eigen/Eigen/src/Core/SelfAdjointView.h \
+  ../lib/Eigen/Eigen/src/Core/products/GeneralBlockPanelKernel.h \
+  ../lib/Eigen/Eigen/src/Core/InternalHeaderCheck.h \
+  ../lib/Eigen/Eigen/src/Core/products/Parallelizer.h \
+  ../lib/Eigen/Eigen/src/Core/ProductEvaluators.h \
+  ../lib/Eigen/Eigen/src/Core/products/GeneralMatrixVector.h \
+  ../lib/Eigen/Eigen/src/Core/products/GeneralMatrixMatrix.h \
+  ../lib/Eigen/Eigen/src/Core/SolveTriangular.h \
+  ../lib/Eigen/Eigen/src/Core/products/GeneralMatrixMatrixTriangular.h \
+  ../lib/Eigen/Eigen/src/Core/products/SelfadjointMatrixVector.h \
+  ../lib/Eigen/Eigen/src/Core/products/SelfadjointMatrixMatrix.h \
+  ../lib/Eigen/Eigen/src/Core/products/SelfadjointProduct.h \
+  ../lib/Eigen/Eigen/src/Core/products/SelfadjointRank2Update.h \
+  ../lib/Eigen/Eigen/src/Core/products/TriangularMatrixVector.h \
+  ../lib/Eigen/Eigen/src/Core/products/TriangularMatrixMatrix.h \
+  ../lib/Eigen/Eigen/src/Core/products/TriangularSolverMatrix.h \
+  ../lib/Eigen/Eigen/src/Core/products/TriangularSolverVector.h \
+  ../lib/Eigen/Eigen/src/Core/BandMatrix.h \
+  ../lib/Eigen/Eigen/src/Core/CoreIterators.h \
+  ../lib/Eigen/Eigen/src/Core/ConditionEstimator.h \
+  ../lib/Eigen/Eigen/src/Core/BooleanRedux.h \
+  ../lib/Eigen/Eigen/src/Core/Select.h \
+  ../lib/Eigen/Eigen/src/Core/VectorwiseOp.h \
+  ../lib/Eigen/Eigen/src/Core/PartialReduxEvaluator.h \
+  ../lib/Eigen/Eigen/src/Core/Random.h \
+  ../lib/Eigen/Eigen/src/Core/Replicate.h \
+  ../lib/Eigen/Eigen/src/Core/Reverse.h \
+  ../lib/Eigen/Eigen/src/Core/ArrayWrapper.h \
+  ../lib/Eigen/Eigen/src/Core/StlIterators.h \
+  ../lib/Eigen/Eigen/src/Core/GlobalFunctions.h \
+  ../lib/Eigen/Eigen/src/Core/util/ReenableStupidWarnings.h \
+  ../lib/Eigen/unsupported/Eigen/SpecialFunctions \
+  /usr/include/c++/11/math.h \
+  ../lib/Eigen/Eigen/Core \
+  ../lib/Eigen/Eigen/src/Core/util/DisableStupidWarnings.h \
+  ../lib/Eigen/unsupported/Eigen/src/SpecialFunctions/BesselFunctionsImpl.h \
+  ../lib/Eigen/unsupported/Eigen/src/SpecialFunctions/InternalHeaderCheck.h \
+  ../lib/Eigen/unsupported/Eigen/src/SpecialFunctions/BesselFunctionsBFloat16.h \
+  ../lib/Eigen/unsupported/Eigen/src/SpecialFunctions/BesselFunctionsHalf.h \
+  ../lib/Eigen/unsupported/Eigen/src/SpecialFunctions/BesselFunctionsPacketMath.h \
+  ../lib/Eigen/unsupported/Eigen/src/SpecialFunctions/BesselFunctionsFunctors.h \
+  ../lib/Eigen/unsupported/Eigen/src/SpecialFunctions/BesselFunctionsArrayAPI.h \
+  ../lib/Eigen/unsupported/Eigen/src/SpecialFunctions/SpecialFunctionsImpl.h \
+  ../lib/Eigen/unsupported/Eigen/src/SpecialFunctions/SpecialFunctionsBFloat16.h \
+  ../lib/Eigen/unsupported/Eigen/src/SpecialFunctions/SpecialFunctionsHalf.h \
+  ../lib/Eigen/unsupported/Eigen/src/SpecialFunctions/SpecialFunctionsPacketMath.h \
+  ../lib/Eigen/unsupported/Eigen/src/SpecialFunctions/SpecialFunctionsFunctors.h \
+  ../lib/Eigen/unsupported/Eigen/src/SpecialFunctions/SpecialFunctionsArrayAPI.h \
+  ../lib/Eigen/Eigen/src/Core/util/ReenableStupidWarnings.h \
+  ../lib/Eigen/Eigen/src/Core/util/DisableStupidWarnings.h \
+  ../lib/Eigen/unsupported/Eigen/CXX11/src/util/CXX11Meta.h \
+  ../lib/Eigen/unsupported/Eigen/CXX11/src/util/EmulateArray.h \
+  ../lib/Eigen/unsupported/Eigen/CXX11/src/util/CXX11Workarounds.h \
+  ../lib/Eigen/unsupported/Eigen/CXX11/src/util/MaxSizeVector.h \
+  /usr/include/c++/11/atomic \
+  /usr/include/c++/11/bits/atomic_base.h \
+  /usr/include/c++/11/bits/atomic_lockfree_defines.h \
+  /usr/include/c++/11/chrono \
+  /usr/include/c++/11/ratio \
+  /usr/include/c++/11/ctime \
+  /usr/include/c++/11/bits/parse_numbers.h \
+  /usr/include/c++/11/iterator \
+  /usr/include/c++/11/bits/stream_iterator.h \
+  /usr/include/c++/11/numeric \
+  /usr/include/c++/11/bits/stl_numeric.h \
+  /usr/include/c++/11/bit \
+  /usr/include/c++/11/pstl/glue_numeric_defs.h \
+  /usr/include/c++/11/random \
+  /usr/include/c++/11/bits/random.h \
+  /usr/include/x86_64-linux-gnu/c++/11/bits/opt_random.h \
+  /usr/include/c++/11/bits/random.tcc \
+  /usr/include/c++/11/thread \
+  /usr/include/c++/11/bits/std_thread.h \
+  /usr/include/c++/11/bits/unique_ptr.h \
+  /usr/include/c++/11/bits/this_thread_sleep.h \
+  ../lib/Eigen/unsupported/Eigen/CXX11/src/Tensor/TensorMacros.h \
+  ../lib/Eigen/unsupported/Eigen/CXX11/src/Tensor/TensorForwardDeclarations.h \
+  ../lib/Eigen/unsupported/Eigen/CXX11/src/Tensor/InternalHeaderCheck.h \
+  ../lib/Eigen/unsupported/Eigen/CXX11/src/Tensor/TensorMeta.h \
+  ../lib/Eigen/unsupported/Eigen/CXX11/src/Tensor/TensorFunctors.h \
+  ../lib/Eigen/unsupported/Eigen/CXX11/src/Tensor/TensorCostModel.h \
+  ../lib/Eigen/unsupported/Eigen/CXX11/src/Tensor/TensorDeviceDefault.h \
+  ../lib/Eigen/unsupported/Eigen/CXX11/src/Tensor/TensorDeviceThreadPool.h \
+  ../lib/Eigen/unsupported/Eigen/CXX11/src/Tensor/TensorDeviceGpu.h \
+  ../lib/Eigen/unsupported/Eigen/CXX11/src/Tensor/TensorDeviceSycl.h \
+  ../lib/Eigen/unsupported/Eigen/CXX11/src/Tensor/TensorIndexList.h \
+  ../lib/Eigen/unsupported/Eigen/CXX11/src/Tensor/TensorDimensionList.h \
+  ../lib/Eigen/unsupported/Eigen/CXX11/src/Tensor/TensorDimensions.h \
+  ../lib/Eigen/unsupported/Eigen/CXX11/src/Tensor/TensorInitializer.h \
+  ../lib/Eigen/unsupported/Eigen/CXX11/src/Tensor/TensorTraits.h \
+  ../lib/Eigen/unsupported/Eigen/CXX11/src/Tensor/TensorRandom.h \
+  ../lib/Eigen/unsupported/Eigen/CXX11/src/Tensor/TensorUInt128.h \
+  ../lib/Eigen/unsupported/Eigen/CXX11/src/Tensor/TensorIntDiv.h \
+  ../lib/Eigen/unsupported/Eigen/CXX11/src/Tensor/TensorGlobalFunctions.h \
+  ../lib/Eigen/unsupported/Eigen/CXX11/src/Tensor/TensorIO.h \
+  ../lib/Eigen/unsupported/Eigen/CXX11/src/Tensor/TensorBase.h \
+  ../lib/Eigen/unsupported/Eigen/CXX11/src/Tensor/TensorBlock.h \
+  ../lib/Eigen/unsupported/Eigen/CXX11/src/Tensor/TensorEvaluator.h \
+  ../lib/Eigen/unsupported/Eigen/CXX11/src/Tensor/TensorExpr.h \
+  ../lib/Eigen/unsupported/Eigen/CXX11/src/Tensor/TensorReduction.h \
+  ../lib/Eigen/unsupported/Eigen/CXX11/src/Tensor/TensorReductionGpu.h \
+  ../lib/Eigen/unsupported/Eigen/CXX11/src/Tensor/TensorArgMax.h \
+  ../lib/Eigen/unsupported/Eigen/CXX11/src/Tensor/TensorConcatenation.h \
+  ../lib/Eigen/unsupported/Eigen/CXX11/src/Tensor/TensorContractionMapper.h \
+  ../lib/Eigen/unsupported/Eigen/CXX11/src/Tensor/TensorContractionBlocking.h \
+  ../lib/Eigen/unsupported/Eigen/CXX11/src/Tensor/TensorContraction.h \
+  ../lib/Eigen/unsupported/Eigen/CXX11/src/Tensor/TensorContractionThreadPool.h \
+  ../lib/Eigen/unsupported/Eigen/CXX11/src/Tensor/TensorContractionGpu.h \
+  ../lib/Eigen/unsupported/Eigen/CXX11/src/Tensor/TensorConversion.h \
+  ../lib/Eigen/unsupported/Eigen/CXX11/src/Tensor/TensorConvolution.h \
+  ../lib/Eigen/unsupported/Eigen/CXX11/src/Tensor/TensorFFT.h \
+  ../lib/Eigen/unsupported/Eigen/CXX11/src/Tensor/TensorPatch.h \
+  ../lib/Eigen/unsupported/Eigen/CXX11/src/Tensor/TensorImagePatch.h \
+  ../lib/Eigen/unsupported/Eigen/CXX11/src/Tensor/TensorVolumePatch.h \
+  ../lib/Eigen/unsupported/Eigen/CXX11/src/Tensor/TensorBroadcasting.h \
+  ../lib/Eigen/unsupported/Eigen/CXX11/src/Tensor/TensorChipping.h \
+  ../lib/Eigen/unsupported/Eigen/CXX11/src/Tensor/TensorInflation.h \
+  ../lib/Eigen/unsupported/Eigen/CXX11/src/Tensor/TensorLayoutSwap.h \
+  ../lib/Eigen/unsupported/Eigen/CXX11/src/Tensor/TensorMorphing.h \
+  ../lib/Eigen/unsupported/Eigen/CXX11/src/Tensor/TensorPadding.h \
+  ../lib/Eigen/unsupported/Eigen/CXX11/src/Tensor/TensorReverse.h \
+  ../lib/Eigen/unsupported/Eigen/CXX11/src/Tensor/TensorShuffling.h \
+  ../lib/Eigen/unsupported/Eigen/CXX11/src/Tensor/TensorStriding.h \
+  ../lib/Eigen/unsupported/Eigen/CXX11/src/Tensor/TensorCustomOp.h \
+  ../lib/Eigen/unsupported/Eigen/CXX11/src/Tensor/TensorEvalTo.h \
+  ../lib/Eigen/unsupported/Eigen/CXX11/src/Tensor/TensorForcedEval.h \
+  ../lib/Eigen/unsupported/Eigen/CXX11/src/Tensor/TensorGenerator.h \
+  ../lib/Eigen/unsupported/Eigen/CXX11/src/Tensor/TensorAssign.h \
+  ../lib/Eigen/unsupported/Eigen/CXX11/src/Tensor/TensorScan.h \
+  ../lib/Eigen/unsupported/Eigen/CXX11/src/Tensor/TensorTrace.h \
+  ../lib/Eigen/unsupported/Eigen/CXX11/src/Tensor/TensorExecutor.h \
+  ../lib/Eigen/unsupported/Eigen/CXX11/src/Tensor/TensorDevice.h \
+  ../lib/Eigen/unsupported/Eigen/CXX11/src/Tensor/TensorStorage.h \
+  ../lib/Eigen/unsupported/Eigen/CXX11/src/Tensor/Tensor.h \
+  ../lib/Eigen/unsupported/Eigen/CXX11/src/Tensor/TensorFixedSize.h \
+  ../lib/Eigen/unsupported/Eigen/CXX11/src/Tensor/TensorMap.h \
+  ../lib/Eigen/unsupported/Eigen/CXX11/src/Tensor/TensorRef.h \
+  ../lib/Eigen/Eigen/src/Core/util/ReenableStupidWarnings.h \
+  ../orion/orion_assert.hpp \
+  /usr/include/c++/11/iostream \
+  ../orion/activations/include_activations.hpp \
+  ../orion/activations/sigmoid.hpp \
+  ../orion/activations/tanh.hpp \
+  ../orion/activations/relu.hpp \
+  ../orion/activations/softmax.hpp \
+  ../orion/activations/linear.hpp \
+  ../orion/activations/swish.hpp \
+  ../orion/activations/softplus.hpp \
+  ../orion/activations/softsign.hpp \
+  ../orion/activations/selu.hpp \
+  ../orion/activations/elu.hpp \
+  ../orion/weights/include_weights.hpp \
+  ../orion/weights/weights.hpp \
+  ../orion/weights/glorot.hpp \
+  ../orion/weights/he.hpp \
+  ../orion/weights/lecun.hpp \
   ../orion/optimizers/include_optimizers.hpp \
   ../orion/optimizers/optimizer.hpp \
   /usr/include/c++/11/map \
@@ -3670,6 +4218,8 @@ CMakeFiles/Orion.dir/orion/main.cpp.o: ../orion/main.cpp \
   ../orion/weights/include_weights.hpp \
   ../orion/weights/weights.hpp \
   ../orion/weights/glorot.hpp \
+  ../orion/weights/he.hpp \
+  ../orion/weights/lecun.hpp \
   ../orion/optimizers/include_optimizers.hpp \
   ../orion/optimizers/optimizer.hpp \
   /usr/include/c++/11/map \
@@ -3689,6 +4239,7 @@ CMakeFiles/Orion.dir/orion/main.cpp.o: ../orion/main.cpp \
   ../orion/layers/globalaveragepooling1d.hpp \
   ../orion/layers/conv2d.hpp \
   ../orion/layers/conv2d.ipp \
+  ../orion/layers/maxpooling2d.hpp \
   ../orion/metrics/include_metrics.hpp \
   ../orion/metrics/metric.hpp \
   ../orion/metrics/accuracy.hpp \
@@ -3696,7 +4247,8 @@ CMakeFiles/Orion.dir/orion/main.cpp.o: ../orion/main.cpp \
   ../orion/sequential.hpp \
   ../orion/internal/include_internal.hpp \
   ../orion/internal/batcher.hpp \
-  ../orion/internal/print_tensor.hpp
+  ../orion/internal/print_tensor.hpp \
+  ../examples/xor_classifier.hpp
 
 CMakeFiles/Orion.dir/orion/metrics/accuracy.cpp.o: ../orion/metrics/accuracy.cpp \
   /usr/include/stdc-predef.h \
@@ -4743,6 +5295,8 @@ CMakeFiles/Orion.dir/orion/metrics/loss.cpp.o: ../orion/metrics/loss.cpp \
   ../orion/weights/include_weights.hpp \
   ../orion/weights/weights.hpp \
   ../orion/weights/glorot.hpp \
+  ../orion/weights/he.hpp \
+  ../orion/weights/lecun.hpp \
   ../orion/optimizers/include_optimizers.hpp \
   ../orion/optimizers/optimizer.hpp \
   /usr/include/c++/11/map \
@@ -4762,6 +5316,7 @@ CMakeFiles/Orion.dir/orion/metrics/loss.cpp.o: ../orion/metrics/loss.cpp \
   ../orion/layers/globalaveragepooling1d.hpp \
   ../orion/layers/conv2d.hpp \
   ../orion/layers/conv2d.ipp \
+  ../orion/layers/maxpooling2d.hpp \
   ../orion/internal/include_internal.hpp \
   ../orion/internal/batcher.hpp \
   ../orion/internal/print_tensor.hpp \
@@ -6848,6 +7403,8 @@ CMakeFiles/Orion.dir/orion/sequential.cpp.o: ../orion/sequential.cpp \
   ../orion/weights/include_weights.hpp \
   ../orion/weights/weights.hpp \
   ../orion/weights/glorot.hpp \
+  ../orion/weights/he.hpp \
+  ../orion/weights/lecun.hpp \
   ../orion/optimizers/include_optimizers.hpp \
   ../orion/optimizers/optimizer.hpp \
   /usr/include/c++/11/map \
@@ -6867,6 +7424,7 @@ CMakeFiles/Orion.dir/orion/sequential.cpp.o: ../orion/sequential.cpp \
   ../orion/layers/globalaveragepooling1d.hpp \
   ../orion/layers/conv2d.hpp \
   ../orion/layers/conv2d.ipp \
+  ../orion/layers/maxpooling2d.hpp \
   ../orion/internal/include_internal.hpp \
   ../orion/internal/batcher.hpp \
   ../orion/internal/print_tensor.hpp \
@@ -6914,6 +7472,10 @@ CMakeFiles/Orion.dir/orion/sequential.cpp.o: ../orion/sequential.cpp \
 
 ../orion/layers/dense.hpp:
 
+../orion/layers/maxpooling2d.hpp:
+
+../orion/layers/maxpooling2d.cpp:
+
 ../orion/layers/globalaveragepooling1d.hpp:
 
 ../orion/optimizers/adam.hpp:
@@ -6923,6 +7485,10 @@ CMakeFiles/Orion.dir/orion/sequential.cpp.o: ../orion/sequential.cpp \
 ../orion/loss/mean_squared_error.hpp:
 
 /usr/include/c++/11/map:
+
+../orion/weights/lecun.hpp:
+
+../orion/weights/he.hpp:
 
 ../orion/weights/glorot.hpp:
 
@@ -7049,6 +7615,8 @@ CMakeFiles/Orion.dir/orion/sequential.cpp.o: ../orion/sequential.cpp \
 ../lib/Eigen/unsupported/Eigen/CXX11/src/util/CXX11Meta.h:
 
 ../lib/Eigen/unsupported/Eigen/src/SpecialFunctions/SpecialFunctionsArrayAPI.h:
+
+../examples/xor_classifier.hpp:
 
 ../lib/Eigen/unsupported/Eigen/src/SpecialFunctions/SpecialFunctionsFunctors.h:
 

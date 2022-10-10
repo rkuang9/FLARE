@@ -7,37 +7,25 @@
 
 #include "orion/orion_types.hpp"
 
-namespace orion {
+namespace orion
+{
 
 class Sigmoid
 {
 public:
-    static Tensor<2> Activate(const Tensor<2> &features)
+    template<int TensorRank>
+    static Tensor<TensorRank> Activate(const Tensor<TensorRank> &features)
     {
         return features.sigmoid();
     }
 
 
-    static Tensor<3> Activate(const Tensor<3> &features)
-    {
-        return features.sigmoid();
-    }
-
-
-    static Tensor<2> Gradients(const Tensor<2> &features)
+    template<int TensorRank>
+    static Tensor<TensorRank> Gradients(const Tensor<TensorRank> &features)
     {
         auto one = static_cast<Scalar>(1.0);
 
-        Tensor<2> sigmoid = features.sigmoid();
-        return sigmoid * (one - sigmoid);
-    }
-
-
-    static Tensor<3> Gradients(const Tensor<3> &features)
-    {
-        auto one = static_cast<Scalar>(1.0);
-
-        Tensor<2> sigmoid = features.sigmoid();
+        Tensor<TensorRank> sigmoid = features.sigmoid();
         return sigmoid * (one - sigmoid);
     }
 };

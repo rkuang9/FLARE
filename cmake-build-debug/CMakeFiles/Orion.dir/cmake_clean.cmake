@@ -9,6 +9,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/Orion.dir/orion/layers/embedding.cpp.o.d"
   "CMakeFiles/Orion.dir/orion/layers/globalaveragepooling1d.cpp.o"
   "CMakeFiles/Orion.dir/orion/layers/globalaveragepooling1d.cpp.o.d"
+  "CMakeFiles/Orion.dir/orion/layers/maxpooling2d.cpp.o"
+  "CMakeFiles/Orion.dir/orion/layers/maxpooling2d.cpp.o.d"
   "CMakeFiles/Orion.dir/orion/loss/binary_cross_entropy.cpp.o"
   "CMakeFiles/Orion.dir/orion/loss/binary_cross_entropy.cpp.o.d"
   "CMakeFiles/Orion.dir/orion/loss/mean_squared_error.cpp.o"

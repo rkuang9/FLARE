@@ -10,7 +10,7 @@
 namespace orion
 {
 
-template<typename Activation = Linear>
+template<typename Activation>
 class Dense : public Layer
 {
 public:

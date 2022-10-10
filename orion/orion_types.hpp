@@ -30,30 +30,40 @@ typedef double Scalar;
 #endif
 
 #ifdef ORION_COLMAJOR
-template<int Rank, typename DataType = Scalar, int StorageType = Eigen::ColMajor>
+template<int TensorRank, typename DataType = Scalar, int StorageType = Eigen::ColMajor>
 #else
-template<int Rank, typename DataType = Scalar, int StorageType = Eigen::RowMajor>
+template<int TensorRank, typename DataType = Scalar, int StorageType = Eigen::RowMajor>
 #endif
-using Tensor = Eigen::Tensor<DataType, Rank, StorageType>;
+using Tensor = Eigen::Tensor<DataType, TensorRank, StorageType>;
 
 #ifdef ORION_COLMAJOR
-template<int Rank, typename DataType = Scalar, int StorageType = Eigen::ColMajor>
+template<int TensorRank, typename DataType = Scalar, int StorageType = Eigen::ColMajor>
 #else
-template<int Rank, typename DataType = Scalar, int StorageType = Eigen::RowMajor>
+template<int TensorRank, typename DataType = Scalar, int StorageType = Eigen::RowMajor>
 #endif
-using Dims = typename Eigen::Tensor<DataType, Rank, StorageType>::Dimensions;
+using Dims = typename Eigen::Tensor<DataType, TensorRank, StorageType>::Dimensions;
 
 
 // Maps, create tensors on existing data
-template<int Rank>
-using TensorMap = Eigen::TensorMap<Tensor<Rank>>;
+template<int TensorRank>
+using TensorMap = Eigen::TensorMap<Tensor<TensorRank>>;
 
-template<int Rank>
-using TensorMapConst = Eigen::TensorMap<const Tensor<Rank>>;
+template<int TensorRank>
+using TensorMapConst = Eigen::TensorMap<const Tensor<TensorRank>>;
 
 // contraction dimensions
 typedef Eigen::array<Eigen::IndexPair<int>, 1> ContractDim;
 typedef Eigen::IndexPair<int> Axes;
+
+// convolution typedefs
+typedef Tensor<3>::Dimensions Input;
+typedef Tensor<2>::Dimensions Kernel;
+typedef Tensor<2>::Dimensions Stride;
+typedef Tensor<2>::Dimensions Dilation;
+using Padding = Eigen::PaddingType;
+
+// pooling typedefs
+
 
 }
 

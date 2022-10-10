@@ -13,28 +13,16 @@ namespace orion
 class Softmax
 {
 public:
-    static Tensor<2> Activate(const Tensor<2> &features)
+    template <int TensorRank>
+    static Tensor<TensorRank> Activate(const Tensor<TensorRank> &features)
     {
         throw std::logic_error("softmax has issues, not working yet");
         return features.exp() / features.exp().sum();
     }
 
 
-    static Tensor<3> Activate(const Tensor<3> &features)
-    {
-        throw std::logic_error("softmax has issues, not working yet");
-        return features.exp() / features.exp().sum();
-    }
-
-
-    static Tensor<3> Gradients(const Tensor<2> &features)
-    {
-        throw std::logic_error("softmax has issues, not working yet");
-        return (features >= 0).select(features.constant(1.0), features.constant(0.0));
-    }
-
-
-    static Tensor<3> Gradients(const Tensor<3> &features)
+    template <int TensorRank>
+    static Tensor<TensorRank> Gradients(const Tensor<TensorRank> &features)
     {
         throw std::logic_error("softmax has issues, not working yet");
         return (features >= 0).select(features.constant(1.0), features.constant(0.0));

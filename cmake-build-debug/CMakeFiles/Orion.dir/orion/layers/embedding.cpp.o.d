@@ -473,6 +473,8 @@ CMakeFiles/Orion.dir/orion/layers/embedding.cpp.o: \
  /home/macross/Desktop/OrionNN/orion/weights/include_weights.hpp \
  /home/macross/Desktop/OrionNN/orion/weights/weights.hpp \
  /home/macross/Desktop/OrionNN/orion/weights/glorot.hpp \
+ /home/macross/Desktop/OrionNN/orion/weights/he.hpp \
+ /home/macross/Desktop/OrionNN/orion/weights/lecun.hpp \
  /home/macross/Desktop/OrionNN/orion/optimizers/include_optimizers.hpp \
  /home/macross/Desktop/OrionNN/orion/optimizers/optimizer.hpp \
  /usr/include/c++/11/map /usr/include/c++/11/bits/stl_tree.h \

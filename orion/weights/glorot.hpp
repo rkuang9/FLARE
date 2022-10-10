@@ -10,11 +10,12 @@
 namespace orion
 {
 
-template<int Rank = 2>
-class GlorotUniform : public Initializer<Rank>
+template<int TensorRank>
+class GlorotUniform : public Initializer<TensorRank>
 {
 public:
     GlorotUniform() = default;
+
     /**
      * Glorot uniform initialization, creates a tensor on a uniform distribution
      * in range +- sqrt(6 / (fan_in + fan_out))
@@ -24,28 +25,17 @@ public:
      * @param fan_out   number of layer output units
      * @return Tensor<Rank>
      */
-    Tensor<Rank> Initialize(typename Tensor<Rank>::Dimensions dims,
+    Tensor<TensorRank> Initialize(const Dims<TensorRank> &dims,
                          int fan_in, int fan_out) const override
     {
         Scalar limit = std::sqrt(6.0 / (fan_in + fan_out));
-        return RandomUniform<Rank>(dims, -limit, limit);
+        return RandomUniform<TensorRank>(dims, -limit, limit);
     }
-
-
-    /**
-     * Rank 3 equivalent
-     */
-    /*Tensor<3> Initialize(Tensor<3>::Dimensions dims,
-                         int fan_in, int fan_out) const override
-    {
-        Scalar limit = std::sqrt(6.0 / (fan_in + fan_out));
-        return RandomUniform<3>(dims, -limit, limit);
-    }*/
 };
 
 
-template<int Rank = 2>
-class GlorotNormal : public Initializer<Rank>
+template<int TensorRank>
+class GlorotNormal : public Initializer<TensorRank>
 {
 public:
     /**
@@ -57,23 +47,12 @@ public:
      * @param fan_out   number of layer output units
      * @return Tensor<3>
      */
-    Tensor<Rank> Initialize(typename Tensor<Rank>::Dimensions dims,
+    Tensor<TensorRank> Initialize(const Dims<TensorRank> &dims,
                          int fan_in, int fan_out) const override
     {
         Scalar stddev = std::sqrt(2.0 / (fan_in + fan_out));
-        return RandomNormal<Rank>(dims, 0.0, stddev);
+        return RandomNormal<TensorRank>(dims, 0.0, stddev);
     }
-
-
-    /**
-     * Rank 3 equivalent
-     */
-    /*Tensor<3> Initialize(Tensor<3>::Dimensions dims,
-                         int fan_in, int fan_out) const override
-    {
-        Scalar stddev = std::sqrt(2.0 / (fan_in + fan_out));
-        return RandomNormal<3>(dims, 0.0, stddev);
-    }*/
 };
 
 }
