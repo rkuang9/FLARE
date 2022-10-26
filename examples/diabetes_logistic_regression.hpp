@@ -12,35 +12,6 @@
 #include <orion/orion.hpp>
 
 
-template<typename DataType>
-std::vector<std::vector<DataType>>
-CSVToVector(const std::string &filename, char delimiter = ',')
-{
-    std::vector<std::vector<DataType>> result;
-
-    std::string csv_row;
-    std::ifstream csv(filename);
-    std::getline(csv, csv_row); // skip header
-
-    // access each row
-    while (std::getline(csv, csv_row)) {
-        std::stringstream row_string(csv_row);
-        std::string value;
-
-        std::vector<DataType> row;
-
-        // access each value of the csv row and push to vector
-        while (std::getline(row_string, value, delimiter)) {
-            row.push_back(std::stod(value));
-        }
-
-        result.push_back(std::move(row));
-    }
-
-    return result;
-}
-
-
 // needs input normalization to achieve better results
 void DiabetesDetection()
 {

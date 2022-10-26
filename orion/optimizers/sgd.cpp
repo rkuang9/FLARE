@@ -53,6 +53,23 @@ void SGD::Minimize(Tensor<1> &b, const Tensor<1> &dL_db)
 }
 
 
+void SGD::Minimize(Tensor<4> &k, const Tensor<4> &dL_dk)
+{
+    Tensor<4> &velocity = this->v_dk[k.data()];
+
+    if (velocity.size() == 0) {
+        // on first run, initialize zero matrix with same shape as bias
+        velocity.resize(k.dimensions());
+        velocity.setZero();
+    }
+
+    velocity = this->momentum * velocity + dL_dk; // TensorFlow's version
+    //velocity = this->momentum * velocity + (1 - this->momentum) * dL_db; // Andrew Ng's version
+
+    k -= this->learning_rate * velocity;
+}
+
+
 Scalar SGD::GetMomentum() const
 {
     return this->momentum;

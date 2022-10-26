@@ -34,6 +34,7 @@ void Embedding::Forward(const Tensor<2> &input)
     this->Z.resize(Tensor<3>::Dimensions(
             input.dimension(1), input.dimension(0), this->embed_dims));
 
+    // TODO: see if chip() can make this code less verbose
     // from the input tensor values construct output tensor Z
     for (Eigen::Index col = 0; col < input.dimension(1); col++) {
         // col also denotes the batch dimension of the output tensor Z

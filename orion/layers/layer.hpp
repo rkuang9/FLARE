@@ -20,12 +20,16 @@ class Layer
 public:
     virtual ~Layer() = default;
 
+
     /**
      * Forward propagation for input layers
      *
      * @param inputs   rank 2 tensor training sample
      */
-    virtual void Forward(const Tensor<2> &inputs) {}
+    virtual void Forward(const Tensor<2> &inputs)
+    {
+        throw std::logic_error("An error occurred, base class Layer was called");
+    }
 
 
     /**
@@ -33,7 +37,10 @@ public:
      *
      * @param inputs   rank 3 tensor training sample
      */
-    virtual void Forward(const Tensor<3> &inputs) {};
+    virtual void Forward(const Tensor<3> &inputs)
+    {
+        throw std::logic_error("An error occurred, base class Layer was called");
+    }
 
 
     /**
@@ -41,15 +48,10 @@ public:
      *
      * @param inputs   rank 3 tensor training sample
      */
-    virtual void Forward(const Tensor<4> &inputs) {};
-
-
-    /**
-     * Backward propagation for output layers
-     *
-     * @param loss_function   loss object that calculates and records loss
-     */
-    virtual void Backward(const LossFunction &loss_function) {}
+    virtual void Forward(const Tensor<4> &inputs)
+    {
+        throw std::logic_error("An error occurred, base class Layer was called");
+    }
 
 
     /**
@@ -57,7 +59,21 @@ public:
      *
      * @param prev   a reference to the previous layer
      */
-    virtual void Forward(const Layer &prev) {}
+    virtual void Forward(const Layer &prev)
+    {
+        throw std::logic_error("An error occurred, base class Layer was called");
+    }
+
+
+    /**
+     * Backward propagation for output layers
+     *
+     * @param loss_function   loss object that calculates and records loss
+     */
+    virtual void Backward(const LossFunction &loss_function)
+    {
+        throw std::logic_error("An error occurred, base class Layer was called");
+    }
 
 
     /**
@@ -65,7 +81,10 @@ public:
      *
      * @param next   a reference to the next layer
      */
-    virtual void Backward(const Layer &next) {}
+    virtual void Backward(const Layer &next)
+    {
+        throw std::logic_error("An error occurred, base class Layer was called");
+    }
 
 
     /**
@@ -74,37 +93,80 @@ public:
      *
      * @param optimizer   optimizer object that performs layer parameter updates
      */
-    virtual void Update(Optimizer &optimizer) {}
+    virtual void Update(Optimizer &optimizer)
+    {
+        throw std::logic_error("An error occurred, base class Layer was called");
+    }
 
 
     /**
      * @return   layer's activation values
      */
-    virtual const Tensor<2> &GetOutput2D() const {}
-    virtual const Tensor<3> &GetOutput3D() const {}
-    virtual const Tensor<4> &GetOutput4D() const {}
+    virtual const Tensor<2> &GetOutput2D() const
+    {
+        throw std::logic_error("An error occurred, base class Layer was called");
+    }
+
+
+    virtual const Tensor<3> &GetOutput3D() const
+    {
+        throw std::logic_error("An error occurred, base class Layer was called");
+    }
+
+
+    virtual const Tensor<4> &GetOutput4D() const
+    {
+        throw std::logic_error("An error occurred, base class Layer was called");
+    }
 
 
     /**
      * @return   layer's loss gradients w.r.t. pre-activated output (dL / dZ))
      */
-    virtual const Tensor<2> &GetInputGradients2D() const {}
-    virtual const Tensor<3> &GetInputGradients3D() const {}
-    virtual const Tensor<4> &GetInputGradients4D() const {}
+    virtual const Tensor<2> &GetInputGradients2D() const
+    {
+        throw std::logic_error("An error occurred, base class Layer was called");
+    }
+
+
+    virtual const Tensor<3> &GetInputGradients3D() const
+    {
+        throw std::logic_error("An error occurred, base class Layer was called");
+    }
+
+
+    virtual const Tensor<4> &GetInputGradients4D() const
+    {
+        throw std::logic_error("An error occurred, base class Layer was called");
+    }
 
 
     /**
      * @return   layer's weights
      */
-    virtual const Tensor<2> &GetWeights() const {}
-    virtual const Tensor<4> &GetWeights4D() const {}
+    virtual const Tensor<2> &GetWeights() const
+    {
+        throw std::logic_error("An error occurred, base class Layer was called");
+    }
+
+
+    virtual const Tensor<4> &GetWeights4D() const
+    {
+        throw std::logic_error("An error occurred, base class Layer was called");
+    }
 
 
     /**
      * @return   layer's loss gradients w.r.t weights (dL / dw)
      */
-    virtual const Tensor<2> &GetWeightGradients() const {}
-    virtual const Tensor<4> &GetWeightGradients4D() const {}
+    virtual const Tensor<2> &GetWeightGradients() const
+    {
+        throw std::logic_error("An error occurred, base class Layer was called");
+    }
+
+
+    virtual const Tensor<4> &GetWeightGradients4D() const
+    {}
 
 
     /**
@@ -112,22 +174,42 @@ public:
      *
      * @param weights   a rank 2/3 tensor
      */
-    virtual void SetWeights(const Tensor<2> &weights) {}
-    virtual void SetWeights(const Tensor<4> &weights) {}
+    virtual void SetWeights(const Tensor<2> &weights)
+    {
+        throw std::logic_error("An error occurred, base class Layer was called");
+    }
+
+
+    virtual void SetWeights(const Tensor<4> &weights)
+    {
+        throw std::logic_error("An error occurred, base class Layer was called");
+    }
 
 
     /**
      * @return   layer's bias
      */
-    virtual const Tensor<2> &GetBias() const {}
+    virtual const Tensor<2> &GetBias() const
+    {
+        throw std::logic_error("An error occurred, base class Layer was called");
+    }
+
 
     /**
      * Set the layer's bias
      *
      * @param bias   a rank 2 tensor with dimensions (n, 1)
      */
-    virtual void SetBias(const Tensor<2> &bias) {}
-    virtual void SetBias(const Tensor<4> &bias) {}
+    virtual void SetBias(const Tensor<2> &bias)
+    {
+        throw std::logic_error("An error occurred, base class Layer was called");
+    }
+
+
+    virtual void SetBias(const Tensor<4> &bias)
+    {
+        throw std::logic_error("An error occurred, base class Layer was called");
+    }
 
 
     /**
@@ -143,8 +225,17 @@ public:
 
 
     // calculate one forward propagation output (e.g. for Dense)
-    virtual Tensor<2> operator()(const Tensor<2> &tensor) const {}
-    virtual Tensor<2> operator()(const Tensor<3> &tensor) const {}
+    virtual Tensor<2> operator()(const Tensor<2> &tensor) const
+    {
+        throw std::logic_error("An error occurred, base class Layer was called");
+    }
+
+
+    virtual Tensor<2> operator()(const Tensor<3> &tensor) const
+    {
+        throw std::logic_error("An error occurred, base class Layer was called");
+    }
+
 
     std::string name = "layer"; // name of player, to be set by inherited classes
 };

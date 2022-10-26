@@ -8,244 +8,247 @@
 		<Option virtualFolders="CMake Files\;CMake Files\orion\;CMake Files\orion\activations\;CMake Files\orion\layers\;CMake Files\orion\weights\;CMake Files\orion\optimizers\;CMake Files\orion\loss\;CMake Files\orion\internal\;CMake Files\orion\metrics\;CMake Files\examples\;"/>
 		<Build>
 			<Target title="all">
-				<Option working_dir="/home/macross/Desktop/OrionNN/cmake-build-debug"/>
+				<Option working_dir="C:/Users/Macross/Desktop/OrionNN/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/gmake -j4 -f &quot;/home/macross/Desktop/OrionNN/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
-					<CompileFile command="/usr/bin/gmake -j4 -f &quot;/home/macross/Desktop/OrionNN/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/gmake -j4 -f &quot;/home/macross/Desktop/OrionNN/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/gmake -j4 -f &quot;/home/macross/Desktop/OrionNN/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="C:/PROGRA~1/JETBRA~1/CLION2~1.4/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/Macross/Desktop/OrionNN/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="C:/PROGRA~1/JETBRA~1/CLION2~1.4/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/Macross/Desktop/OrionNN/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/PROGRA~1/JETBRA~1/CLION2~1.4/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/Macross/Desktop/OrionNN/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/PROGRA~1/JETBRA~1/CLION2~1.4/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/Macross/Desktop/OrionNN/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="Orion">
-				<Option output="/home/macross/Desktop/OrionNN/bin/Orion" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/macross/Desktop/OrionNN/bin"/>
+				<Option output="C:/Users/Macross/Desktop/OrionNN/bin/Orion.exe" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="C:/Users/Macross/Desktop/OrionNN/bin"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
 				<Option compiler="gcc"/>
 				<Compiler>
-					<Add directory="/home/macross/Desktop/OrionNN/lib/Eigen"/>
-					<Add directory="/home/macross/Desktop/OrionNN"/>
-					<Add directory="/usr/include/c++/11"/>
-					<Add directory="/usr/include/x86_64-linux-gnu/c++/11"/>
-					<Add directory="/usr/include/c++/11/backward"/>
-					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/11/include"/>
-					<Add directory="/usr/local/include"/>
-					<Add directory="/usr/include/x86_64-linux-gnu"/>
-					<Add directory="/usr/include"/>
+					<Add directory="C:/Users/Macross/Desktop/OrionNN/lib/Eigen"/>
+					<Add directory="C:/Users/Macross/Desktop/OrionNN"/>
+					<Add directory="C:/Program Files/JetBrains/CLion 2022.2.4/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/11.2.0/include/c++"/>
+					<Add directory="C:/Program Files/JetBrains/CLion 2022.2.4/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/11.2.0/include/c++/x86_64-w64-mingw32"/>
+					<Add directory="C:/Program Files/JetBrains/CLion 2022.2.4/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/11.2.0/include/c++/backward"/>
+					<Add directory="C:/Program Files/JetBrains/CLion 2022.2.4/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/11.2.0/include"/>
+					<Add directory="C:/Program Files/JetBrains/CLion 2022.2.4/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/11.2.0/../../../../include"/>
+					<Add directory="C:/Program Files/JetBrains/CLion 2022.2.4/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/11.2.0/include-fixed"/>
+					<Add directory="C:/Program Files/JetBrains/CLion 2022.2.4/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/11.2.0/../../../../x86_64-w64-mingw32/include"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/gmake -j4 -f &quot;/home/macross/Desktop/OrionNN/cmake-build-debug/Makefile&quot;  VERBOSE=1 Orion"/>
-					<CompileFile command="/usr/bin/gmake -j4 -f &quot;/home/macross/Desktop/OrionNN/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/gmake -j4 -f &quot;/home/macross/Desktop/OrionNN/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/gmake -j4 -f &quot;/home/macross/Desktop/OrionNN/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="C:/PROGRA~1/JETBRA~1/CLION2~1.4/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/Macross/Desktop/OrionNN/cmake-build-debug/Makefile&quot;  VERBOSE=1 Orion"/>
+					<CompileFile command="C:/PROGRA~1/JETBRA~1/CLION2~1.4/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/Macross/Desktop/OrionNN/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/PROGRA~1/JETBRA~1/CLION2~1.4/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/Macross/Desktop/OrionNN/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/PROGRA~1/JETBRA~1/CLION2~1.4/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/Macross/Desktop/OrionNN/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="Orion/fast">
-				<Option output="/home/macross/Desktop/OrionNN/bin/Orion" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/macross/Desktop/OrionNN/bin"/>
+				<Option output="C:/Users/Macross/Desktop/OrionNN/bin/Orion.exe" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="C:/Users/Macross/Desktop/OrionNN/bin"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
 				<Option compiler="gcc"/>
 				<Compiler>
-					<Add directory="/home/macross/Desktop/OrionNN/lib/Eigen"/>
-					<Add directory="/home/macross/Desktop/OrionNN"/>
-					<Add directory="/usr/include/c++/11"/>
-					<Add directory="/usr/include/x86_64-linux-gnu/c++/11"/>
-					<Add directory="/usr/include/c++/11/backward"/>
-					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/11/include"/>
-					<Add directory="/usr/local/include"/>
-					<Add directory="/usr/include/x86_64-linux-gnu"/>
-					<Add directory="/usr/include"/>
+					<Add directory="C:/Users/Macross/Desktop/OrionNN/lib/Eigen"/>
+					<Add directory="C:/Users/Macross/Desktop/OrionNN"/>
+					<Add directory="C:/Program Files/JetBrains/CLion 2022.2.4/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/11.2.0/include/c++"/>
+					<Add directory="C:/Program Files/JetBrains/CLion 2022.2.4/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/11.2.0/include/c++/x86_64-w64-mingw32"/>
+					<Add directory="C:/Program Files/JetBrains/CLion 2022.2.4/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/11.2.0/include/c++/backward"/>
+					<Add directory="C:/Program Files/JetBrains/CLion 2022.2.4/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/11.2.0/include"/>
+					<Add directory="C:/Program Files/JetBrains/CLion 2022.2.4/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/11.2.0/../../../../include"/>
+					<Add directory="C:/Program Files/JetBrains/CLion 2022.2.4/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/11.2.0/include-fixed"/>
+					<Add directory="C:/Program Files/JetBrains/CLion 2022.2.4/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/11.2.0/../../../../x86_64-w64-mingw32/include"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/gmake -j4 -f &quot;/home/macross/Desktop/OrionNN/cmake-build-debug/Makefile&quot;  VERBOSE=1 Orion/fast"/>
-					<CompileFile command="/usr/bin/gmake -j4 -f &quot;/home/macross/Desktop/OrionNN/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/gmake -j4 -f &quot;/home/macross/Desktop/OrionNN/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/gmake -j4 -f &quot;/home/macross/Desktop/OrionNN/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="C:/PROGRA~1/JETBRA~1/CLION2~1.4/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/Macross/Desktop/OrionNN/cmake-build-debug/Makefile&quot;  VERBOSE=1 Orion/fast"/>
+					<CompileFile command="C:/PROGRA~1/JETBRA~1/CLION2~1.4/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/Macross/Desktop/OrionNN/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/PROGRA~1/JETBRA~1/CLION2~1.4/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/Macross/Desktop/OrionNN/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/PROGRA~1/JETBRA~1/CLION2~1.4/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/Macross/Desktop/OrionNN/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="edit_cache">
-				<Option working_dir="/home/macross/Desktop/OrionNN/cmake-build-debug"/>
+				<Option working_dir="C:/Users/Macross/Desktop/OrionNN/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/gmake -j4 -f &quot;/home/macross/Desktop/OrionNN/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
-					<CompileFile command="/usr/bin/gmake -j4 -f &quot;/home/macross/Desktop/OrionNN/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/gmake -j4 -f &quot;/home/macross/Desktop/OrionNN/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/gmake -j4 -f &quot;/home/macross/Desktop/OrionNN/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="C:/PROGRA~1/JETBRA~1/CLION2~1.4/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/Macross/Desktop/OrionNN/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="C:/PROGRA~1/JETBRA~1/CLION2~1.4/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/Macross/Desktop/OrionNN/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/PROGRA~1/JETBRA~1/CLION2~1.4/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/Macross/Desktop/OrionNN/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/PROGRA~1/JETBRA~1/CLION2~1.4/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/Macross/Desktop/OrionNN/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="rebuild_cache">
-				<Option working_dir="/home/macross/Desktop/OrionNN/cmake-build-debug"/>
+				<Option working_dir="C:/Users/Macross/Desktop/OrionNN/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/gmake -j4 -f &quot;/home/macross/Desktop/OrionNN/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
-					<CompileFile command="/usr/bin/gmake -j4 -f &quot;/home/macross/Desktop/OrionNN/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/gmake -j4 -f &quot;/home/macross/Desktop/OrionNN/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/gmake -j4 -f &quot;/home/macross/Desktop/OrionNN/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="C:/PROGRA~1/JETBRA~1/CLION2~1.4/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/Macross/Desktop/OrionNN/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="C:/PROGRA~1/JETBRA~1/CLION2~1.4/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/Macross/Desktop/OrionNN/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/PROGRA~1/JETBRA~1/CLION2~1.4/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/Macross/Desktop/OrionNN/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/PROGRA~1/JETBRA~1/CLION2~1.4/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/Macross/Desktop/OrionNN/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 		</Build>
-		<Unit filename="/home/macross/Desktop/OrionNN/examples/xor_classifier.hpp">
+		<Unit filename="C:/Users/Macross/Desktop/OrionNN/examples/xor_classifier.hpp">
 			<Option target="Orion"/>
 		</Unit>
-		<Unit filename="/home/macross/Desktop/OrionNN/orion/activations/elu.hpp">
+		<Unit filename="C:/Users/Macross/Desktop/OrionNN/orion/activations/elu.hpp">
 			<Option target="Orion"/>
 		</Unit>
-		<Unit filename="/home/macross/Desktop/OrionNN/orion/activations/linear.hpp">
+		<Unit filename="C:/Users/Macross/Desktop/OrionNN/orion/activations/linear.hpp">
 			<Option target="Orion"/>
 		</Unit>
-		<Unit filename="/home/macross/Desktop/OrionNN/orion/activations/relu.hpp">
+		<Unit filename="C:/Users/Macross/Desktop/OrionNN/orion/activations/relu.hpp">
 			<Option target="Orion"/>
 		</Unit>
-		<Unit filename="/home/macross/Desktop/OrionNN/orion/activations/selu.hpp">
+		<Unit filename="C:/Users/Macross/Desktop/OrionNN/orion/activations/selu.hpp">
 			<Option target="Orion"/>
 		</Unit>
-		<Unit filename="/home/macross/Desktop/OrionNN/orion/activations/sigmoid.hpp">
+		<Unit filename="C:/Users/Macross/Desktop/OrionNN/orion/activations/sigmoid.hpp">
 			<Option target="Orion"/>
 		</Unit>
-		<Unit filename="/home/macross/Desktop/OrionNN/orion/activations/softmax.hpp">
+		<Unit filename="C:/Users/Macross/Desktop/OrionNN/orion/activations/softmax.hpp">
 			<Option target="Orion"/>
 		</Unit>
-		<Unit filename="/home/macross/Desktop/OrionNN/orion/activations/softplus.hpp">
+		<Unit filename="C:/Users/Macross/Desktop/OrionNN/orion/activations/softplus.hpp">
 			<Option target="Orion"/>
 		</Unit>
-		<Unit filename="/home/macross/Desktop/OrionNN/orion/activations/softsign.hpp">
+		<Unit filename="C:/Users/Macross/Desktop/OrionNN/orion/activations/softsign.hpp">
 			<Option target="Orion"/>
 		</Unit>
-		<Unit filename="/home/macross/Desktop/OrionNN/orion/activations/swish.hpp">
+		<Unit filename="C:/Users/Macross/Desktop/OrionNN/orion/activations/swish.hpp">
 			<Option target="Orion"/>
 		</Unit>
-		<Unit filename="/home/macross/Desktop/OrionNN/orion/activations/tanh.hpp">
+		<Unit filename="C:/Users/Macross/Desktop/OrionNN/orion/activations/tanh.hpp">
 			<Option target="Orion"/>
 		</Unit>
-		<Unit filename="/home/macross/Desktop/OrionNN/orion/internal/batcher.cpp">
+		<Unit filename="C:/Users/Macross/Desktop/OrionNN/orion/internal/batcher.cpp">
 			<Option target="Orion"/>
 		</Unit>
-		<Unit filename="/home/macross/Desktop/OrionNN/orion/internal/batcher.hpp">
+		<Unit filename="C:/Users/Macross/Desktop/OrionNN/orion/internal/batcher.hpp">
 			<Option target="Orion"/>
 		</Unit>
-		<Unit filename="/home/macross/Desktop/OrionNN/orion/internal/print_tensor.cpp">
+		<Unit filename="C:/Users/Macross/Desktop/OrionNN/orion/internal/print_tensor.cpp">
 			<Option target="Orion"/>
 		</Unit>
-		<Unit filename="/home/macross/Desktop/OrionNN/orion/internal/print_tensor.hpp">
+		<Unit filename="C:/Users/Macross/Desktop/OrionNN/orion/internal/print_tensor.hpp">
 			<Option target="Orion"/>
 		</Unit>
-		<Unit filename="/home/macross/Desktop/OrionNN/orion/layers/conv2d.ipp">
+		<Unit filename="C:/Users/Macross/Desktop/OrionNN/orion/layers/conv2d.ipp">
 			<Option target="Orion"/>
 		</Unit>
-		<Unit filename="/home/macross/Desktop/OrionNN/orion/layers/dense.ipp">
+		<Unit filename="C:/Users/Macross/Desktop/OrionNN/orion/layers/dense.ipp">
 			<Option target="Orion"/>
 		</Unit>
-		<Unit filename="/home/macross/Desktop/OrionNN/orion/layers/embedding.cpp">
+		<Unit filename="C:/Users/Macross/Desktop/OrionNN/orion/layers/embedding.cpp">
 			<Option target="Orion"/>
 		</Unit>
-		<Unit filename="/home/macross/Desktop/OrionNN/orion/layers/embedding.hpp">
+		<Unit filename="C:/Users/Macross/Desktop/OrionNN/orion/layers/embedding.hpp">
 			<Option target="Orion"/>
 		</Unit>
-		<Unit filename="/home/macross/Desktop/OrionNN/orion/layers/globalaveragepooling1d.cpp">
+		<Unit filename="C:/Users/Macross/Desktop/OrionNN/orion/layers/flatten.ipp">
 			<Option target="Orion"/>
 		</Unit>
-		<Unit filename="/home/macross/Desktop/OrionNN/orion/layers/globalaveragepooling1d.hpp">
+		<Unit filename="C:/Users/Macross/Desktop/OrionNN/orion/layers/globalaveragepooling1d.cpp">
 			<Option target="Orion"/>
 		</Unit>
-		<Unit filename="/home/macross/Desktop/OrionNN/orion/layers/layer.hpp">
+		<Unit filename="C:/Users/Macross/Desktop/OrionNN/orion/layers/globalaveragepooling1d.hpp">
 			<Option target="Orion"/>
 		</Unit>
-		<Unit filename="/home/macross/Desktop/OrionNN/orion/layers/maxpooling2d.cpp">
+		<Unit filename="C:/Users/Macross/Desktop/OrionNN/orion/layers/layer.hpp">
 			<Option target="Orion"/>
 		</Unit>
-		<Unit filename="/home/macross/Desktop/OrionNN/orion/layers/maxpooling2d.hpp">
+		<Unit filename="C:/Users/Macross/Desktop/OrionNN/orion/layers/maxpooling2d.cpp">
 			<Option target="Orion"/>
 		</Unit>
-		<Unit filename="/home/macross/Desktop/OrionNN/orion/loss/binary_cross_entropy.cpp">
+		<Unit filename="C:/Users/Macross/Desktop/OrionNN/orion/layers/maxpooling2d.hpp">
 			<Option target="Orion"/>
 		</Unit>
-		<Unit filename="/home/macross/Desktop/OrionNN/orion/loss/binary_cross_entropy.hpp">
+		<Unit filename="C:/Users/Macross/Desktop/OrionNN/orion/loss/binary_cross_entropy.cpp">
 			<Option target="Orion"/>
 		</Unit>
-		<Unit filename="/home/macross/Desktop/OrionNN/orion/loss/mean_squared_error.cpp">
+		<Unit filename="C:/Users/Macross/Desktop/OrionNN/orion/loss/binary_cross_entropy.hpp">
 			<Option target="Orion"/>
 		</Unit>
-		<Unit filename="/home/macross/Desktop/OrionNN/orion/loss/mean_squared_error.hpp">
+		<Unit filename="C:/Users/Macross/Desktop/OrionNN/orion/loss/mean_squared_error.cpp">
 			<Option target="Orion"/>
 		</Unit>
-		<Unit filename="/home/macross/Desktop/OrionNN/orion/main.cpp">
+		<Unit filename="C:/Users/Macross/Desktop/OrionNN/orion/loss/mean_squared_error.hpp">
 			<Option target="Orion"/>
 		</Unit>
-		<Unit filename="/home/macross/Desktop/OrionNN/orion/metrics/accuracy.cpp">
+		<Unit filename="C:/Users/Macross/Desktop/OrionNN/orion/main.cpp">
 			<Option target="Orion"/>
 		</Unit>
-		<Unit filename="/home/macross/Desktop/OrionNN/orion/metrics/accuracy.hpp">
+		<Unit filename="C:/Users/Macross/Desktop/OrionNN/orion/metrics/accuracy.cpp">
 			<Option target="Orion"/>
 		</Unit>
-		<Unit filename="/home/macross/Desktop/OrionNN/orion/metrics/loss.cpp">
+		<Unit filename="C:/Users/Macross/Desktop/OrionNN/orion/metrics/accuracy.hpp">
 			<Option target="Orion"/>
 		</Unit>
-		<Unit filename="/home/macross/Desktop/OrionNN/orion/metrics/loss.hpp">
+		<Unit filename="C:/Users/Macross/Desktop/OrionNN/orion/metrics/loss.cpp">
 			<Option target="Orion"/>
 		</Unit>
-		<Unit filename="/home/macross/Desktop/OrionNN/orion/optimizers/adam.cpp">
+		<Unit filename="C:/Users/Macross/Desktop/OrionNN/orion/metrics/loss.hpp">
 			<Option target="Orion"/>
 		</Unit>
-		<Unit filename="/home/macross/Desktop/OrionNN/orion/optimizers/adam.hpp">
+		<Unit filename="C:/Users/Macross/Desktop/OrionNN/orion/optimizers/adam.cpp">
 			<Option target="Orion"/>
 		</Unit>
-		<Unit filename="/home/macross/Desktop/OrionNN/orion/optimizers/rmsprop.cpp">
+		<Unit filename="C:/Users/Macross/Desktop/OrionNN/orion/optimizers/adam.hpp">
 			<Option target="Orion"/>
 		</Unit>
-		<Unit filename="/home/macross/Desktop/OrionNN/orion/optimizers/rmsprop.hpp">
+		<Unit filename="C:/Users/Macross/Desktop/OrionNN/orion/optimizers/rmsprop.cpp">
 			<Option target="Orion"/>
 		</Unit>
-		<Unit filename="/home/macross/Desktop/OrionNN/orion/optimizers/sgd.cpp">
+		<Unit filename="C:/Users/Macross/Desktop/OrionNN/orion/optimizers/rmsprop.hpp">
 			<Option target="Orion"/>
 		</Unit>
-		<Unit filename="/home/macross/Desktop/OrionNN/orion/optimizers/sgd.hpp">
+		<Unit filename="C:/Users/Macross/Desktop/OrionNN/orion/optimizers/sgd.cpp">
 			<Option target="Orion"/>
 		</Unit>
-		<Unit filename="/home/macross/Desktop/OrionNN/orion/orion.hpp">
+		<Unit filename="C:/Users/Macross/Desktop/OrionNN/orion/optimizers/sgd.hpp">
 			<Option target="Orion"/>
 		</Unit>
-		<Unit filename="/home/macross/Desktop/OrionNN/orion/orion_assert.hpp">
+		<Unit filename="C:/Users/Macross/Desktop/OrionNN/orion/orion.hpp">
 			<Option target="Orion"/>
 		</Unit>
-		<Unit filename="/home/macross/Desktop/OrionNN/orion/orion_types.hpp">
+		<Unit filename="C:/Users/Macross/Desktop/OrionNN/orion/orion_assert.hpp">
 			<Option target="Orion"/>
 		</Unit>
-		<Unit filename="/home/macross/Desktop/OrionNN/orion/sequential.cpp">
+		<Unit filename="C:/Users/Macross/Desktop/OrionNN/orion/orion_types.hpp">
 			<Option target="Orion"/>
 		</Unit>
-		<Unit filename="/home/macross/Desktop/OrionNN/orion/sequential.hpp">
+		<Unit filename="C:/Users/Macross/Desktop/OrionNN/orion/sequential.cpp">
 			<Option target="Orion"/>
 		</Unit>
-		<Unit filename="/home/macross/Desktop/OrionNN/CMakeLists.txt">
+		<Unit filename="C:/Users/Macross/Desktop/OrionNN/orion/sequential.hpp">
+			<Option target="Orion"/>
+		</Unit>
+		<Unit filename="C:/Users/Macross/Desktop/OrionNN/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>
 		</Unit>
-		<Unit filename="/home/macross/Desktop/OrionNN/orion/CMakeLists.txt">
+		<Unit filename="C:/Users/Macross/Desktop/OrionNN/orion/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\orion\"/>
 		</Unit>
-		<Unit filename="/home/macross/Desktop/OrionNN/orion/activations/CMakeLists.txt">
+		<Unit filename="C:/Users/Macross/Desktop/OrionNN/orion/activations/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\orion\activations\"/>
 		</Unit>
-		<Unit filename="/home/macross/Desktop/OrionNN/orion/layers/CMakeLists.txt">
+		<Unit filename="C:/Users/Macross/Desktop/OrionNN/orion/layers/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\orion\layers\"/>
 		</Unit>
-		<Unit filename="/home/macross/Desktop/OrionNN/orion/weights/CMakeLists.txt">
+		<Unit filename="C:/Users/Macross/Desktop/OrionNN/orion/weights/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\orion\weights\"/>
 		</Unit>
-		<Unit filename="/home/macross/Desktop/OrionNN/orion/optimizers/CMakeLists.txt">
+		<Unit filename="C:/Users/Macross/Desktop/OrionNN/orion/optimizers/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\orion\optimizers\"/>
 		</Unit>
-		<Unit filename="/home/macross/Desktop/OrionNN/orion/loss/CMakeLists.txt">
+		<Unit filename="C:/Users/Macross/Desktop/OrionNN/orion/loss/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\orion\loss\"/>
 		</Unit>
-		<Unit filename="/home/macross/Desktop/OrionNN/orion/internal/CMakeLists.txt">
+		<Unit filename="C:/Users/Macross/Desktop/OrionNN/orion/internal/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\orion\internal\"/>
 		</Unit>
-		<Unit filename="/home/macross/Desktop/OrionNN/orion/metrics/CMakeLists.txt">
+		<Unit filename="C:/Users/Macross/Desktop/OrionNN/orion/metrics/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\orion\metrics\"/>
 		</Unit>
-		<Unit filename="/home/macross/Desktop/OrionNN/examples/CMakeLists.txt">
+		<Unit filename="C:/Users/Macross/Desktop/OrionNN/examples/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\examples\"/>
 		</Unit>
 	</Project>

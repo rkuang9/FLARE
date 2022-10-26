@@ -11,5 +11,6 @@
 #include "globalaveragepooling1d.hpp"
 #include "conv2d.hpp"
 #include "maxpooling2d.hpp"
+#include "flatten.hpp"
 
 #endif //ORION_INCLUDE_LAYERS_HPP

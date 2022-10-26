@@ -69,6 +69,8 @@ template<typename Activation>
 void Dense<Activation>::Backward(const Layer &next) // hidden layer backward
 {
     // (next.weights.transpose * next.dL_dZ) hadamard g'(this->Z)
+    // TODO: move the contraction terms to Dense::GetInputGradients
+    // TODO: otherwise Dense -> Flatten won't work together
     this->dL_dZ = next.GetWeights().contract(
             next.GetInputGradients2D(), ContractDim{Axes{0, 0}}) *
                   Activation::Gradients(this->Z);

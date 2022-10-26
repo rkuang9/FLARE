@@ -63,7 +63,7 @@ typedef Tensor<2>::Dimensions Dilation;
 using Padding = Eigen::PaddingType;
 
 // pooling typedefs
-
+typedef Tensor<2>::Dimensions PoolSize;
 
 }
 

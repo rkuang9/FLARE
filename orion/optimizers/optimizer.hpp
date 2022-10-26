@@ -25,6 +25,8 @@ public:
 
     virtual void Minimize(Tensor<1> &b, const Tensor<1> &dL_db) = 0;
 
+    virtual void Minimize(Tensor<4> &W, const Tensor<4> &dL_dW) {};
+
     Scalar GetLearningRate() const { return this->learning_rate; };
 
 protected:

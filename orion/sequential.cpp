@@ -31,13 +31,13 @@ void Sequential::Compile(LossFunction &loss_function, Optimizer &optimizer)
 }
 
 
-// currently accepts Tensor<2> inputs (column vecors stacked side by side into a matrix)
+/*// currently accepts Tensor<2> inputs (column vecors stacked side by side into a matrix)
 void Sequential::Fit(std::vector<std::vector<Scalar>> &inputs,
                      std::vector<std::vector<Scalar>> &labels,
                      int epochs, int batch_size)
 {
     if (inputs.size() != labels.size()) {
-        //throw std::invalid_argument("inputs should batch labels 1:1");
+        //throw std::invalid_argument("inputs should match labels 1:1");
     }
 
     if (!this->loss) {
@@ -63,10 +63,12 @@ void Sequential::Fit(std::vector<std::vector<Scalar>> &inputs,
         }
 
         if (!this->metrics.empty()) {
-            std::cout << "Epoch " << std::right << std::setw(std::to_string(epochs).length()) << e + 1;
+            std::cout << "Epoch " << std::right
+                    << std::setw(std::to_string(epochs).length()) << e + 1;
 
             for (auto *metric: this->metrics) {
-                std::cout << " - " << metric->name << ": " << metric->Compute(*this) << " ";
+                std::cout << " - " << metric->name << ": " << metric->Compute(*this)
+                        << " ";
             }
 
             std::cout << "\n";
@@ -81,7 +83,7 @@ void Sequential::Fit(const std::vector<Tensor<2>> &inputs,
                      int epochs, int batch_size)
 {
     if (inputs.size() != labels.size()) {
-        throw std::invalid_argument("inputs should batch labels 1:1");
+        throw std::invalid_argument("inputs should match labels 1:1");
     }
 
     if (!this->loss) {
@@ -103,31 +105,7 @@ void Sequential::Fit(const std::vector<Tensor<2>> &inputs,
             this->Update(*this->opt);
         }
     }
-}
-
-
-void Sequential::Forward(const Tensor<2> &training_sample)
-{
-    this->layers.front()->Forward(training_sample);
-
-    for (size_t i = 1; i < this->layers.size(); i++) {
-        this->layers[i]->Forward(*this->layers[i - 1]);
-    }
-}
-
-
-void
-Sequential::Backward(const Tensor<2> &training_label, LossFunction &loss_function)
-{
-    loss_function.CalculateLoss(this->layers.back()->GetOutput2D(),
-                                training_label);
-
-    this->layers.back()->Backward(loss_function);
-
-    for (int i = this->layers.size() - 2; i >= 0; --i) {
-        this->layers[i]->Backward(*this->layers[i + 1]);
-    }
-}
+}*/
 
 
 void Sequential::Update(Optimizer &optimizer)
@@ -192,15 +170,15 @@ Scalar Sequential::GradientCheck(const Tensor<2> &input, const Tensor<2> &label,
                 theta(row, col) += epsilon;
                 this->layers[i]->SetWeights(theta);
                 this->Forward(input);
-                Scalar J_plus = (*this->loss)(
-                        this->layers.back()->GetOutput2D(), label);
+                this->loss->CalculateLoss(this->layers.back()->GetOutput2D(), label);
+                Scalar J_plus = this->loss->GetLoss();
 
                 // J(0...0-E...0) term, 2* to undo J_plus too
                 theta(row, col) -= 2 * epsilon;
                 this->layers[i]->SetWeights(theta);
                 this->Forward(input);
-                Scalar J_minus = (*this->loss)(
-                        this->layers.back()->GetOutput2D(), label);
+                this->loss->CalculateLoss(this->layers.back()->GetOutput2D(), label);
+                Scalar J_minus = this->loss->GetLoss();
 
                 dtheta_approx(row, col) = (J_plus - J_minus) / (2 * epsilon);
 

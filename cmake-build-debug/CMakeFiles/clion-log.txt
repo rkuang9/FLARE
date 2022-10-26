@@ -1,4 +1,4 @@
-/snap/clion/206/bin/cmake/linux/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" -S /home/macross/Desktop/OrionNN -B /home/macross/Desktop/OrionNN/cmake-build-debug
+"C:\Program Files\JetBrains\CLion 2022.2.4\bin\cmake\win\bin\cmake.exe" -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - MinGW Makefiles" -S C:\Users\Macross\Desktop\OrionNN -B C:\Users\Macross\Desktop\OrionNN\cmake-build-debug
 -- Configuring done
 -- Generating done
--- Build files have been written to: /home/macross/Desktop/OrionNN/cmake-build-debug
+-- Build files have been written to: C:/Users/Macross/Desktop/OrionNN/cmake-build-debug

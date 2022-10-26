@@ -5,6 +5,7 @@ set(SOURCES
         globalaveragepooling1d.cpp
         conv2d.ipp
         maxpooling2d.cpp
+        flatten.ipp
         )
 
 set(SOURCE_DIRECTORY)

@@ -23,12 +23,15 @@ public:
 
     void Minimize(Tensor<1> &b, const Tensor<1> &dL_db) override;
 
+    void Minimize(Tensor<4> &k, const Tensor<4> &dL_dk) override;
+
     Scalar GetMomentum() const;
 
 private:
     Scalar momentum; // default 0 means no momentum
 
     // holds moving averages per layer, stored using Tensor.data() pointer as key
+    std::map<const Scalar *, Tensor<4>> v_dk; // k = kernels/filters
     std::map<const Scalar *, Tensor<2>> v_dw;
     std::map<const Scalar *, Tensor<1>> v_db;
 };

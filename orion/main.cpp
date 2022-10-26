@@ -1,66 +1,83 @@
 #include <iostream>
 #include <chrono>
-
+#include <vector>
 #include <orion/orion.hpp>
-#include "examples/xor_classifier.hpp"
+//#include "examples/xor_classifier.hpp"
+#include <utility>
+
+// FLARE
+// Fast Learning Architectures/Algorithms Ran Eagerly
+// Fast Learning Architectures/Algorithms Rapid Execution
+// Fast Learning Architectures/Algorithms Really Epic
 
 using namespace orion;
 
+Dims<4> NCHW(0, 3, 1, 2);
 
-void convolve_test()
+
+void conv_backpropagation()
 {
-    int batch = 2;
+    int filters = 2;
     int channels = 3;
-    int filters = 3;
-    int filter_size = 2;
+    int batch_size = 5;
 
-    Tensor<3> preimage(1, 3, 3);
-    preimage.setValues({{{1, 1, 3}, {1, 1, 2}, {2, 4, 0}}});
-    Tensor<3> prekernel(1, 2, 2);
-    prekernel.setValues({{{1, 0}, {2, 1}}});
+    std::cout << "filters: ";
+    std::cin >> filters;
 
-    Tensor<4> image = preimage.reshape(Dims<4>(1, 3, 3, 1)).broadcast(
-            Dims<4>(batch, 1, 1, channels));
-    Tensor<4> kernel = prekernel.reshape(
-            Dims<4>(1, filter_size, filter_size, 1)).broadcast(
-            Dims<4>(filters, 1, 1, channels));
+    std::cout << "channels: ";
+    std::cin >> channels;
 
+    std::cout << "batch_size: ";
+    std::cin >> batch_size;
+    std::cout << "\n";
 
-    Layer *conv = new Conv2D<ReLU>(filters, Input(3, 3, channels), Kernel(2, 2), Padding::PADDING_VALID);
+    Tensor<2> preimage(5, 5);
+    preimage.setValues({{1, 2,  3,  4,  5},
+                        {2, 4,  6,  8,  10},
+                        {3, 6,  9,  12, 15},
+                        {5, 10, 15, 20, 25},
+                        {6, 12, 18, 24, 36}});
+
+    Tensor<4> image = preimage
+            .reshape(Dims<4>(1, preimage.dimension(0), preimage.dimension(1), 1))
+            .broadcast(Dims<4>(batch_size, 1, 1, channels));
+
+    Tensor<1> prelabel(9 * filters * batch_size);
+    prelabel.setConstant(30.0);
+    Tensor<4> label(batch_size, 3, 3, filters);
+    label.setConstant(30.0);
+
+    Tensor<2> prekernel(3, 3);
+    prekernel.setValues({{1, 0, 1},
+                         {2, 1, 3},
+                         {3, 1, 2}});
+
+    Tensor<4> kernel = prekernel
+            .reshape(Dims<4>(1, prekernel.dimension(0), prekernel.dimension(1), 1))
+            .broadcast(Dims<4>(filters, 1, 1, channels));
+
+    SGD sgd(1);
+    MeanSquaredError loss;
+
+    Layer *conv = new Conv2D<Swish>(filters, Input(5, 5, channels), Kernel(3, 3),
+                                     Padding::PADDING_VALID, Stride(1, 1));
     conv->SetWeights(kernel);
+
     conv->Forward(image);
-    std::cout << conv->GetOutput4D().shuffle(Dims<4>(0, 3, 1, 2)) << "\n" << conv->GetOutput4D().dimensions() << "\n";
+    loss.CalculateLoss(conv->GetOutput4D(), label);
+    conv->Backward(loss);
+    conv->Update(sgd);
+    std::cout << "updated kernels: " << conv->GetWeights4D().dimensions() << "\n" << conv->GetWeights4D().shuffle(NCHW) << "\n";
 }
 
-
-void pooling2D()
-{
-    Tensor<2> img(3, 3);
-    img.setValues({{1, 2, 3},
-                   {4, 5, 6},
-                   {7, 8, 9}});
-
-    Tensor<4> patches = img.reshape(Dims<4>(1, 3, 3, 1))
-            .extract_image_patches(2, 2, 1, 1, 1, 1, Eigen::PADDING_VALID)
-            .reshape(Dims<3>(1, 4, 4))
-            .maximum(Dims<1>(2))
-            .reshape(Dims<4>(1, 2, 2, 1));
-
-    std::cout << patches.shuffle(Dims<4>(0, 3, 1, 2)) << "\n" << patches.dimensions()
-            << "\n\n";
-
-}
 
 
 int main()
 {
     auto start = std::chrono::high_resolution_clock::now();
 
-
-    //pooling2D();
-    convolve_test();
-
-
+    //padding();
+    conv_backpropagation();
 
     auto stop = std::chrono::high_resolution_clock::now();
     auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);

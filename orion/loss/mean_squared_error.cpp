@@ -10,7 +10,7 @@ namespace orion
 
 MeanSquaredError::MeanSquaredError(int history_size)
 {
-    this->gradient_history.reserve(history_size);
+    this->gradient_history2D.reserve(history_size);
     this->loss_history.reserve(history_size);
 }
 
@@ -23,14 +23,27 @@ void MeanSquaredError::CalculateLoss(const Tensor<2> &predict,
                          " don't match label dimensions " <<
                          label.dimensions());
 
-    this->loss_history.push_back((*this)(predict, label));
-
-    this->gradient_history.emplace_back(2 * (predict - label));
+    this->loss_history.push_back(this->Loss(predict, label));
+    this->gradient_history2D.emplace_back(2 * (predict - label));
 }
 
 
-Scalar MeanSquaredError::operator()(const Tensor<2> &predict,
-                                    const Tensor<2> &label) const
+void MeanSquaredError::CalculateLoss(const Tensor<4> &predict,
+                                     const Tensor<4> &label)
+{
+    orion_assert(predict.dimensions() == label.dimensions(),
+                 "predict dimensions " << predict.dimensions() <<
+                         " don't match label dimensions " <<
+                         label.dimensions());
+
+    this->loss_history.push_back(this->Loss(predict, label));
+    this->gradient_history4D.emplace_back(2 * (predict - label));
+}
+
+
+template<int TensorRank>
+Scalar MeanSquaredError::Loss(const Tensor<TensorRank> &predict,
+                              const Tensor<TensorRank> &label)
 {
     Tensor<0> mean = (label - predict).square().mean();
     return mean(0);

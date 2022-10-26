@@ -17,8 +17,11 @@ public:
 
     void CalculateLoss(const Tensor<2> &predict, const Tensor<2> &label) override;
 
-    Scalar operator()(const Tensor<2> &predict,
-                      const Tensor<2> &label) const override;
+    void CalculateLoss(const Tensor<4> &predict, const Tensor<4> &label) override;
+
+private:
+    template<int TensorRank>
+    Scalar Loss(const Tensor<TensorRank> &predict, const Tensor<TensorRank> &label);
 };
 
 } // orion

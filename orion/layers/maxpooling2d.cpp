@@ -6,170 +6,73 @@
 
 namespace orion
 {
-template<int PoolRank>
-void MaxPooling2D<PoolRank>::Forward(const Tensor<2> &inputs)
+
+MaxPooling2D::MaxPooling2D(const PoolSize &pool_dim, const Stride &stride_dim) :
+        pool_dim(pool_dim),
+        stride_dim(stride_dim)
 {
-    Layer::Forward(inputs);
+    // assumes PADDING_VALID
 }
 
 
-template<int PoolRank>
-void MaxPooling2D<PoolRank>::Forward(const Tensor<3> &inputs)
+void MaxPooling2D::Forward(const Tensor<4> &inputs)
 {
-    Layer::Forward(inputs);
+    auto batches = inputs.dimension(0);
+    auto channels = inputs.dimension(3);
+
+    auto output_h =
+            ((inputs.dimension(1) - this->pool_dim[0]) / this->stride_dim[0]) + 1;
+    auto output_w =
+            ((inputs.dimension(2)  - this->pool_dim[1]) / this->stride_dim[1]) + 1;
+
+    this->Z = inputs
+            .extract_image_patches(
+                    this->pool_dim[0], this->pool_dim[1],
+                    this->stride_dim[0], this->stride_dim[1],
+                    1, 1, Eigen::PADDING_VALID)
+            .maximum(Dims<2>(2, 3))
+            .reshape(Dims<4>(batches, output_h, output_w, channels));
 }
 
 
-template<int PoolRank>
-void MaxPooling2D<PoolRank>::Forward(const Tensor<4> &inputs)
-{
-    Layer::Forward(inputs);
-}
-
-
-template<int PoolRank>
-void MaxPooling2D<PoolRank>::Backward(const LossFunction &loss_function)
-{
-    Layer::Backward(loss_function);
-}
-
-
-template<int PoolRank>
-void MaxPooling2D<PoolRank>::Forward(const Layer &prev)
+void MaxPooling2D::Forward(const Layer &prev)
 {
     Layer::Forward(prev);
 }
 
 
-template<int PoolRank>
-void MaxPooling2D<PoolRank>::Backward(const Layer &next)
+void MaxPooling2D::Backward(const LossFunction &loss_function)
+{
+    Layer::Backward(loss_function);
+}
+
+
+void MaxPooling2D::Backward(const Layer &next)
 {
     Layer::Backward(next);
 }
 
 
-template<int PoolRank>
-void MaxPooling2D<PoolRank>::Update(Optimizer &optimizer)
+const Tensor<4> &MaxPooling2D::GetOutput4D() const
 {
-    Layer::Update(optimizer);
+    return this->Z;
 }
 
 
-template<int PoolRank>
-const Tensor<2> &MaxPooling2D<PoolRank>::GetOutput2D() const
-{
-    return Layer::GetOutput2D();
-}
-
-
-template<int PoolRank>
-const Tensor<3> &MaxPooling2D<PoolRank>::GetOutput3D() const
-{
-    return Layer::GetOutput3D();
-}
-
-
-template<int PoolRank>
-const Tensor<4> &MaxPooling2D<PoolRank>::GetOutput4D() const
-{
-    return Layer::GetOutput4D();
-}
-
-
-template<int PoolRank>
-const Tensor<2> &MaxPooling2D<PoolRank>::GetInputGradients2D() const
-{
-    return Layer::GetInputGradients2D();
-}
-
-
-template<int PoolRank>
-const Tensor<3> &MaxPooling2D<PoolRank>::GetInputGradients3D() const
-{
-    return Layer::GetInputGradients3D();
-}
-
-
-template<int PoolRank>
-const Tensor<4> &MaxPooling2D<PoolRank>::GetInputGradients4D() const
+const Tensor<4> &MaxPooling2D::GetInputGradients4D() const
 {
     return Layer::GetInputGradients4D();
 }
 
 
-template<int PoolRank>
-const Tensor<2> &MaxPooling2D<PoolRank>::GetWeights() const
+int MaxPooling2D::GetInputRank() const
 {
-    return Layer::GetWeights();
+    return 4;
 }
 
 
-template<int PoolRank>
-const Tensor<4> &MaxPooling2D<PoolRank>::GetWeights4D() const
+int MaxPooling2D::GetOutputRank() const
 {
-    return Layer::GetWeights4D();
+    return 4;
 }
-
-
-template<int PoolRank>
-const Tensor<2> &MaxPooling2D<PoolRank>::GetWeightGradients() const
-{
-    return Layer::GetWeightGradients();
-}
-
-
-template<int PoolRank>
-const Tensor<4> &MaxPooling2D<PoolRank>::GetWeightGradients4D() const
-{
-    return Layer::GetWeightGradients4D();
-}
-
-
-template<int PoolRank>
-void MaxPooling2D<PoolRank>::SetWeights(const Tensor<2> &weights)
-{
-    Layer::SetWeights(weights);
-}
-
-
-template<int PoolRank>
-void MaxPooling2D<PoolRank>::SetWeights(const Tensor<4> &weights)
-{
-    Layer::SetWeights(weights);
-}
-
-
-template<int PoolRank>
-const Tensor<2> &MaxPooling2D<PoolRank>::GetBias() const
-{
-    return Layer::GetBias();
-}
-
-
-template<int PoolRank>
-void MaxPooling2D<PoolRank>::SetBias(const Tensor<2> &bias)
-{
-    Layer::SetBias(bias);
-}
-
-
-template<int PoolRank>
-void MaxPooling2D<PoolRank>::SetBias(const Tensor<4> &bias)
-{
-    Layer::SetBias(bias);
-}
-
-
-template<int PoolRank>
-int MaxPooling2D<PoolRank>::GetInputRank() const
-{
-    return 0;
-}
-
-
-template<int PoolRank>
-int MaxPooling2D<PoolRank>::GetOutputRank() const
-{
-    return 0;
-}
-} // orion
+} // namespace orion
