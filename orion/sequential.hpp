@@ -59,11 +59,8 @@ public:
 
         for (int e = 0; e < epochs; e++) {
             for (int m = 0; m < inputs.size(); m++) {
-                std::cout << "forward\n";
                 this->Forward(inputs[m]);
-                std::cout << "backward\n";
                 this->Backward(labels[m], *this->loss);
-                std::cout << "update\n";
                 this->Update(*this->opt);
 
                 // print metrics on screen
