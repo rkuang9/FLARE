@@ -10,10 +10,10 @@ namespace orion
 {
 
 template<typename Activation>
-Conv2D<Activation>::Conv2D(int num_filters, const Input &input, const Kernel &kernel,
-                           Padding padding, const Stride &stride,
-                           const Initializer<4> &initializer,
-                           const Dilation &dilation) :
+Conv2D<Activation>::Conv2D(
+        int num_filters, const Input &input, const Kernel &kernel,
+        const Stride &stride, const Dilation &dilation, Padding padding,
+        const Initializer<4> &initializer) :
         input_dim(input), kernel_dim(kernel),
         stride_dim(stride), dilation_dim(dilation),
         padding(padding == 1 ? Eigen::PADDING_VALID : Eigen::PADDING_SAME)
@@ -22,44 +22,38 @@ Conv2D<Activation>::Conv2D(int num_filters, const Input &input, const Kernel &ke
     throw std::invalid_argument(
             "Conv2D only supports the NHWC tensor format, use ORION_ROWMAJOR instead");
 #endif
-    /*if (padding == Padding::PADDING_SAME) {
-        throw std::invalid_argument("SAME padding not working YET");
-    }*/
 
     orion_assert(kernel.size() == 2 && stride.size() == 2 && dilation.size() == 2,
-                 "kernel, stride, and dilation dimensions require 2 values");
+                 "CONV2D KERNEL, STRIDE, AND DILATION DIMS EACH REQUIRE 2 VALUES");
 
-    orion_assert(kernel[0] % 2 == 1 && kernel[1] % 2 == 1.0,
-                 "Conv2D kernel dimensions should be odd numbers");
+    this->name = "conv2d";
 
-    auto receptive_field_size = kernel[0] * kernel[1];
-    auto input_channels = input.back();
 
+    // initialize kernel values
     // https://stackoverflow.com/questions/42670274/how-to-calculate-fan-in-and-fan-out-in-xavier-initialization-for-neural-networks
+    auto receptive_field_size = kernel.height() * kernel.width();
+    auto channels = input.back();
+
     this->kernels = initializer.
-            Initialize(Dims<4>(num_filters, kernel[0], kernel[1], input.back()),
-                       static_cast<int>(input_channels * receptive_field_size),
+            Initialize(Dims<4>(num_filters, kernel.height(),
+                               kernel.width(), input.channels()),
+                       static_cast<int>(channels * receptive_field_size),
                        static_cast<int>(num_filters * receptive_field_size));
 }
 
 
-// https://stackoverflow.com/questions/55532819
 template<typename Activation>
 void Conv2D<Activation>::Forward(const Tensor<4> &inputs)
 {
-    // TODO: may have to change assertion to check channels only, and maybe change
-    // TODO: the constructor signature to accept channels rather than image dimensions
-    orion_assert(/*inputs.dimension(1) == this->input_dim[0] &&
-                 inputs.dimension(2) == this->input_dim[1] &&*/
-            inputs.dimension(3) == this->input_dim[2],
-            "Conv2D::Forward EXPECTED INPUT DIMENSIONS "
-                    << Dims<4>(inputs.dimension(0), this->input_dim[0],
-                               this->input_dim[1], this->input_dim[2])
-                    << " , INSTEAD GOT " << inputs.dimensions());
+    orion_assert(inputs.dimension(3) == this->input_dim[2],
+                 "Conv2D::Forward EXPECTED INPUT DIMENSIONS "
+                         << Dims<4>(inputs.dimension(0), this->input_dim[0],
+                                    this->input_dim[1], this->input_dim[2])
+                         << " , INSTEAD GOT " << inputs.dimensions());
 
     this->X = inputs;
-    this->Z = Conv2D::Convolve(inputs, this->kernels, this->stride_dim,
-                               this->padding, this->dilation_dim);
+    this->Z = Conv2D::ConvolutionForward(inputs, this->kernels, this->stride_dim,
+                                         this->dilation_dim, this->padding);
     this->A = Activation::Activate(this->Z);
 }
 
@@ -97,25 +91,14 @@ void Conv2D<Activation>::Backward()
             this->X, this->dL_dZ,
             this->dilation_dim, this->stride_dim,
             this->padding, this->kernels.dimensions());
-
     orion_assert(this->dL_dk.dimensions() == this->kernels.dimensions(),
                  "Conv2D::Backward EXPECTED KERNEL GRADIENTS DIMENSIONS "
                          << this->kernels.dimensions() << ", GOT "
                          << this->dL_dk.dimensions());
 
-    /*// pad height and width of output gradients, both in each direction once
-    Eigen::array<std::pair<int, int>, 4> single_pad_hw;
-    single_pad_hw[0] = std::make_pair(0, 0);
-    single_pad_hw[1] = std::make_pair(1, 1);
-    single_pad_hw[2] = std::make_pair(1, 1);
-    single_pad_hw[3] = std::make_pair(0, 0);
-
-    // pad(dL_dZ) * rotate180HW(kernels)
-    this->dL_dX = Conv2D::Convolve(this->dL_dZ.pad(single_pad_hw),
-                                   this->kernels.template reverse(
-                                           Dims<4, bool>(false, true, true, false)),
-                                   this->stride_dim,
-                                   this->padding, this->dilation_dim);*/
+    this->dL_dX = Conv2D::ConvolutionBackwardInput(
+            this->dL_dZ, this->kernels,
+            this->dilation_dim, this->stride_dim, this->X.dimensions());
 }
 
 
@@ -197,46 +180,55 @@ int Conv2D<Activation>::GetOutputRank() const
 
 
 template<typename Activation>
-Tensor<4> Conv2D<Activation>::Convolve(const Tensor<4> &input,
-                                       const Tensor<4> &kernels,
-                                       const Stride &stride, Padding padding,
-                                       const Dilation &dilation)
+Tensor<4> Conv2D<Activation>::ConvolutionForward(
+        const Tensor<4> &input, const Tensor<4> &kernels,
+        const Stride &stride, const Dilation &dilation, Padding padding)
 {
     Eigen::Index num_kernels = kernels.dimension(0); // the N in kernels' NHWC
     Eigen::Index kernel_h = kernels.dimension(1);
     Eigen::Index kernel_w = kernels.dimension(2);
     Eigen::Index kernel_size = kernel_h * kernel_w * kernels.dimension(3);
-
-    Eigen::Index padding_h =
-            padding == Padding::PADDING_VALID ? 0 : (kernels.dimension(1) - 1) / 2;
-    Eigen::Index padding_w =
-            padding == Padding::PADDING_VALID ? 0 : (kernels.dimension(2) - 1) / 2;
-
-    Eigen::Index output_h =
-            ((input.dimension(1) + 2 * padding_h - dilation[0] * (kernel_h - 1) -
-              1) / stride[0]) + 1;
-    Eigen::Index output_w =
-            ((input.dimension(2) + 2 * padding_w - dilation[1] * (kernel_w - 1) -
-              1) / stride[1]) + 1;
-
+    Eigen::Index input_h = input.dimension(1);
+    Eigen::Index input_w = input.dimension(2);
     Eigen::Index batch_size = input.dimension(0);
+
+    Eigen::Index output_h = 0;
+    Eigen::Index output_w = 0;
+    Eigen::Index pad_h = 0;
+    Eigen::Index pad_w = 0;
+
+    if (padding == Eigen::PADDING_SAME) {
+        // same padding for strided convolutions will have resolution decreased
+        output_h = std::ceil(static_cast<Scalar>(input_h) /
+                             static_cast<Scalar>(stride.height()));
+        output_w = std::ceil(static_cast<Scalar>(input_w) /
+                             static_cast<Scalar>(stride.width()));
+
+        pad_h = (output_h - 1) * stride.height() -
+                input_h + dilation.height() * (kernel_h - 1) + 1;
+        pad_w = (output_w - 1) * stride.width() -
+                input_w + dilation.width() * (kernel_w - 1) + 1;
+    }
+    else {
+        output_h = 1 + (input_h - dilation.height() * (kernel_h - 1) - 1) /
+                       stride.height();
+        output_w = 1 + (input_w - dilation.width() * (kernel_w - 1) - 1) /
+                       stride.width();
+    }
+
     Eigen::Index num_patches = output_h * output_w;
-
-
-    Tensor<5> patches = input.extract_image_patches(
-            kernel_h, kernel_w,
-            stride[0], stride[1],
-            dilation[0], dilation[1], padding);
 
     return input
             .extract_image_patches(
                     kernel_h, kernel_w,
-                    stride[0], stride[1],
-                    dilation[0], dilation[1], padding)
+                    stride.height(), stride.width(),
+                    dilation.height(), dilation.width(),
+                    1, 1,
+                    pad_h / 2, pad_h - pad_h / 2,
+                    pad_w / 2, pad_w - pad_w / 2, 0.0)
             .reshape(Dims<3>(batch_size, num_patches, kernel_size))
-            .contract(
-                    kernels.reshape(Dims<2>(num_kernels, kernel_size)),
-                    ContractDim {Axes(2, 1)})
+            .contract(kernels.reshape(Dims<2>(num_kernels, kernel_size)),
+                      ContractDim {Axes(2, 1)})
             .reshape(Dims<4>(batch_size, output_h, output_w, num_kernels));
 }
 
@@ -245,7 +237,7 @@ template<typename Activation>
 Tensor<4> Conv2D<Activation>::ConvolutionBackwardKernel(
         const Tensor<4> &layer_input, const Tensor<4> &gradients,
         const Stride &stride, const Dilation &dilation,
-        Padding padding, Dims<4> output_dims)
+        Padding padding, const Dims<4> &output_dims)
 {
     // stride and dilation from forward propagation are swapped in backpropagation
     // layer_input is the layer input 4D tensor in format [N,H,W,C]
@@ -257,7 +249,7 @@ Tensor<4> Conv2D<Activation>::ConvolutionBackwardKernel(
     Eigen::Index grad_w = gradients.dimension(2);
     Eigen::Index filters = gradients.dimension(3);
     Eigen::Index patches = output_dims[1] * output_dims[2]; // H * W from [F,H,W,C]
-    Eigen::Index grad_size_per_kernel = batches * grad_h * grad_w * channels;
+    Eigen::Index size_per_kernel = batches * grad_h * grad_w * channels;
 
     orion_assert(batches == layer_input.dimension(0),
                  "Conv2D::ConvolutionBackwardKernel EXPECTED GRADIENTS BATCH SIZE "
@@ -273,28 +265,19 @@ Tensor<4> Conv2D<Activation>::ConvolutionBackwardKernel(
             .shuffle(Dims<4>(3, 0, 1, 2))
             .reshape(Dims<5>(filters, batches, grad_h, grad_w, 1))
             .broadcast(Dims<5>(1, 1, 1, 1, channels))
-            .reshape(Dims<2>(filters, grad_size_per_kernel));
+            .reshape(Dims<2>(filters, size_per_kernel));
 
-
-    // set up padding on input_layer, 0 padding if valid was used in forward pass
-    Eigen::array<std::pair<Eigen::Index, Eigen::Index>, 4> pad_input_dims;
-    pad_input_dims[0] = std::make_pair(0, 0); // don't pad input's batch dim
-    pad_input_dims[3] = std::make_pair(0, 0); // don't pad input's channels dim
+    Eigen::Index pad_h = 0;
+    Eigen::Index pad_w = 0;
 
     if (padding == Eigen::PADDING_SAME) {
         // calculate padding for only the height and width dims
         // solve for p from the convolution output size formula, divide by 4 instead
         // of 2 to get padding for each direction
-        Eigen::Index pad_h = (layer_input.dimension(1) * (stride[0] - 1) -
-                              stride[0] + dilation[0] * (grad_h - 1) + 1) / 4;
-        Eigen::Index pad_w = (layer_input.dimension(2) * (stride[1] - 1) -
-                              stride[1] + dilation[1] * (grad_w - 1) + 1) / 4;
-        pad_input_dims[1] = std::make_pair(pad_h, pad_h); // height padding
-        pad_input_dims[2] = std::make_pair(pad_w, pad_w); // width padding
-    }
-    else {
-        pad_input_dims[1] = std::make_pair(0, 0); // height padding
-        pad_input_dims[2] = std::make_pair(0, 0); // width padding
+        pad_h = (output_dims[1] - 1) * stride.height() -
+                layer_input.dimension(1) + dilation.height() * (grad_h - 1) + 1;
+        pad_w = (output_dims[2] - 1) * stride.width() -
+                layer_input.dimension(2) + dilation.width() * (grad_w - 1) + 1;
     }
 
     // reshape layer input to im2col tensor by:
@@ -303,13 +286,14 @@ Tensor<4> Conv2D<Activation>::ConvolutionBackwardKernel(
     // 3. reorder dimensions from [N,P,H,W,C] to [P,N,H,W,C]
     // 4. reshape into 2D tensor [P, grad_size_per_kernel]
     auto patches_im2col = layer_input
-            .pad(pad_input_dims)
             .extract_image_patches(grad_h, grad_w,
                                    stride[0], stride[1],
                                    dilation[0], dilation[1],
-                                   Eigen::PADDING_VALID)
+                                   1, 1,
+                                   pad_h / 2, pad_h - pad_h / 2,
+                                   pad_w / 2, pad_w - pad_w / 2, 0.0)
             .shuffle(Dims<5>(1, 0, 2, 3, 4))
-            .reshape(Dims<2>(patches, batches * grad_h * grad_w * channels));
+            .reshape(Dims<2>(patches, size_per_kernel));
 
     // convolve the layer input with the backpropagated gradients by:
     // 1. contract the 2 im2col tensors along the [grad_size_per_kernel] dim to get [F,P]
@@ -323,6 +307,64 @@ Tensor<4> Conv2D<Activation>::ConvolutionBackwardKernel(
                    .reshape(Dims<4>(filters, output_dims[1], output_dims[2], 1))
                    .broadcast(Dims<4>(1, 1, 1, channels)) /
            static_cast<Scalar>(batches * channels /* * channels*/);
+}
+
+
+template<typename Activation>
+Tensor<4> Conv2D<Activation>::ConvolutionBackwardInput(
+        const Tensor<4> &gradients, const Tensor<4> &kernels,
+        const Stride &stride, const Dilation &dilation,
+        const Dims<4> &result_dims)
+{
+    Eigen::Index batches = gradients.dimension(0);
+    Eigen::Index channels = kernels.dimension(3);
+    Eigen::Index kernel_h = kernels.dimension(1);
+    Eigen::Index kernel_w = kernels.dimension(2);
+    Eigen::Index num_kernels = kernels.dimension(0);
+    Eigen::Index num_patches = result_dims[1] * result_dims[2];
+    Eigen::Index grad_h = gradients.dimension(1);
+    Eigen::Index grad_w = gradients.dimension(2);
+
+    Eigen::Index layer_input_h = result_dims[1];
+    Eigen::Index layer_input_w = result_dims[2];
+
+    Eigen::Index pad_h = (layer_input_h - 1) * stride.height() -
+                         grad_h + dilation.height() * (kernel_h - 1) + 1;
+    Eigen::Index pad_w = (layer_input_w - 1) * stride.width() -
+                         grad_w + dilation.width() * (kernel_w - 1) + 1;
+
+    // reshape the gradients to im2col
+    // 1. extract image patches to get a 5D tensor in [N,P,H,W,F] format,
+    //    P = #patches, F = #filters from prev layer (or #channels)
+    // 2. collapse the patches dimensions to get a 3D tensor in [N,P,H*W*F] format
+    auto gradients_im2col = gradients
+            .extract_image_patches(kernel_h, kernel_w,
+                                   stride.height(), stride.width(),
+                                   dilation.height(), dilation.width(),
+                                   1, 1,
+                                   pad_h / 2, pad_h - pad_h / 2,
+                                   pad_w / 2, pad_w - pad_w / 2, 0)
+            .reshape(Dims<3>(batches, num_patches,
+                             kernel_h * kernel_w * num_kernels));
+
+    // reshape the kernels to im2col
+    // 1. backpropagation through inputs requires kernels to be flipped 180 deg
+    // 2. reorder dimensions from [F,H,W,C] to [C,H,W,F], F = #filters
+    // 3. reshape into a 2D tensor in [C,H*W*F] format
+    auto kernels_im2col = kernels
+            .reverse(Dims<4, bool>(false, true, true, false))
+            .eval()
+            .shuffle(Dims<4>(3, 1, 2, 0))
+            .reshape(Dims<2>(channels, kernel_h * kernel_w * num_kernels));
+
+    // multiply the gradient and kernel tensors
+    // 1. given gradients im2col dims: [N,P,H*W*F] and kernels im2col dims: [C,H*W*F],
+    //    contract on the H*W*F dimensions of the gradients and im2col tensors
+    // 2. reshape the resulting tensor from [N,P,C] to [N,H,W,C], this dL/dX tensor
+    //    is passed back to the previous layer as dL/dZ
+    return gradients_im2col
+            .contract(kernels_im2col, ContractDim {Axes(2, 1)})
+            .reshape(result_dims);
 }
 
 

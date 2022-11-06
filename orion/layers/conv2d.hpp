@@ -16,22 +16,19 @@ class Conv2D : public Layer
 
 public:
     /**
+     * 2D convolutional layer, performs convolution on images
      *
-     * @param num_filters
-     * @param input
-     * @param kernel
-     * @param padding
-     * @param stride
-     * @param initializer
-     * @param dilation      known as in_stride in Eigen, the number of values to
-     *                      skip, similar to stride, but for the patch-kernel dot
-     *                      Dilation(2, 2) means to skip (pass over) one value
+     * @param num_filters   # filters used (a collection of filters make a kernel)
+     * @param input         input dimensions, Input(height, width, channels)
+     * @param kernel        kernel dimensions, Kernel(height, width)
+     * @param stride        stride dimensions, Stride(height, width)
+     * @param dilation      dilation dimensions, Dilation(height, width)
+     * @param padding       padding type, Padding::PADDING_VALID or Padding::PADDING_SAME
+     * @param initializer   method of kernel initialization
      */
     Conv2D(int num_filters, const Input &input, const Kernel &kernel,
-           Padding padding = Padding::PADDING_VALID,
-           const Stride &stride = Stride(1, 1),
-           const Initializer<4> &initializer = GlorotUniform<4>(),
-           const Dilation &dilation = Dilation(1, 1));
+           const Stride &stride, const Dilation &dilation, Padding padding,
+           const Initializer<4> &initializer = GlorotUniform<4>());
 
     ~Conv2D() override = default;
 
@@ -71,7 +68,8 @@ public:
     int GetOutputRank() const override;
 
     /**
-     * Convolve a batch of images with a batch of kernels
+     * ConvolutionForward a batch of images with a batch of kernels
+     *
      * @param input     Tensor<4> in format NHWC
      * @param kernels   Tensor<4> in format NHWC, where N = # filters
      * @param stride    Stride dimensions (h, w)
@@ -79,28 +77,46 @@ public:
      * @param padding   Padding enum, PADDING_VALID or PADDING_SAME
      * @return          Tensor<4> in format NHWC
      */
-    static Tensor<4> Convolve(const Tensor<4> &input, const Tensor<4> &kernels,
-                              const Stride &stride, Padding padding,
-                              const Dilation &dilation = Dilation(1, 1));
+    static Tensor<4> ConvolutionForward(
+            const Tensor<4> &input, const Tensor<4> &kernels,
+            const Stride &stride, const Dilation &dilation, Padding padding);
 
     /**
      * Backpropagation, calculate derivative of loss w.r.t. kernels is the convolution
      * between layer input and output gradients propagated back from the next layer
      *
      * @param layer_input   Layer input tensor in format NHWC
-     * @param gradients     Output gradients with same dims as layer output
+     * @param gradients     Output gradients in format FHWC, plays role of kernel
      * @param stride        Forward propagation's dilation (not stride) dimensions (h, w)
      * @param dilation      Forward propagation's stride (not dilation) dimensions (h, w)
      * @param padding       Padding enum used in forward propagation
-     * @param output_dims   Dimensions of the resultant dL/dk, same as kernels
+     * @param output_dims   Expected dimensions of the resultant dL/dk tensor (same as kernels)
      * @return
      */
     static Tensor<4> ConvolutionBackwardKernel(
             const Tensor<4> &layer_input, const Tensor<4> &gradients,
             const Stride &stride, const Dilation &dilation,
-            Padding padding, Dims<4> output_dims);
+            Padding padding, const Dims<4> &output_dims);
+
+    /**
+     * Backpropagation through inputs, derivative of loss w.r.t. inputs is the
+     * "full" convolution between output gradients dL/dZ and layer kernels
+     *
+     * @param gradients     Output gradients in format NHWF (aka NHWC for next layer)
+     * @param kernels       Layer kernels in format FHWC
+     * @param stride        Forward propagation's dilation (not stride) dimensions (h, w)
+     * @param dilation      Forward propagation's stride (not dilation) dimensions (h, w)
+     * @param result_dims   Dimensions of the forward propagation input tensor
+     * @return
+     */
+    static Tensor<4> ConvolutionBackwardInput(
+            const Tensor<4> &gradients, const Tensor<4> &kernels,
+            const Stride &stride, const Dilation &dilation,
+            const Dims<4> &result_dims);
 
 private:
+
+
     void Backward();
 
     Tensor<4> X;

@@ -25,22 +25,11 @@ public:
 
     void Compile(LossFunction &loss_function, Optimizer &optimizer);
 
-
-    /*void Fit(std::vector<std::vector<Scalar>> &inputs,
-             std::vector<std::vector<Scalar>> &labels,
-             int epochs, int batch_size = 1);
-
-    void Fit(const std::vector<Tensor<2>> &inputs,
-             const std::vector<Tensor<2>> &labels,
-             int epochs, int batch_size = 1);*/
-
     template<int TensorSampleRank, int TensorLabelRank>
     void Fit(const std::vector<Tensor<TensorSampleRank>> &inputs,
              const std::vector<Tensor<TensorLabelRank>> &labels,
              int epochs, int batch_size = 1)
     {
-        std::cout << "running fit\n";
-
         if (inputs.size() != labels.size()) {
             throw std::invalid_argument("inputs should match labels 1:1");
         }
@@ -62,7 +51,6 @@ public:
                 this->Forward(inputs[m]);
                 this->Backward(labels[m], *this->loss);
                 this->Update(*this->opt);
-
                 // print metrics on screen
                 if (!this->metrics.empty()) {
                     std::cout << "Epoch " << std::right
@@ -129,6 +117,7 @@ protected:
     void Backward(const Tensor<TensorLabelRank> &training_label,
                   LossFunction &loss_function)
     {
+
         if constexpr (TensorLabelRank == 2) {
             loss_function.CalculateLoss(this->layers.back()->GetOutput2D(),
                                         training_label);
@@ -141,7 +130,6 @@ protected:
             loss_function.CalculateLoss(this->layers.back()->GetOutput4D(),
                                         training_label);
         }
-
 
         this->layers.back()->Backward(loss_function);
 

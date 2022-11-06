@@ -62,7 +62,7 @@ void Flatten<InputTensorRank>::Backward(const LossFunction &loss_function)
 template<int InputTensorRank>
 void Flatten<InputTensorRank>::Backward(const Layer &next)
 {
-    // undo flatten by undoing shuffle and reshaping to input dims
+    // undo flatten by undoing and reshaping to input dims
     if constexpr (InputTensorRank == 2) {
         this->dL_dZ = next.GetInputGradients2D();
     }
