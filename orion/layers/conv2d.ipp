@@ -204,6 +204,7 @@ Tensor<4> Conv2D<Activation>::ConvolutionForward(
         output_w = std::ceil(static_cast<Scalar>(input_w) /
                              static_cast<Scalar>(stride.width()));
 
+        // if uneven padding, extra goes to bottom/right
         pad_h = (output_h - 1) * stride.height() -
                 input_h + dilation.height() * (kernel_h - 1) + 1;
         pad_w = (output_w - 1) * stride.width() -
@@ -271,9 +272,7 @@ Tensor<4> Conv2D<Activation>::ConvolutionBackwardKernel(
     Eigen::Index pad_w = 0;
 
     if (padding == Eigen::PADDING_SAME) {
-        // calculate padding for only the height and width dims
-        // solve for p from the convolution output size formula, divide by 4 instead
-        // of 2 to get padding for each direction
+        // if uneven padding, extra goes to bottom/right
         pad_h = (output_dims[1] - 1) * stride.height() -
                 layer_input.dimension(1) + dilation.height() * (grad_h - 1) + 1;
         pad_w = (output_dims[2] - 1) * stride.width() -
@@ -317,9 +316,10 @@ Tensor<4> Conv2D<Activation>::ConvolutionBackwardInput(
         const Dims<4> &result_dims)
 {
     Eigen::Index batches = gradients.dimension(0);
-    Eigen::Index channels = kernels.dimension(3);
     Eigen::Index kernel_h = kernels.dimension(1);
     Eigen::Index kernel_w = kernels.dimension(2);
+    Eigen::Index channels = kernels.dimension(3);
+
     Eigen::Index num_kernels = kernels.dimension(0);
     Eigen::Index num_patches = result_dims[1] * result_dims[2];
     Eigen::Index grad_h = gradients.dimension(1);
@@ -328,6 +328,7 @@ Tensor<4> Conv2D<Activation>::ConvolutionBackwardInput(
     Eigen::Index layer_input_h = result_dims[1];
     Eigen::Index layer_input_w = result_dims[2];
 
+    // if uneven padding, extra goes to bottom/right
     Eigen::Index pad_h = (layer_input_h - 1) * stride.height() -
                          grad_h + dilation.height() * (kernel_h - 1) + 1;
     Eigen::Index pad_w = (layer_input_w - 1) * stride.width() -
