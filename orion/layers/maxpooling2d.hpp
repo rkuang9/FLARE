@@ -10,10 +10,11 @@
 namespace orion
 {
 
-class MaxPooling2D: public Layer
+class MaxPooling2D : public Layer
 {
 public:
-    MaxPooling2D(const PoolSize &pool_dim, const Stride &stride_dim);
+    MaxPooling2D(const PoolSize &pool, const Stride &stride,
+                 const Dilation &dilation, Padding padding);
 
     ~MaxPooling2D() override = default;
 
@@ -34,11 +35,17 @@ public:
     int GetOutputRank() const override;
 
 private:
+    void Backward(const Tensor<4> &gradients);
+
     Tensor<4> X;
     Tensor<4> Z;
+    Tensor<4> dL_dX;
+    Tensor<4> dL_dZ;
 
-    PoolSize pool_dim;
-    Stride stride_dim;
+    PoolSize pool;
+    Stride stride;
+    Dilation dilation;
+    Padding padding;
 
 };
 

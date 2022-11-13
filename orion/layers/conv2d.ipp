@@ -3,8 +3,6 @@
 //
 
 #include "conv2d.hpp"
-#include <utility> // for std::pair required for padding arguments
-
 
 namespace orion
 {
