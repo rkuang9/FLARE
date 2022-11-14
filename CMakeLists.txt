@@ -12,7 +12,7 @@ set(CMAKE_CXX_STANDARD 17)
 
 
 # ignore warning for virtual functions returning nothing
-set(CMAKE_CXX_FLAGS "-O2 -Wno-return-type -Wreturn-local-addr -static")
+set(CMAKE_CXX_FLAGS "-O2 -Wno-return-type -Wreturn-local-addr")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 
 add_subdirectory(orion)
