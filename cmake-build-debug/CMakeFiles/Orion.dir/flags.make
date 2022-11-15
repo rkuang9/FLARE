@@ -6,7 +6,7 @@ CXX_DEFINES =
 
 CXX_INCLUDES = -I/Users/macross/Desktop/OrionNN/lib/Eigen -I/Users/macross/Desktop/OrionNN
 
-CXX_FLAGSarm64 = -O2 -Wno-return-type -Wreturn-local-addr -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.0.sdk -std=gnu++17
+CXX_FLAGSarm64 = -O2 -Wno-return-type -Wreturn-stack-address -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.0.sdk -std=gnu++17
 
-CXX_FLAGS = -O2 -Wno-return-type -Wreturn-local-addr -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.0.sdk -std=gnu++17
+CXX_FLAGS = -O2 -Wno-return-type -Wreturn-stack-address -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.0.sdk -std=gnu++17
 

@@ -8,13 +8,22 @@ namespace orion
 {
 
 MaxPooling2D::MaxPooling2D(const PoolSize &pool, const Stride &stride,
-                           const Dilation &dilation, Padding padding) :
+                           Padding padding) :
         pool(pool),
         stride(stride),
-        dilation(dilation),
         padding(padding)
 {
+    // nothing to do
+}
 
+
+MaxPooling2D::MaxPooling2D(const PoolSize &pool, Padding padding)
+        : pool(pool),
+          padding(padding),
+          stride(Stride(1, 1)),
+          dilation(Dilation(1, 1))
+{
+    // nothing to do
 }
 
 
@@ -67,13 +76,15 @@ void MaxPooling2D::Forward(const Layer &prev)
 
 void MaxPooling2D::Backward(const LossFunction &loss_function)
 {
-    //this->dL
+    this->Backward(loss_function.GetGradients4D() /
+                   static_cast<Scalar>(this->Z.dimensions().TotalSize() /
+                                       this->Z.dimension(0)));
 }
 
 
 void MaxPooling2D::Backward(const Layer &next)
 {
-    Layer::Backward(next);
+    this->Backward(next.GetInputGradients4D());
 }
 
 
@@ -148,6 +159,12 @@ void MaxPooling2D::Backward(const Tensor<4> &gradients)
     // dL / dX now contains all that gradient values routed back to their respective max indices
     // reshape it back to the input tensor's dimensions
     this->dL_dX = dL_dX_flatten.reshape(this->X.dimensions());
+}
+
+
+void MaxPooling2D::Update(Optimizer &)
+{
+    // max pooling has no parameter to update
 }
 
 

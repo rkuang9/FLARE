@@ -14,70 +14,36 @@ using namespace orion;
 
 void maxpool_op()
 {
-    Tensor<4> img(2, 5, 5, 3);
-    PoolSize pool(3, 3);
-    Stride stride(1, 1);
-    Eigen::Index batch = img.dimension(0);
-    Eigen::Index gap_w = pool.width() - 1;
-    Eigen::Index gap_h = pool.height() - 1;
-    Eigen::Index img_w = img.dimension(2);
-    Eigen::Index img_h = img.dimension(1);
-    Eigen::Index pool_size = pool.TotalSize();
-    Eigen::Index pool_h = pool.height();
-    Eigen::Index pool_w = pool.width();
-    Eigen::Index channels = img.dimension(3);
-
-    for (int i = 0; i < img.size(); i++) {
-        img(i) = i;
-    }
-
-    Tensor<4> gradients(2, 3, 3, 3);
-    gradients.setRandom();
-
-    Tensor<2> gradients_flattened = gradients.reshape(Dims<2>(
-            gradients.dimension(0) * gradients.dimension(1) * gradients.dimension(2),
-            gradients.dimension(3)));
-
-    Tensor<2> flatten = img.reshape(Dims<2>(
-            img.dimension(0) * img.dimension(1) * img.dimension(2),
-            img.dimension(3)));
-    std::cout << flatten << "\n\n";
-
-    Tensor<2> input_grad(flatten.dimensions());
-    input_grad.setZero();
-
-    Eigen::Index output_h = 1 + (img.dimension(1) - pool.height()) / stride.height();
-    Eigen::Index output_w = 1 + (img.dimension(2) - pool.width()) / stride.width();
+    Tensor<2> quad(3, 3);
+    quad.setValues({{1, 2, 3},
+                    {4, 5, 6},
+                    {7, 8, 9}});
+    Tensor<4> fakeimg = quad
+            .reshape(Dims<4>(1, 3, 3, 1))
+            .broadcast(Dims<4>(2, 1, 1, 3));
+    Tensor<4> fakelabels(2, 2, 2, 1);
+    fakelabels.setZero();
 
 
-    for (Eigen::Index i = 0; i < (output_h * output_w * batch); i++) {
-        Eigen::Index patch_start =
-                i + (i / output_w) * gap_w + (i / pool_size) * img_w * gap_h;
-        //std::cout << "patch index start: " << patch_start << "\n";
-        Scalar max_val = INT_MIN;
-        Eigen::Index max_index = -1;
+    Sequential model {
+            new Conv2D<Linear>(1, Input {3, 3, 3}, Kernel {1, 1}, Stride {1, 1},
+                               Dilation {1, 1}, Padding::PADDING_VALID),
+            new MaxPooling2D(PoolSize(2, 2), Padding::PADDING_VALID),
+    };
 
-        for (Eigen::Index c = 0; c < channels; c++) {
-            for (Eigen::Index p = 0; p < pool_size; p++) {
-                Eigen::Index pool_index = patch_start + p + (p / pool_w) * gap_w;
-                //std::cout << flatten(pool_index, c) << ", ";
+    MeanSquaredError loss;
+    SGD opt(1);
 
-                if (flatten(pool_index) > max_val) {
-                    max_val = flatten(pool_index);
-                    max_index = pool_index;
-                }
-            }
+    Tensor<4> kernel(1, 1, 1, 3);
+    kernel.setConstant(1);
 
-            input_grad(max_index, c) = gradients_flattened(i, c);
+    model.layers[0]->SetWeights(kernel);
 
-            std::cout << "\n";
-        }
-
-    }
-
-    std::cout << "gradients\n" << gradients.shuffle(Dims<4>(3, 0, 1, 2)) << "\n";
-    std::cout << "dL_dX:\n";
-    std::cout << input_grad.reshape(img.dimensions()).shuffle(Dims<4>(3, 0, 1, 2));
+    model.Compile(loss, opt);
+    model.Fit(std::vector<Tensor<4>> {fakeimg}, std::vector<Tensor<4>> {fakelabels},
+              1, 1);
+    std::cout << "updated kernels: " << model.layers[0]->GetWeights4D() << ", expect 3 x [-308]\n";
+    std::cout << "loss: " << loss.GetLoss() << ", expect 463.5000\n";
 }
 
 

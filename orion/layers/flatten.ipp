@@ -86,7 +86,11 @@ const Tensor<2> &Flatten<InputTensorRank>::GetOutput2D() const
 }
 
 
+#if MACOSX == TRUE
+#pragma GCC diagnostic ignored "-Wreturn-stack-address"
+#else
 #pragma GCC diagnostic ignored "-Wreturn-local-addr"
+#endif
 
 template<int InputTensorRank>
 const Tensor<2> &Flatten<InputTensorRank>::GetInputGradients2D() const
@@ -102,7 +106,11 @@ const Tensor<2> &Flatten<InputTensorRank>::GetInputGradients2D() const
 }
 
 
+#if MACOSX == TRUE
+#pragma GCC diagnostic ignored "-Wreturn-stack-address"
+#else
 #pragma GCC diagnostic ignored "-Wreturn-local-addr"
+#endif
 
 template<int InputTensorRank>
 const Tensor<3> &Flatten<InputTensorRank>::GetInputGradients3D() const
@@ -118,7 +126,11 @@ const Tensor<3> &Flatten<InputTensorRank>::GetInputGradients3D() const
 }
 
 
+#if MACOSX == TRUE
+#pragma GCC diagnostic ignored "-Wreturn-stack-address"
+#else
 #pragma GCC diagnostic ignored "-Wreturn-local-addr"
+#endif
 
 template<int InputTensorRank>
 const Tensor<4> &Flatten<InputTensorRank>::GetInputGradients4D() const
