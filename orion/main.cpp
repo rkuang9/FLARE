@@ -44,6 +44,7 @@ void maxpool_op()
               1, 1);
     std::cout << "updated kernels: " << model.layers[0]->GetWeights4D() << ", expect 3 x [-308]\n";
     std::cout << "loss: " << loss.GetLoss() << ", expect 463.5000\n";
+    std::cout << "layer output: \n" << model.layers[1]->GetOutput4D().shuffle(Dims<4>(3, 0, 1, 2)) << "\n";
 }
 
 
