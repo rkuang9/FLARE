@@ -4,7 +4,7 @@
 # compile CXX with /Library/Developer/CommandLineTools/usr/bin/c++
 CXX_DEFINES = 
 
-CXX_INCLUDES = -I/Users/macross/Desktop/OrionNN/lib/Eigen -I/Users/macross/Desktop/OrionNN
+CXX_INCLUDES = -I/Users/macross/Desktop/OrionNN/lib/Eigen -I/Users/macross/Desktop/OrionNN -isystem /Users/macross/Desktop/opencv-4.6.0 -isystem /Users/macross/Desktop/opencv-4.6.0-111/include -isystem /Users/macross/Desktop/opencv-4.6.0-111/modules/core/include -isystem /Users/macross/Desktop/opencv-4.6.0-111/modules/flann/include -isystem /Users/macross/Desktop/opencv-4.6.0-111/modules/imgproc/include -isystem /Users/macross/Desktop/opencv-4.6.0-111/modules/ml/include -isystem /Users/macross/Desktop/opencv-4.6.0-111/modules/photo/include -isystem /Users/macross/Desktop/opencv-4.6.0-111/modules/dnn/include -isystem /Users/macross/Desktop/opencv-4.6.0-111/modules/features2d/include -isystem /Users/macross/Desktop/opencv-4.6.0-111/modules/imgcodecs/include -isystem /Users/macross/Desktop/opencv-4.6.0-111/modules/videoio/include -isystem /Users/macross/Desktop/opencv-4.6.0-111/modules/calib3d/include -isystem /Users/macross/Desktop/opencv-4.6.0-111/modules/highgui/include -isystem /Users/macross/Desktop/opencv-4.6.0-111/modules/objdetect/include -isystem /Users/macross/Desktop/opencv-4.6.0-111/modules/stitching/include -isystem /Users/macross/Desktop/opencv-4.6.0-111/modules/ts/include -isystem /Users/macross/Desktop/opencv-4.6.0-111/modules/video/include -isystem /Users/macross/Desktop/opencv-4.6.0-111/modules/gapi/include
 
 CXX_FLAGSarm64 = -O2 -Wno-return-type -Wreturn-stack-address -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.0.sdk -std=gnu++17
 

@@ -26,8 +26,14 @@ add_subdirectory(orion)
 add_subdirectory(examples)
 
 include_directories(lib/Eigen)
+
+#
+set(OpenCV_DIR lib/opencv-4.6.0)
+find_package( OpenCV REQUIRED )
+
+include_directories( ${OpenCV_INCLUDE_DIRS} )
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 add_executable(${PROJECT_NAME} ${SRC_FILES})
 
-target_link_libraries(${PROJECT_NAME})
+target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBS})

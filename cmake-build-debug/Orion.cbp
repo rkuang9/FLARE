@@ -5,7 +5,7 @@
 		<Option title="Orion"/>
 		<Option makefile_is_custom="1"/>
 		<Option compiler="gcc"/>
-		<Option virtualFolders="CMake Files\;CMake Files\orion\;CMake Files\orion\activations\;CMake Files\orion\layers\;CMake Files\orion\weights\;CMake Files\orion\optimizers\;CMake Files\orion\loss\;CMake Files\orion\internal\;CMake Files\orion\metrics\;CMake Files\examples\;"/>
+		<Option virtualFolders="CMake Files\;CMake Files\lib\;CMake Files\lib\opencv-4.6.0\;CMake Files\orion\;CMake Files\orion\activations\;CMake Files\orion\layers\;CMake Files\orion\weights\;CMake Files\orion\optimizers\;CMake Files\orion\loss\;CMake Files\orion\internal\;CMake Files\orion\metrics\;CMake Files\examples\;"/>
 		<Build>
 			<Target title="all">
 				<Option working_dir="/Users/macross/Desktop/OrionNN/cmake-build-debug"/>
@@ -26,6 +26,24 @@
 				<Compiler>
 					<Add directory="/Users/macross/Desktop/OrionNN/lib/Eigen"/>
 					<Add directory="/Users/macross/Desktop/OrionNN"/>
+					<Add directory="/Users/macross/Desktop/opencv-4.6.0"/>
+					<Add directory="/Users/macross/Desktop/opencv-4.6.0-111/include"/>
+					<Add directory="/Users/macross/Desktop/opencv-4.6.0-111/modules/core/include"/>
+					<Add directory="/Users/macross/Desktop/opencv-4.6.0-111/modules/flann/include"/>
+					<Add directory="/Users/macross/Desktop/opencv-4.6.0-111/modules/imgproc/include"/>
+					<Add directory="/Users/macross/Desktop/opencv-4.6.0-111/modules/ml/include"/>
+					<Add directory="/Users/macross/Desktop/opencv-4.6.0-111/modules/photo/include"/>
+					<Add directory="/Users/macross/Desktop/opencv-4.6.0-111/modules/dnn/include"/>
+					<Add directory="/Users/macross/Desktop/opencv-4.6.0-111/modules/features2d/include"/>
+					<Add directory="/Users/macross/Desktop/opencv-4.6.0-111/modules/imgcodecs/include"/>
+					<Add directory="/Users/macross/Desktop/opencv-4.6.0-111/modules/videoio/include"/>
+					<Add directory="/Users/macross/Desktop/opencv-4.6.0-111/modules/calib3d/include"/>
+					<Add directory="/Users/macross/Desktop/opencv-4.6.0-111/modules/highgui/include"/>
+					<Add directory="/Users/macross/Desktop/opencv-4.6.0-111/modules/objdetect/include"/>
+					<Add directory="/Users/macross/Desktop/opencv-4.6.0-111/modules/stitching/include"/>
+					<Add directory="/Users/macross/Desktop/opencv-4.6.0-111/modules/ts/include"/>
+					<Add directory="/Users/macross/Desktop/opencv-4.6.0-111/modules/video/include"/>
+					<Add directory="/Users/macross/Desktop/opencv-4.6.0-111/modules/gapi/include"/>
 					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../include/c++/v1"/>
 					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/14.0.0/include"/>
 					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
@@ -48,6 +66,24 @@
 				<Compiler>
 					<Add directory="/Users/macross/Desktop/OrionNN/lib/Eigen"/>
 					<Add directory="/Users/macross/Desktop/OrionNN"/>
+					<Add directory="/Users/macross/Desktop/opencv-4.6.0"/>
+					<Add directory="/Users/macross/Desktop/opencv-4.6.0-111/include"/>
+					<Add directory="/Users/macross/Desktop/opencv-4.6.0-111/modules/core/include"/>
+					<Add directory="/Users/macross/Desktop/opencv-4.6.0-111/modules/flann/include"/>
+					<Add directory="/Users/macross/Desktop/opencv-4.6.0-111/modules/imgproc/include"/>
+					<Add directory="/Users/macross/Desktop/opencv-4.6.0-111/modules/ml/include"/>
+					<Add directory="/Users/macross/Desktop/opencv-4.6.0-111/modules/photo/include"/>
+					<Add directory="/Users/macross/Desktop/opencv-4.6.0-111/modules/dnn/include"/>
+					<Add directory="/Users/macross/Desktop/opencv-4.6.0-111/modules/features2d/include"/>
+					<Add directory="/Users/macross/Desktop/opencv-4.6.0-111/modules/imgcodecs/include"/>
+					<Add directory="/Users/macross/Desktop/opencv-4.6.0-111/modules/videoio/include"/>
+					<Add directory="/Users/macross/Desktop/opencv-4.6.0-111/modules/calib3d/include"/>
+					<Add directory="/Users/macross/Desktop/opencv-4.6.0-111/modules/highgui/include"/>
+					<Add directory="/Users/macross/Desktop/opencv-4.6.0-111/modules/objdetect/include"/>
+					<Add directory="/Users/macross/Desktop/opencv-4.6.0-111/modules/stitching/include"/>
+					<Add directory="/Users/macross/Desktop/opencv-4.6.0-111/modules/ts/include"/>
+					<Add directory="/Users/macross/Desktop/opencv-4.6.0-111/modules/video/include"/>
+					<Add directory="/Users/macross/Desktop/opencv-4.6.0-111/modules/gapi/include"/>
 					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../include/c++/v1"/>
 					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/14.0.0/include"/>
 					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
@@ -219,6 +255,15 @@
 		</Unit>
 		<Unit filename="/Users/macross/Desktop/OrionNN/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+		<Unit filename="/Users/macross/Desktop/OrionNN/lib/opencv-4.6.0/OpenCVConfig-version.cmake">
+			<Option virtualFolder="CMake Files\lib\opencv-4.6.0\"/>
+		</Unit>
+		<Unit filename="/Users/macross/Desktop/OrionNN/lib/opencv-4.6.0/OpenCVConfig.cmake">
+			<Option virtualFolder="CMake Files\lib\opencv-4.6.0\"/>
+		</Unit>
+		<Unit filename="/Users/macross/Desktop/OrionNN/lib/opencv-4.6.0/OpenCVModules.cmake">
+			<Option virtualFolder="CMake Files\lib\opencv-4.6.0\"/>
 		</Unit>
 		<Unit filename="/Users/macross/Desktop/OrionNN/orion/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\orion\"/>
