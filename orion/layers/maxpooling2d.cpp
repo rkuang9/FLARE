@@ -131,6 +131,9 @@ Tensor<4> MaxPooling2D::MaxPooling2DForward(
                        stride.width();
     }
 
+    // 1. extract image patches to get [N,P,H,W,C], each patch is the same size as pool
+    // 2. find the max value along the height and width dimensions to get [N,P,C]
+    // 3. patch dimension P contains the max values, reshape back to [N,H,W,C]
     return inputs
             .extract_image_patches(
                     pool.height(), pool.width(),
@@ -160,7 +163,7 @@ Tensor<4> MaxPooling2D::MaxPooling2DBackwardInput(
     Eigen::Index pad_h = 0;
     Eigen::Index pad_w = 0;
 
-    Eigen::array<std::pair<int, int>, 4> pad;
+    Eigen::array<std::pair<int, int>, 4> pad_dims;
 
     if (padding == Eigen::PADDING_SAME) {
         // compute total padding used in forward propagation
@@ -175,13 +178,13 @@ Tensor<4> MaxPooling2D::MaxPooling2DBackwardInput(
                 input_w + dilation.width() * (pool.width() - 1) + 1;
     }
 
-    // pad the input tensor as was done during forward propagation
-    pad[0] = std::make_pair(0, 0); // don't pad batch
-    pad[1] = std::make_pair(pad_w / 2, pad_w - pad_w / 2); // width padding
-    pad[2] = std::make_pair(pad_h / 2, pad_h - pad_h / 2); // height padding
-    pad[3] = std::make_pair(0, 0); // don't pad channels
+    // pad_dims the input tensor as was done during forward propagation
+    pad_dims[0] = std::make_pair(0, 0); // don't pad_dims batch
+    pad_dims[1] = std::make_pair(pad_w / 2, pad_w - pad_w / 2); // width padding
+    pad_dims[2] = std::make_pair(pad_h / 2, pad_h - pad_h / 2); // height padding
+    pad_dims[3] = std::make_pair(0, 0); // don't pad_dims channels
 
-    Tensor<4> inputs_padded = inputs.pad(pad, std::numeric_limits<Scalar>::lowest());
+    Tensor<4> inputs_padded = inputs.pad(pad_dims, std::numeric_limits<Scalar>::lowest());
 
     // this will become dL / dX which is passed to the previous layer as dL / dZ
     Tensor<4> input_gradients(inputs_padded.dimensions());
