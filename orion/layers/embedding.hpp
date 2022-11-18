@@ -38,8 +38,6 @@ public:
 
     int GetOutputRank() const override;
 
-    Tensor<2> operator()(const Tensor<2> &tensor) const override;
-
 public:
     void Backward();
 

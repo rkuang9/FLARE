@@ -150,10 +150,4 @@ int Embedding::GetOutputRank() const
     return 3; // matrices of word embeddings stacked in the batch dimension
 }
 
-
-Tensor<2> Embedding::operator()(const Tensor<2> &tensor) const
-{
-
-}
-
 } // namespace orion

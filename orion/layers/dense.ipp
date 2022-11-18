@@ -55,17 +55,6 @@ void Dense<Activation>::Forward(const Layer &prev)
 
 
 template<typename Activation>
-Tensor<2> Dense<Activation>::operator()(const Tensor<2> &tensor) const
-{
-    orion_assert(this->w.dimension(1) == tensor.dimension(0),
-                 "Dense::Forward EXPECTED " << this->w.dimension(1)
-                         << " INPUT FEATURES, GOT " << tensor.dimension(0));
-    Tensor<2> z = this->w.contract(tensor, ContractDim{Axes(1, 0)});
-    return Activation::Activate(z);
-}
-
-
-template<typename Activation>
 void Dense<Activation>::Backward(const Layer &next) // hidden layer backward
 {
     // (next.weights.transpose * next.dL_dZ) hadamard g'(this->Z)

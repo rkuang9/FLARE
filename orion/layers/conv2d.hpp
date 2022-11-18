@@ -32,8 +32,9 @@ public:
 
     ~Conv2D() override = default;
 
+
     /**
-     * Forward propagation for hidden layers, convolve the input tensor
+     * Forward propagation, convolve the input tensor
      * with this layer's filters using the Im2col technique
      *
      * While training, all inputs should have the same dimensions
@@ -43,35 +44,99 @@ public:
      */
     void Forward(const Tensor<4> &inputs) override;
 
+
+    /**
+     * Forward propagation for hidden layers, passes the previous layer's
+     * output as input for Forward(inputs)
+     *
+     * @param prev   a reference to the previous layer
+     */
     void Forward(const Layer &prev) override;
 
+
+    /**
+     * Backward propagation for output layers, calculates
+     * loss gradients w.r.t. Z using the loss gradients recorded
+     * in the loss object
+     *
+     * @param loss_function   a reference to the loss object
+     */
     void Backward(const LossFunction &loss_function) override;
 
+
+    /**
+     * Backward propagation for hidden layers, calculates
+     * loss gradients w.r.t. Z
+     *
+     * @param next   a reference to the next layer
+     */
     void Backward(const Layer &next) override;
 
+
+    /**
+     * Updates the layer's weights and bias with dL/dk, dL/db using
+     * the provided optimizer
+     *
+     * @param optimizer   a reference to the optimizer object
+     */
     void Update(Optimizer &optimizer) override;
 
+
+    // getters and setters
+
+
+    /**
+     * @return   layer's activation values
+     */
     const Tensor<4> &GetOutput4D() const override;
 
+
+    /**
+     * @return   layer's loss gradients w.r.t. pre-activated output (dL / dZ))
+     */
     const Tensor<4> &GetInputGradients4D() const override;
 
-    const Tensor<4> &GetWeightGradients4D() const override;
 
+    /**
+     * @return   layer's kernels
+     */
     const Tensor<4> &GetWeights4D() const override;
 
+
+    /**
+     * @return   loss gradients w.r.t. weights (dL / dk)
+     */
+    const Tensor<4> &GetWeightGradients4D() const override;
+
+
+    /**
+     * Set layer's weights
+     *
+     * @param weights   custom weights with dimensions [output units, input units]
+     */
     void SetWeights(const Tensor<4> &weights) override;
+
 
     void SetBias(const Tensor<4> &bias) override;
 
+
+    /**
+     * @return   expected rank of forward propagation's input tensor
+     */
     int GetInputRank() const override;
 
+
+    /**
+     * @return   expected rank of forward propagation's output tensor
+     */
     int GetOutputRank() const override;
+
 
     /**
      * ConvolutionForward a batch of images with a batch of kernels
      *
-     * @param input     Tensor<4> in format NHWC
-     * @param kernels   Tensor<4> in format NHWC, where N = # filters
+     * @param input     input tensor in format NHWC
+     * @param kernels   kernels tensor in format NHWC, where N = # filters
      * @param stride    Stride dimensions (h, w)
      * @param dilation  Dilation dimensions (h, w)
      * @param padding   Padding enum, PADDING_VALID or PADDING_SAME
@@ -115,30 +180,26 @@ public:
             const Dims<4> &result_dims);
 
 private:
-
-
+    // runs backpropagation, the Backward() override functions feed into this
     void Backward();
 
-    Tensor<4> X;
-    Tensor<4> Z;
-    Tensor<4> A;
-    Tensor<4> dL_dZ;
-    Tensor<4> dL_dX; // to be passed on as dL_dZ to previous layer
+    Tensor<4> X; // layer input image
+    Tensor<4> Z; // layer input convolved with kernels
+    Tensor<4> A; // activated output of layer inout convolved with kernels
+    Tensor<4> dL_dZ; // gradients of layer output, received from next layer
+    Tensor<4> dL_dX; // gradients of layer input, passed as dL_dZ to previous layer
 
     Tensor<4> kernels; // weights, NHWC format, N = num filters
     Tensor<4> b; // bias
-    Tensor<4> dL_dk;
-    Tensor<4> dL_db;
+    Tensor<4> dL_dk; // loss gradients w.r.t. kernels
+    Tensor<4> dL_db; // loss gradients w.r.t. bias
 
-    // the following are calculated once beforehand for the convolution operation
+    // convolution hyperparameters
     Eigen::PaddingType padding;
-
-
     Input input_dim;
     Kernel kernel_dim;
     Stride stride_dim;
     Dilation dilation_dim;
-    Dims<3> output_dim;
 
 };
 

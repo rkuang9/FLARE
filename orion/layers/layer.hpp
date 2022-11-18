@@ -227,19 +227,6 @@ public:
     virtual int GetOutputRank() const = 0;
 
 
-    // calculate one forward propagation output (e.g. for Dense)
-    virtual Tensor<2> operator()(const Tensor<2> &tensor) const
-    {
-        throw std::logic_error("An error occurred, base class Layer was called");
-    }
-
-
-    virtual Tensor<2> operator()(const Tensor<3> &tensor) const
-    {
-        throw std::logic_error("An error occurred, base class Layer was called");
-    }
-
-
     std::string name = "layer"; // name of player, to be set by inherited classes
 };
 

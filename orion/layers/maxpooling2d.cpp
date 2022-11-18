@@ -31,40 +31,9 @@ void MaxPooling2D::Forward(const Tensor<4> &inputs)
 {
     this->X = inputs;
 
-    Eigen::Index batches = inputs.dimension(0);
-    Eigen::Index channels = inputs.dimension(3);
-    Eigen::Index input_h = inputs.dimension(1);
-    Eigen::Index input_w = inputs.dimension(2);
-
-    Eigen::Index pad_h = 0;
-    Eigen::Index pad_w = 0;
-
-    if (this->padding == Eigen::PADDING_SAME) {
-        // compute total padding required
-        pad_h = (input_h - 1) * this->stride.height() -
-                input_h + this->dilation.height() * (this->pool.height() - 1) + 1;
-        pad_w = (input_w - 1) * this->stride.width() -
-                input_w + this->dilation.width() * (this->pool.width() - 1) + 1;
-    }
-
-    // note that in the formula here, pad_h already contains a "2"
-    Eigen::Index output_h =
-            ((input_h + pad_h - this->dilation.height() * (this->pool.height() - 1) -
-              1) / this->stride.height()) + 1;
-    Eigen::Index output_w =
-            ((input_w + pad_w - this->dilation.width() * (this->pool.width() - 1) -
-              1) / this->stride.width()) + 1;
-
-    this->Z = inputs
-            .extract_image_patches(
-                    this->pool.height(), this->pool.width(),
-                    this->stride.height(), this->stride.width(),
-                    this->dilation.height(), this->dilation.width(),
-                    1, 1,
-                    pad_h / 2, pad_h - pad_h / 2,
-                    pad_w / 2, pad_w - pad_w / 2, 0.0)
-            .maximum(Dims<2>(2, 3))
-            .reshape(Dims<4>(batches, output_h, output_w, channels));
+    this->Z = MaxPooling2DForward(
+            inputs, this->pool,
+            this->stride, this->dilation, this->padding);
 }
 
 
@@ -90,81 +59,15 @@ void MaxPooling2D::Backward(const Layer &next)
 
 void MaxPooling2D::Backward(const Tensor<4> &gradients)
 {
-    Eigen::Index batch = this->X.dimension(0);
-    Eigen::Index img_h = this->X.dimension(1);
-    Eigen::Index img_w = this->X.dimension(2);
-    Eigen::Index channels = this->X.dimension(3);
-
-    // gap values are the amount of indices to skip in the input tensor to reach the
-    // next row as the pooling window slides left to right and stops to stay within bounds
-    Eigen::Index gap_w = this->pool.width() - 1;
-    Eigen::Index gap_h = this->pool.height() - 1;
-
-    Eigen::Index pool_size = pool.TotalSize();
-
-    Eigen::Index output_h = gradients.dimension(1);
-    Eigen::Index output_w = gradients.dimension(2);
-
-
-    // input_flatten the output gradients into [N*H*W,C]
-    Tensor<2> grad_flatten = gradients.reshape(Dims<2>(
-            gradients.dimension(0) * gradients.dimension(1) * gradients.dimension(2),
-            gradients.dimension(3)));
-
-    // input_flatten the layer input into [N*H*W,C]
-    Tensor<2> input_flatten = this->X.reshape(Dims<2>(
-            this->X.dimension(0) * this->X.dimension(1) * this->X.dimension(2),
-            this->X.dimension(3)));
-
-    // create a zeroed flattened version of the input gradients that will become dL / dX
-    Tensor<2> dL_dX_flatten(input_flatten.dimensions());
-    dL_dX_flatten.setZero();
-
-
-
-
-    // let patch be the sections on which the pool slides over
-    // iterate through each gradient value
-    for (Eigen::Index patch = 0; patch < grad_flatten.dimension(0); patch++) {
-        // find the index of the patch's first value in flattened input tensor
-        Eigen::Index patch_start =
-                patch + (patch / output_w) * gap_w +
-                (patch / pool_size) * img_w * gap_h;
-
-        Scalar max_val = INT_MIN;
-        Eigen::Index max_index = -1;
-
-        // iterate through the patch's values (per channel) and find the index
-        // of the patch's max value as it exists in the flattened input tensor,
-        // apply the current gradient value (indexed as patch) to that index in the
-        // flattened dL_dX tensor
-        for (Eigen::Index c = 0; c < channels; c++) {
-            for (Eigen::Index pool_index = 0; pool_index < pool_size; pool_index++) {
-
-                Eigen::Index actual_index =
-                        patch_start + pool_index +
-                        (pool_index / this->pool.width()) * gap_w;
-
-                if (input_flatten(actual_index) > max_val) {
-                    max_val = input_flatten(actual_index);
-                    max_index = actual_index;
-                }
-            }
-
-            dL_dX_flatten(max_index, c) += grad_flatten(patch, c);
-        }
-
-    }
-
-    // dL / dX now contains all that gradient values routed back to their respective max indices
-    // reshape it back to the input tensor's dimensions
-    this->dL_dX = dL_dX_flatten.reshape(this->X.dimensions());
+    this->dL_dX = MaxPooling2D::MaxPooling2DBackwardInput(
+            this->X, gradients, this->pool,
+            this->stride, this->dilation, this->padding);
 }
 
 
 void MaxPooling2D::Update(Optimizer &)
 {
-    // max pooling has no parameter to update
+    // max pooling has no parameters to update
 }
 
 
@@ -189,6 +92,145 @@ int MaxPooling2D::GetInputRank() const
 int MaxPooling2D::GetOutputRank() const
 {
     return 4;
+}
+
+
+Tensor<4> MaxPooling2D::MaxPooling2DForward(
+        const Tensor<4> &inputs, const PoolSize &pool,
+        const Stride &stride, const Dilation &dilation, Padding padding)
+{
+    Eigen::Index batches = inputs.dimension(0);
+    Eigen::Index channels = inputs.dimension(3);
+    Eigen::Index input_h = inputs.dimension(1);
+    Eigen::Index input_w = inputs.dimension(2);
+
+    Eigen::Index pad_h = 0;
+    Eigen::Index pad_w = 0;
+    Eigen::Index output_h = 0;
+    Eigen::Index output_w = 0;
+
+    if (padding == Eigen::PADDING_SAME) {
+        // compute total padding required
+        output_h = std::ceil(static_cast<Scalar>(input_h) /
+                             static_cast<Scalar>(stride.height()));
+        output_w = std::ceil(static_cast<Scalar>(input_w) /
+                             static_cast<Scalar>(stride.width()));
+
+        pad_h = (output_h - 1) * stride.height() -
+                input_h + dilation.height() * (pool.height() - 1) + 1;
+        pad_w = (output_w - 1) * stride.width() -
+                input_w + dilation.width() * (pool.width() - 1) + 1;
+    }
+    else {
+        // note that in the formula here, pad_h & pad_w already contains a "2" factor
+        output_h = 1 + (input_h + pad_h -
+                        dilation.height() * (pool.height() - 1) - 1) /
+                       stride.height();
+        output_w = 1 + (input_w + pad_w -
+                        dilation.width() * (pool.width() - 1) - 1) /
+                       stride.width();
+    }
+
+    return inputs
+            .extract_image_patches(
+                    pool.height(), pool.width(),
+                    stride.height(), stride.width(),
+                    dilation.height(), dilation.width(),
+                    1, 1,
+                    pad_h / 2, pad_h - pad_h / 2,
+                    pad_w / 2, pad_w - pad_w / 2,
+                    std::numeric_limits<Scalar>::lowest())
+            .maximum(Dims<2>(2, 3))
+            .reshape(Dims<4>(batches, output_h, output_w, channels));
+}
+
+
+Tensor<4> MaxPooling2D::MaxPooling2DBackwardInput(
+        const Tensor<4> &inputs, const Tensor<4> &gradients, const PoolSize &pool,
+        const Stride &stride, const Dilation &dilation, Padding padding)
+{
+    Eigen::Index batches = inputs.dimension(0);
+    Eigen::Index input_h = inputs.dimension(1);
+    Eigen::Index input_w = inputs.dimension(2);
+    Eigen::Index channels = inputs.dimension(3);
+
+    Eigen::Index grad_h = gradients.dimension(1);
+    Eigen::Index grad_w = gradients.dimension(2);
+
+    Eigen::Index pad_h = 0;
+    Eigen::Index pad_w = 0;
+
+    Eigen::array<std::pair<int, int>, 4> pad;
+
+    if (padding == Eigen::PADDING_SAME) {
+        // compute total padding used in forward propagation
+        Eigen::Index output_h = std::ceil(static_cast<Scalar>(input_h) /
+                                          static_cast<Scalar>(stride.height()));
+        Eigen::Index output_w = std::ceil(static_cast<Scalar>(input_w) /
+                                          static_cast<Scalar>(stride.width()));
+
+        pad_h = (output_h - 1) * stride.height() -
+                input_h + dilation.height() * (pool.height() - 1) + 1;
+        pad_w = (output_w - 1) * stride.width() -
+                input_w + dilation.width() * (pool.width() - 1) + 1;
+    }
+
+    // pad the input tensor as was done during forward propagation
+    pad[0] = std::make_pair(0, 0); // don't pad batch
+    pad[1] = std::make_pair(pad_w / 2, pad_w - pad_w / 2); // width padding
+    pad[2] = std::make_pair(pad_h / 2, pad_h - pad_h / 2); // height padding
+    pad[3] = std::make_pair(0, 0); // don't pad channels
+
+    Tensor<4> inputs_padded = inputs.pad(pad, std::numeric_limits<Scalar>::lowest());
+
+    // this will become dL / dX which is passed to the previous layer as dL / dZ
+    Tensor<4> input_gradients(inputs_padded.dimensions());
+    input_gradients.setZero();
+
+    // loop through all values of the gradient tensor
+    for (Eigen::Index n = 0; n < batches; n++) {
+        for (Eigen::Index h = 0; h < grad_h; h++) {
+            // set the pool window's first and last row & col indices
+            Eigen::Index pool_start_r = h * stride.height();
+            Eigen::Index pool_end_r = pool_start_r + pool.height();
+
+            for (Eigen::Index w = 0; w < grad_w; w++) {
+                Eigen::Index pool_start_c = w * stride.width();
+                Eigen::Index pool_end_c = pool_start_c + pool.width();
+
+                // in each channel, find the pool window's maximum value's row,col
+                for (Eigen::Index c = 0; c < channels; c++) {
+                    Eigen::Index max_val_row = pool_start_r;
+                    Eigen::Index max_val_col = pool_start_c;
+                    Scalar max_val = inputs_padded(n, pool_start_r, pool_start_c, c);
+
+                    // starting at the first value, visit each value of the
+                    // pool window from left to right, row by row
+                    for (Eigen::Index pool_row = pool_start_r;
+                         pool_row < pool_end_r; pool_row++) {
+                        for (Eigen::Index pool_col = pool_start_c;
+                             pool_col < pool_end_c; pool_col++) {
+                            if (inputs_padded(n, pool_row, pool_col, c) > max_val) {
+                                max_val = inputs_padded(n, pool_row, pool_col, c);
+                                max_val_row = pool_row;
+                                max_val_col = pool_col;
+                            }
+                        }
+                    }
+
+                    // the current gradient value gets added to the position of the
+                    // input tensor's max value for the current pool window
+                    input_gradients(n, max_val_row, max_val_col, c) +=
+                            gradients(n, h, w, c);
+                }
+            }
+        }
+    }
+
+    // return the input gradients without the padding
+    return input_gradients.slice(
+            Dims<4>(0, pad_h / 2, pad_w / 2, 0),
+            Dims<4>(batches, input_h, input_w, channels));
 }
 
 } // namespace orion

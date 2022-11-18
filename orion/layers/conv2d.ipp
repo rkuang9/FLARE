@@ -50,8 +50,9 @@ void Conv2D<Activation>::Forward(const Tensor<4> &inputs)
                          << " , INSTEAD GOT " << inputs.dimensions());
 
     this->X = inputs;
-    this->Z = Conv2D::ConvolutionForward(inputs, this->kernels, this->stride_dim,
-                                         this->dilation_dim, this->padding);
+    this->Z = Conv2D::ConvolutionForward(
+            inputs, this->kernels, this->stride_dim,
+            this->dilation_dim, this->padding);
     this->A = Activation::Activate(this->Z);
 }
 
@@ -365,6 +366,5 @@ Tensor<4> Conv2D<Activation>::ConvolutionBackwardInput(
             .contract(kernels_im2col, ContractDim {Axes(2, 1)})
             .reshape(result_dims);
 }
-
 
 } // namespace orion

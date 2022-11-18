@@ -73,6 +73,22 @@ public:
 
     Tensor<2> Predict(const Tensor<2> &example);
 
+    template <int TensorSampleRank>
+    Tensor<TensorSampleRank> Predict(const Tensor<TensorSampleRank> &example)
+    {
+        this->Forward(example);
+
+        if constexpr (TensorSampleRank == 2) {
+            return this->layers.back()->GetOutput2D();
+        }
+        else if constexpr (TensorSampleRank == 3) {
+            return this->layers.back()->GetOutput3D();
+        }
+        else {
+            return this->layers.back()->GetOutput4D();
+        }
+    }
+
     /**
      * Check that the layer weight gradients agree with the limit approximation to
      * epsilon'th degree of accuracy

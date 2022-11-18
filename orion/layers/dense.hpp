@@ -21,7 +21,7 @@ public:
 
     /**
      * Forward propagation, computes "z" and "a" with the formulas
-     * z = wx + b, a = g(z) where g is the chose Activation template type
+     * z = wx + b, a = g(z) where g is the chosen Activation template type
      *
      * @param tensor   a rank 2 tensor training sample
      */
@@ -36,6 +36,7 @@ public:
      */
     void Forward(const Layer &prev) override;
 
+
     /**
      * Backward propagation for hidden layers, calculates
      * loss gradients w.r.t. Z
@@ -46,7 +47,7 @@ public:
 
 
     /**
-     * Backward propagation for the output layer, calculates
+     * Backward propagation as the output layer, calculates
      * loss gradients w.r.t. Z using the loss gradients recorded
      * in the loss object
      *
@@ -56,8 +57,8 @@ public:
 
 
     /**
-     * Updates the layer's weights and bias with dL/dw, dL/db according
-     * to the optimizer algorithm
+     * Updates the layer's weights and bias with dL/dw, dL/db using
+     * the provided optimizer
      *
      * @param optimizer   a reference to the optimizer object
      */
@@ -65,6 +66,7 @@ public:
 
 
     // getter setters
+
 
     /**
      * @return   layer's activation values
@@ -97,6 +99,7 @@ public:
      */
     void SetWeights(const Tensor<2> &weights) override;
 
+
     /**
      * @return   layer's bias
      */
@@ -122,15 +125,6 @@ public:
      */
     int GetOutputRank() const override;
 
-
-    /**
-     * Independently compute one forward pass
-     *
-     * @param tensor   a rank 2 tensor training sample
-     * @return   activated units as a result of the forward pass
-     */
-    Tensor<2> operator()(const Tensor<2> &tensor) const override;
-
 private:
     /**
      * Backward propagation, computes the loss gradients
@@ -145,12 +139,13 @@ private:
     Tensor<2> X; // layer input matrix, stacked column-wise
     Tensor<2> Z; // weighted input matrix, Z = w*X + b
     Tensor<2> A; // activated input matrix after applying g(Z)
-    Tensor<2> dL_dZ; // derivative of loss w.r.t. inputs, same dim as X, Z, and A
+    Tensor<2> dL_dZ; // gradients of layer output, received from next layer
 
     Tensor<2> w; // weights matrix
     Tensor<2> b; // bias vector
     Tensor<2> dL_dw; // loss gradients w.r.t. weights
     Tensor<2> dL_db; // loss gradients w.r.t. bias
+
 };
 
 } // namespace orion
