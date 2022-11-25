@@ -6,7 +6,7 @@ This library intends to provide an interface and performance similar to TensorFl
 
 # TODO
 - Softmax activation
-- Categorical 
+- Categorical cross entropy loss
 - Add progress bar to display during training
 - Evaluate a test set per epoch
 - Accuracy metrics
