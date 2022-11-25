@@ -40,7 +40,6 @@ void mnist()
         for (auto &file: std::filesystem::directory_iterator(img_path)) {
             dataset.Add(file.path(), img_label);
         }
-
     }
 
     dataset.Batch(1, true);

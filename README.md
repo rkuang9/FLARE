@@ -1,4 +1,14 @@
 # OrionNN
-A neural network library based on Eigen Tensor
+A neural network library in active development written in C++ and based on Eigen Tensor.
+This library intends to provide an interface and performance similar to TensorFlow 2.
 
-This is an improvement over the existing messier-neural-network which is based on Eigen and limited to rank 2 tensors.
+
+
+# TODO
+- Softmax activation
+- Categorical 
+- Add progress bar to display during training
+- Evaluate a test set per epoch
+- Accuracy metrics
+- Multithreading support
+- Parse JSON datasets
