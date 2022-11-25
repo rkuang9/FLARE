@@ -12,7 +12,7 @@ Dense<Activation>::Dense(int inputs, int outputs, bool use_bias,
                          const Initializer<2> &initializer) :
         use_bias(use_bias),
         w(initializer.Initialize(
-                Tensor<2>::Dimensions(outputs, inputs), inputs, outputs))
+                Tensor<2>::Dimensions(inputs, outputs), inputs, outputs))
 {
     this->name = "dense";
 
@@ -27,20 +27,19 @@ Dense<Activation>::Dense(int inputs, int outputs, bool use_bias,
 template<typename Activation>
 void Dense<Activation>::Forward(const Tensor<2> &input)
 {
-    orion_assert(this->w.dimension(1) == input.dimension(0), this->name <<
-            " Dense::Forward EXPECTED " << this->w.dimension(1)
-            << " INPUT FEATURES, INSTEAD GOT "
-            << input.dimension(0));
+    orion_assert(this->w.dimension(0) == input.dimension(1),
+                 this->name << " Dense::Forward EXPECTED " << this->w.dimension(0)
+                            << " INPUT FEATURES, INSTEAD GOT "
+                            << input.dimension(1));
 
-    // Z = w * X + b
+    // Z = Xw + b (same as Z = wX + b but with batch dims first in X)
     this->X = input;
-    this->Z = this->w.contract(this->X, ContractDim{Axes(1, 0)});
+    this->Z = this->X.contract(this->w, ContractDim {Axes(1, 0)});
 
     if (this->use_bias) {
         // broadcast bias into the shape of Z
-        // TODO: broadcast accepts Tensor<2>::Dimensions()
-        this->Z += this->b.broadcast(
-                Eigen::array<Eigen::Index, 2>({1, input.dimension(1)}));
+        //this->Z += this->b.broadcast(
+        //Eigen::array<Eigen::Index, 2>({1, input.dimension(1)}));
     }
 
     this->A = Activation::Activate(this->Z);
@@ -57,12 +56,7 @@ void Dense<Activation>::Forward(const Layer &prev)
 template<typename Activation>
 void Dense<Activation>::Backward(const Layer &next) // hidden layer backward
 {
-    // (next.weights.transpose * next.dL_dZ) hadamard g'(this->Z)
-    // TODO: move the contraction terms to Dense::GetInputGradients
-    // TODO: otherwise Dense -> Flatten won't work together
-    this->dL_dZ = next.GetWeights().contract(
-            next.GetInputGradients2D(), ContractDim{Axes{0, 0}}) *
-                  Activation::Gradients(this->Z);
+    this->dL_dZ = next.GetInputGradients2D() * Activation::Gradients(this->Z);
     this->Backward();
 }
 
@@ -70,9 +64,9 @@ void Dense<Activation>::Backward(const Layer &next) // hidden layer backward
 template<typename Activation>
 void Dense<Activation>::Backward(const LossFunction &loss) // output backward
 {
-    // divide by num output units
+    // divide by this layer's number of output units
     this->dL_dZ = loss.GetGradients2D() * Activation::Gradients(this->Z) /
-                  (Scalar) this->w.dimension(0);
+                  (Scalar) this->w.dimension(1);
     this->Backward();
 }
 
@@ -81,26 +75,27 @@ template<typename Activation>
 void Dense<Activation>::Backward()
 {
     // dL / dw = (dL / dZ) * (dZ / dw) * (1 / m) where m = batch size
-    this->dL_dw = this->dL_dZ.contract(this->X, ContractDim{Axes(1, 1)})
-                  / (Scalar) this->X.dimension(1); // divide by batch size
+    this->dL_dw = this->X.contract(this->dL_dZ, ContractDim {Axes(0, 0)})
+                  / (Scalar) this->X.dimension(0); // divide by batch size
 
-
-    orion_assert(this->w.dimensions() == this->dL_dw.dimensions(), this->name <<
-            " Dense::Backward weights dimensions " << this->w.dimensions()
-            << " do not match weights gradient dimensions "
-            << this->dL_dw.dimensions());
+    orion_assert(this->w.dimensions() == this->dL_dw.dimensions(),
+                 this->name << " Dense::Backward weights dimensions "
+                            << this->w.dimensions()
+                            << " do not match weights gradient dimensions "
+                            << this->dL_dw.dimensions());
 
     if (this->use_bias) {
         throw std::invalid_argument("bias not available yet");
         // dL/db = dL/dZ, if batch size > 1 then sum along the 1st dimension (col)
-        this->dL_db = this->dL_dZ.sum(Eigen::array<int, 1>{1}).reshape(
+        this->dL_db = this->dL_dZ.sum(Eigen::array<int, 1> {1}).reshape(
                 Tensor<2>::Dimensions(this->dL_dZ.dimension(0), 1)) /
                       (Scalar) this->dL_dZ.dimension(1);
 
         orion_assert(this->b.dimensions() == this->dL_db.dimensions(),
-                     "Dense::Backward BIAS DIMENSIONS " << this->b.dimensions()
-                             << " DO NOT MATCH BIAS GRADIENT DIMENSIONS "
-                             << this->dL_db.dimensions());
+                     this->name << " Dense::Backward BIAS DIMENSIONS "
+                                << this->b.dimensions()
+                                << " DO NOT MATCH BIAS GRADIENT DIMENSIONS "
+                                << this->dL_db.dimensions());
     }
 }
 
@@ -124,9 +119,9 @@ const Tensor<2> &Dense<Activation>::GetOutput2D() const
 
 
 template<typename Activation>
-const Tensor<2> &Dense<Activation>::GetInputGradients2D() const
+Tensor<2> Dense<Activation>::GetInputGradients2D() const
 {
-    return this->dL_dZ;
+    return this->dL_dZ.contract(this->w, ContractDim {Axes(1, 1)});
 }
 
 
@@ -150,7 +145,7 @@ void Dense<Activation>::SetWeights(const Tensor<2> &weights)
     if (weights.dimensions() != this->w.dimensions()) {
         std::ostringstream error_msg;
         error_msg << this->name << " Dense::SetWeights EXPECTED DIMENSIONS " <<
-                this->w.dimensions() << ", GOT " << weights.dimensions();
+                  this->w.dimensions() << ", GOT " << weights.dimensions();
         throw std::invalid_argument(error_msg.str());
     }
 
@@ -171,7 +166,7 @@ void Dense<Activation>::SetBias(const Tensor<2> &bias)
     if (bias.dimensions() != this->b.dimensions()) {
         std::ostringstream error_msg;
         error_msg << this->name << " Dense::SetBias EXPECTED DIMENSIONS " <<
-                this->b.dimensions() << ", GOT " << bias.dimensions();
+                  this->b.dimensions() << ", GOT " << bias.dimensions();
         throw std::invalid_argument(error_msg.str());
     }
 

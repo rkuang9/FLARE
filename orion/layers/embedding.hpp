@@ -24,8 +24,6 @@ public:
 
     void Update(Optimizer &optimizer) override;
 
-    const Tensor<3> &GetInputGradients3D() const override;
-
     const Tensor<3> &GetOutput3D() const override;
 
     const Tensor<2> &GetWeights() const override;

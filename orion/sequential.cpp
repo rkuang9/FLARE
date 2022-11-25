@@ -13,7 +13,7 @@ Sequential::Sequential(std::initializer_list<Layer *> layers) : layers(layers)
 {
     for (int i = 0; i < this->layers.size(); i++) {
         this->layers[i]->name =
-                std::to_string(i + 1) + "_" + this->layers[i]->name;
+                "layer_" + std::to_string(i) + "_" + this->layers[i]->name;
     }
 }
 

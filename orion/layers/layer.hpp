@@ -124,19 +124,19 @@ public:
     /**
      * @return   layer's loss gradients w.r.t. pre-activated output (dL / dZ))
      */
-    virtual const Tensor<2> &GetInputGradients2D() const
+    virtual Tensor<2> GetInputGradients2D() const
     {
         throw std::logic_error("An error occurred, base class Layer GetInputGradients2D was called");
     }
 
 
-    virtual const Tensor<3> &GetInputGradients3D() const
+    virtual Tensor<3> GetInputGradients3D() const
     {
         throw std::logic_error("An error occurred, base class Layer GetInputGradients3D was called");
     }
 
 
-    virtual const Tensor<4> &GetInputGradients4D() const
+    virtual Tensor<4> GetInputGradients4D() const
     {
         throw std::logic_error("An error occurred, base class Layer GetInputGradients4D was called");
     }
@@ -175,7 +175,7 @@ public:
     /**
      * Set the layer's weights
      *
-     * @param weights   a rank 2/3 tensor
+     * @param weights   a rank 2 tensor
      */
     virtual void SetWeights(const Tensor<2> &weights)
     {
@@ -201,7 +201,7 @@ public:
     /**
      * Set the layer's bias
      *
-     * @param bias   a rank 2 tensor with dimensions (n, 1)
+     * @param bias   a rank 2 tensor
      */
     virtual void SetBias(const Tensor<2> &bias)
     {

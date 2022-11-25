@@ -30,6 +30,10 @@ public:
            const Stride &stride, const Dilation &dilation, Padding padding,
            const Initializer<4> &initializer = GlorotUniform<4>());
 
+    Conv2D(int num_filters, const Input &input, const Kernel &kernel,
+           Padding padding = Padding::PADDING_VALID,
+           const Initializer<4> &initializer = GlorotUniform<4>());
+
     ~Conv2D() override = default;
 
 
@@ -94,7 +98,7 @@ public:
     /**
      * @return   layer's loss gradients w.r.t. pre-activated output (dL / dZ))
      */
-    const Tensor<4> &GetInputGradients4D() const override;
+    Tensor<4> GetInputGradients4D() const override;
 
 
     /**

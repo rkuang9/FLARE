@@ -16,11 +16,11 @@ public:
     /**
      * 2D max pooling layer, performs max pooling on images
      * @param pool      pooling dimensions, PoolSize(height, width)
-     * @param stride    stride dimensions, Stride(height, width), defaults to (1, 1)
+     * @param stride    stride dimensions, Stride(height, width), defaults to pool
      * @param padding   padding type, Padding::PADDING_VALID or Padding::PADDING_SAME
      */
     MaxPooling2D(const PoolSize &pool, const Stride &stride, Padding padding);
-    MaxPooling2D(const PoolSize &pool, Padding padding);
+    explicit MaxPooling2D(const PoolSize &pool, Padding padding = Padding::PADDING_VALID);
 
     ~MaxPooling2D() override = default;
 
@@ -78,7 +78,7 @@ public:
     /**
      * @return   layer's loss gradients w.r.t. pre-activated output (dL / dZ))
      */
-    const Tensor<4> &GetInputGradients4D() const override;
+    Tensor<4> GetInputGradients4D() const override;
 
 
     /**

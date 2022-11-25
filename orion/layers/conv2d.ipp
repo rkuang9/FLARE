@@ -41,6 +41,17 @@ Conv2D<Activation>::Conv2D(
 
 
 template<typename Activation>
+Conv2D<Activation>::Conv2D(
+        int num_filters, const Input &input, const Kernel &kernel,
+        Padding padding, const Initializer<4> &initializer)
+        : Conv2D(num_filters, input, kernel, Stride(1, 1),
+                 Dilation(1, 1), padding, initializer)
+{
+
+}
+
+
+template<typename Activation>
 void Conv2D<Activation>::Forward(const Tensor<4> &inputs)
 {
     orion_assert(inputs.dimension(3) == this->input_dim[2],
@@ -95,9 +106,9 @@ void Conv2D<Activation>::Backward()
                          << this->kernels.dimensions() << ", GOT "
                          << this->dL_dk.dimensions());
 
-    this->dL_dX = Conv2D::ConvolutionBackwardInput(
+    /*this->dL_dX = Conv2D::ConvolutionBackwardInput(
             this->dL_dZ, this->kernels,
-            this->dilation_dim, this->stride_dim, this->X.dimensions());
+            this->dilation_dim, this->stride_dim, this->X.dimensions());*/
 }
 
 
@@ -116,9 +127,14 @@ const Tensor<4> &Conv2D<Activation>::GetOutput4D() const
 
 
 template<typename Activation>
-const Tensor<4> &Conv2D<Activation>::GetInputGradients4D() const
+Tensor<4> Conv2D<Activation>::GetInputGradients4D() const
 {
-    return this->dL_dX;
+    // moved from Backward() to here as on-demand since it's not always needed
+    // achieved 382760->307508 ms runtime improvement on mnist 1 epoch, batch size 1
+    return Conv2D::ConvolutionBackwardInput(
+            this->dL_dZ, this->kernels,
+            this->dilation_dim, this->stride_dim, this->X.dimensions());
+    //return this->dL_dX;
 }
 
 

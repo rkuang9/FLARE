@@ -13,17 +13,14 @@ MaxPooling2D::MaxPooling2D(const PoolSize &pool, const Stride &stride,
         stride(stride),
         padding(padding)
 {
-    // nothing to do
+    this->name = "maxpooling2d";
 }
 
 
 MaxPooling2D::MaxPooling2D(const PoolSize &pool, Padding padding)
-        : pool(pool),
-          padding(padding),
-          stride(Stride(1, 1)),
-          dilation(Dilation(1, 1))
+        : MaxPooling2D(pool, pool, padding)
 {
-    // nothing to do
+    // calls the constructor with all arguments
 }
 
 
@@ -59,9 +56,7 @@ void MaxPooling2D::Backward(const Layer &next)
 
 void MaxPooling2D::Backward(const Tensor<4> &gradients)
 {
-    this->dL_dX = MaxPooling2D::MaxPooling2DBackwardInput(
-            this->X, gradients, this->pool,
-            this->stride, this->dilation, this->padding);
+    this->dL_dZ = gradients;
 }
 
 
@@ -77,9 +72,11 @@ const Tensor<4> &MaxPooling2D::GetOutput4D() const
 }
 
 
-const Tensor<4> &MaxPooling2D::GetInputGradients4D() const
+Tensor<4> MaxPooling2D::GetInputGradients4D() const
 {
-    return this->dL_dX;
+    return MaxPooling2D::MaxPooling2DBackwardInput(
+            this->X, this->dL_dZ, this->pool,
+            this->stride, this->dilation, this->padding);
 }
 
 
@@ -184,7 +181,8 @@ Tensor<4> MaxPooling2D::MaxPooling2DBackwardInput(
     pad_dims[2] = std::make_pair(pad_h / 2, pad_h - pad_h / 2); // height padding
     pad_dims[3] = std::make_pair(0, 0); // don't pad_dims channels
 
-    Tensor<4> inputs_padded = inputs.pad(pad_dims, std::numeric_limits<Scalar>::lowest());
+    Tensor<4> inputs_padded = inputs.pad(pad_dims,
+                                         std::numeric_limits<Scalar>::lowest());
 
     // this will become dL / dX which is passed to the previous layer as dL / dZ
     Tensor<4> input_gradients(inputs_padded.dimensions());

@@ -33,7 +33,7 @@ public:
 
     const Tensor<2> &GetOutput2D() const override;
 
-    const Tensor<3> &GetInputGradients3D() const override;
+    Tensor<3> GetInputGradients3D() const override;
 
     const Tensor<2> &GetWeights() const override;
 

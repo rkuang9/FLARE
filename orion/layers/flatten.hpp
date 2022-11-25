@@ -21,6 +21,7 @@ template<int InputTensorRank>
 class Flatten : public Layer
 {
 public:
+    Flatten();
 
     void Forward(const Tensor<InputTensorRank> &input) override;
 
@@ -34,11 +35,11 @@ public:
 
     const Tensor<2> &GetOutput2D() const override;
 
-    const Tensor<2> &GetInputGradients2D() const override;
+    Tensor<2> GetInputGradients2D() const override;
 
-    const Tensor<3> &GetInputGradients3D() const override;
+    Tensor<3> GetInputGradients3D() const override;
 
-    const Tensor<4> &GetInputGradients4D() const override;
+    Tensor<4> GetInputGradients4D() const override;
 
     int GetInputRank() const override;
 

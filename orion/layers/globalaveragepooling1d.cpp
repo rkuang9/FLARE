@@ -71,9 +71,9 @@ const Tensor<2> &GlobalAveragePooling1D::GetOutput2D() const
 }
 
 
-const Tensor<3> &GlobalAveragePooling1D::GetInputGradients3D() const
+Tensor<3> GlobalAveragePooling1D::GetInputGradients3D() const
 {
-    return this->dL_dZ;
+    return this->dL_dZ; // TODO: re-evaluate dL_dX calculation
 }
 
 

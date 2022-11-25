@@ -2,9 +2,11 @@
 #include <chrono>
 #include <vector>
 #include <orion/orion.hpp>
-//#include "examples/xor_classifier.hpp"
-#include "opencv2/core.hpp"
+#include <filesystem>
 
+#include <opencv2/core.hpp>
+#include <opencv2/imgcodecs.hpp>
+#include <opencv2/core/eigen.hpp>
 
 // FLARE
 // Fast Learning Architectures/Algorithms Ran Eagerly
@@ -13,121 +15,118 @@
 
 using namespace orion;
 
-static void help(char** argv)
+
+void mnist()
 {
-    using namespace std;
-    cout
-            << "\n------------------------------------------------------------------\n"
-            << " This program shows the serial out capabilities of cv::Mat\n"
-            << "That is, cv::Mat M(...); cout << M;  Now works.\n"
-            << "Output can be formatted to OpenCV, matlab, python, numpy, csv and \n"
-            << "C styles Usage:\n"
-            << argv[0]
-            << "\n------------------------------------------------------------------\n\n"
-            << endl;
-}
+    namespace fs = std::filesystem;
 
-void opencv()
-{
+    Dims<3> sample_dims(28, 28, 3);
+    Dims<1> label_dims(1);
 
-}
+    Dataset dataset(sample_dims, label_dims);
+
+    std::string mnist_path =
+            fs::current_path().string() + "/mnist/trainingSet/trainingSet/";
 
 
-void maxpool()
-{
-    int batches = 2;
-    int channels = 3;
-    int filters = 2;
+    Tensor<1> img_label(1);
 
-    // hard code a small image
-    Tensor<2> _fakeimg(3, 3);
-    _fakeimg.setValues({{0.321, 0.542,  0.876},
-                        {0.056, 0.0312, 0.432},
-                        {0.432, 0.654,  0.192}});
-    Tensor<4> fakeimg = _fakeimg
-            .reshape(Dims<4>(1, 3, 3, 1))
-            .broadcast(Dims<4>(batches, 1, 1, channels));
+    // go through folders 0-9, labels will be the folder number
+    for (int i = 0; i < 10; i++) {
+        std::string img_path = mnist_path + std::to_string(i);
+        img_label.setValues({i == 1 ? Scalar(1) : Scalar(0)}); // 1 digit is true, not 1 digit is false
 
-    // hard code the labels
-    Tensor<4> fakelabels(batches, 2, 2, filters);
-    fakelabels.setZero();
+        // give Dataset::Add the image path and it will create a tensor
+        for (auto &file: std::filesystem::directory_iterator(img_path)) {
+            dataset.Add(file.path(), img_label);
+        }
 
-    std::vector<Tensor<4>> training_samples {fakeimg};
-    std::vector<Tensor<4>> training_labels {fakelabels};
+    }
 
+    dataset.Batch(1, true);
+
+    std::cout << "total samples: " << dataset.training_samples.size() << "\n";
+
+    // haven't implemented softmax activation so sigmoid (true/false is one) will have to do
     Sequential model {
-            new Conv2D<TanH>(filters, Input {3, 3, channels}, Kernel {2, 2},
-                             Stride {1, 1}, Dilation {1, 1},
-                             Padding::PADDING_VALID),
-            new MaxPooling2D(PoolSize(3, 3), Stride(1, 1), Padding::PADDING_SAME),
+            new Conv2D<ReLU>(16, Input(28, 28, 3),
+                             Kernel(5, 5), Padding::PADDING_VALID),
+            new MaxPooling2D(PoolSize(3, 3)),
+            new Conv2D<ReLU>(32, Input(22, 22, 16),
+                             Kernel(3, 3), Padding::PADDING_VALID),
+            new Flatten<4>(),
+            new Dense<ReLU>(1152, 32, false),
+            new Dense<Sigmoid>(32, 1, false),
     };
 
+    Adam opt;
     MeanSquaredError loss;
-    SGD opt(1);
 
-    // hard code the kernel values
-    Tensor<4> kernel(filters, 2, 2, channels);
-    kernel.setConstant(1);
-    model.layers[0]->SetWeights(kernel);
+    model.Compile(loss, opt, {new Loss});
+    model.Fit(dataset.training_samples, dataset.training_labels, 15, 1);
 
-    model.Compile(loss, opt);
-    model.Fit(training_samples, training_labels, 100, 1);
+    // prediction on a test sample
+    Tensor<3> image_tensor;
+    cv::Mat cv_matrix = cv::imread("/Users/macross/Desktop/OrionNN/bin/mnist/testSample/img_62.jpg");
+    cv::cv2eigen(cv_matrix, image_tensor);
+    Tensor<4> cv_image = image_tensor.reshape(Dims<4>(1, 28, 28, 3));
 
-    std::cout << "loss: " << loss.GetLoss() << "\n";
 
-    std::cout << "updated kernels:\n"
-              << model.layers[0]->GetWeights4D().shuffle(Dims<4>(3, 0, 1, 2))
-              << "\n";
-
-    std::cout << "network output: \n"
-              << model.Predict(fakeimg).shuffle(Dims<4>(3, 0, 1, 2)) << "\n";
+    std::cout << model.Predict<2>(cv_image) << ", expected 1";
 }
 
 
-int main(int argc, char** argv)
+/*void debug()
+{
+    Tensor<2> input(3, 3);
+    input.setValues({{1, 2, 1},
+                     {3, 2, 1},
+                     {3, 4, 4}});
+    Tensor<4> image = input.reshape(Dims<4>(1, 3, 3, 1));
+    Tensor<2> label(1, 1);
+    label.setValues({{0.5}});
+    Tensor<1> pweights(4);
+    pweights.setValues(
+            {0.3, 0.8, 0.5, 0.1});
+    Tensor<2> weights = pweights.reshape(Dims<2>(1, 4));
+    Tensor<2> pkernels(2, 2);
+    pkernels.setValues({{0.3, 0.2},
+                        {0.5, 0.1}});
+    Tensor<4> kernels = pkernels.reshape(Dims<4>(1, 2, 2, 1)).broadcast(
+            Dims<4>(1, 1, 1, 1));
+    std::cout << "hard code setup complete\n";
+    Sequential tf {
+            new Conv2D<ReLU>(1, Input(3, 3, 1), Kernel(2, 2),
+                             Padding::PADDING_VALID),
+            new Flatten<4>(),
+            new Dense<Sigmoid>(4, 1, false),
+    };
+
+    MeanSquaredError mse;
+    SGD sgd(1);
+
+    tf.layers[0]->SetWeights(kernels);
+    tf.layers[2]->SetWeights(weights);
+
+    std::cout << "predict: " << tf.Predict<2>(image) << "\n";
+    tf.Compile(mse, sgd);
+    tf.Fit(std::vector<Tensor<4>> {image}, std::vector<Tensor<2>> {label}, 1, 1);
+    std::cout << tf.layers[0]->GetWeights4D().shuffle(Dims<4>(3, 0, 1, 2)) << "\n";
+    std::cout << tf.layers[2]->GetWeights() << "\n";
+    std::cout << mse.GetGradients2D() << "\n";
+}*/
+
+
+int main(int argc, char **argv)
 {
     auto start = std::chrono::high_resolution_clock::now();
 
-    opencv();
-
-    using namespace std;
-    using namespace std;
-    using namespace cv;
-
-    cv::CommandLineParser parser(argc, argv, "{help h||}");
-    if (parser.has("help"))
-    {
-        help(argv);
-        return 0;
-    }
-    Mat I = Mat::eye(4, 4, CV_64F);
-    I.at<double>(1,1) = CV_PI;
-    cout << "I = \n" << I << ";" << endl << endl;
-    Mat r = Mat(10, 3, CV_8UC3);
-    randu(r, cv::Scalar::all(0), cv::Scalar::all(255));
-    cout << "r (default) = \n" << r << ";" << endl << endl;
-    cout << "r (matlab) = \n" << format(r, Formatter::FMT_MATLAB) << ";" << endl << endl;
-    cout << "r (python) = \n" << format(r, Formatter::FMT_PYTHON) << ";" << endl << endl;
-    cout << "r (numpy) = \n" << format(r, Formatter::FMT_NUMPY) << ";" << endl << endl;
-    cout << "r (csv) = \n" << format(r, Formatter::FMT_CSV) << ";" << endl << endl;
-    cout << "r (c) = \n" << format(r, Formatter::FMT_C) << ";" << endl << endl;
-    Point2f p(5, 1);
-    cout << "p = " << p << ";" << endl;
-    Point3f p3f(2, 6, 7);
-    cout << "p3f = " << p3f << ";" << endl;
-    vector<float> v;
-    v.push_back(1);
-    v.push_back(2);
-    v.push_back(3);
-    cout << "shortvec = " << Mat(v) << endl;
-    vector<Point2f> points(20);
-    for (size_t i = 0; i < points.size(); ++i)
-        points[i] = Point2f((float)(i * 5), (float)(i % 7));
-    cout << "points = " << points << ";" << endl;
+    //reorder_dense_batch_dim();
+    mnist();
 
     auto stop = std::chrono::high_resolution_clock::now();
-    auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
-    std::cout << "\n\n" << "Run Time: " << ms.count() << " ms";
+    auto time = std::chrono::duration_cast<std::chrono::seconds>(stop - start);
+    std::cout << "\n\n" << "Run Time: " << time.count() << "s";
 
     return 0;
 }

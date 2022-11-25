@@ -300,21 +300,21 @@ Orion_EXTERNAL_OBJECTS =
 ../bin/Orion: CMakeFiles/Orion.dir/orion/main.cpp.o
 ../bin/Orion: CMakeFiles/Orion.dir/orion/sequential.cpp.o
 ../bin/Orion: CMakeFiles/Orion.dir/build.make
-../bin/Orion: /Users/macross/Desktop/opencv-4.6.0/lib/libopencv_gapi.4.6.0.dylib
-../bin/Orion: /Users/macross/Desktop/opencv-4.6.0/lib/libopencv_highgui.4.6.0.dylib
-../bin/Orion: /Users/macross/Desktop/opencv-4.6.0/lib/libopencv_ml.4.6.0.dylib
-../bin/Orion: /Users/macross/Desktop/opencv-4.6.0/lib/libopencv_objdetect.4.6.0.dylib
-../bin/Orion: /Users/macross/Desktop/opencv-4.6.0/lib/libopencv_photo.4.6.0.dylib
-../bin/Orion: /Users/macross/Desktop/opencv-4.6.0/lib/libopencv_stitching.4.6.0.dylib
-../bin/Orion: /Users/macross/Desktop/opencv-4.6.0/lib/libopencv_video.4.6.0.dylib
-../bin/Orion: /Users/macross/Desktop/opencv-4.6.0/lib/libopencv_videoio.4.6.0.dylib
-../bin/Orion: /Users/macross/Desktop/opencv-4.6.0/lib/libopencv_imgcodecs.4.6.0.dylib
-../bin/Orion: /Users/macross/Desktop/opencv-4.6.0/lib/libopencv_dnn.4.6.0.dylib
-../bin/Orion: /Users/macross/Desktop/opencv-4.6.0/lib/libopencv_calib3d.4.6.0.dylib
-../bin/Orion: /Users/macross/Desktop/opencv-4.6.0/lib/libopencv_features2d.4.6.0.dylib
-../bin/Orion: /Users/macross/Desktop/opencv-4.6.0/lib/libopencv_flann.4.6.0.dylib
-../bin/Orion: /Users/macross/Desktop/opencv-4.6.0/lib/libopencv_imgproc.4.6.0.dylib
-../bin/Orion: /Users/macross/Desktop/opencv-4.6.0/lib/libopencv_core.4.6.0.dylib
+../bin/Orion: ../lib/opencv/lib/libopencv_gapi.4.6.0.dylib
+../bin/Orion: ../lib/opencv/lib/libopencv_highgui.4.6.0.dylib
+../bin/Orion: ../lib/opencv/lib/libopencv_ml.4.6.0.dylib
+../bin/Orion: ../lib/opencv/lib/libopencv_objdetect.4.6.0.dylib
+../bin/Orion: ../lib/opencv/lib/libopencv_photo.4.6.0.dylib
+../bin/Orion: ../lib/opencv/lib/libopencv_stitching.4.6.0.dylib
+../bin/Orion: ../lib/opencv/lib/libopencv_video.4.6.0.dylib
+../bin/Orion: ../lib/opencv/lib/libopencv_videoio.4.6.0.dylib
+../bin/Orion: ../lib/opencv/lib/libopencv_imgcodecs.4.6.0.dylib
+../bin/Orion: ../lib/opencv/lib/libopencv_dnn.4.6.0.dylib
+../bin/Orion: ../lib/opencv/lib/libopencv_calib3d.4.6.0.dylib
+../bin/Orion: ../lib/opencv/lib/libopencv_features2d.4.6.0.dylib
+../bin/Orion: ../lib/opencv/lib/libopencv_flann.4.6.0.dylib
+../bin/Orion: ../lib/opencv/lib/libopencv_imgproc.4.6.0.dylib
+../bin/Orion: ../lib/opencv/lib/libopencv_core.4.6.0.dylib
 ../bin/Orion: CMakeFiles/Orion.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/Users/macross/Desktop/OrionNN/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_15) "Linking CXX executable ../bin/Orion"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/Orion.dir/link.txt --verbose=$(VERBOSE)

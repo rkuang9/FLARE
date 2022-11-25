@@ -12,6 +12,7 @@ Embedding::Embedding(int vocab_size, int embedding_dim, int input_length,
         : embed_dims(embedding_dim),
           input_len(input_length)
 {
+    throw std::invalid_argument("embedding possibly broken after a decision to move batch dims to the front of the tensor");
     this->name = "embedding";
     this->dL_dw.setZero();
     this->w = initializer.Initialize(
@@ -30,7 +31,7 @@ void Embedding::Forward(const Tensor<2> &input)
     // store the input so backpropagation knows which weight rows to update
     this->X = input;
 
-    // layer output shape is (batch=input.cols, row=input.rows, embed_dum)
+    // layer output shape is (batch=input.cols, row=input.rows, embed_dim)
     this->Z.resize(Tensor<3>::Dimensions(
             input.dimension(1), input.dimension(0), this->embed_dims));
 
@@ -89,7 +90,7 @@ void Embedding::Backward()
             // and divided by batch size
             this->dL_dw.chip((Eigen::Index) this->X(row, batch), 0) +=
                     this->dL_dZ.chip(batch, 0).chip(row, 0) /
-                    (Scalar) this->X.dimension(1);
+                    (Scalar) this->X.dimension(0);
         }
     }
 }
@@ -98,12 +99,6 @@ void Embedding::Backward()
 void Embedding::Update(Optimizer &optimizer)
 {
     optimizer.Minimize(this->w, this->dL_dw);
-}
-
-
-const Tensor<3> &Embedding::GetInputGradients3D() const
-{
-    return this->dL_dZ;
 }
 
 

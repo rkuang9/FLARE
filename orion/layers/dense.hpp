@@ -77,7 +77,7 @@ public:
     /**
      * @return   layer's loss gradients w.r.t. pre-activated output (dL / dZ))
      */
-    const Tensor<2> &GetInputGradients2D() const override;
+    Tensor<2> GetInputGradients2D() const override;
 
 
     /**
@@ -140,6 +140,7 @@ private:
     Tensor<2> Z; // weighted input matrix, Z = w*X + b
     Tensor<2> A; // activated input matrix after applying g(Z)
     Tensor<2> dL_dZ; // gradients of layer output, received from next layer
+    Tensor<2> dL_dX; // input gradients, passed to previous layer as dL_dZ
 
     Tensor<2> w; // weights matrix
     Tensor<2> b; // bias vector

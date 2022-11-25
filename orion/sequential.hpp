@@ -47,23 +47,32 @@ public:
         this->total_samples = inputs.size();
 
         for (int e = 0; e < epochs; e++) {
+            auto start_time = std::chrono::high_resolution_clock::now();
+
             for (int m = 0; m < inputs.size(); m++) {
                 this->Forward(inputs[m]);
                 this->Backward(labels[m], *this->loss);
                 this->Update(*this->opt);
-                // print metrics on screen
-                if (!this->metrics.empty()) {
-                    std::cout << "Epoch " << std::right
-                            << std::setw(std::to_string(epochs).length()) << e + 1;
+            }
 
-                    for (auto *metric: this->metrics) {
-                        std::cout << " - " << metric->name << ": "
-                                << metric->Compute(*this)
-                                << " ";
-                    }
+            // print metrics on screen
+            if (!this->metrics.empty()) {
+                std::cout << "Epoch " << std::right
+                          << std::setw(std::to_string(epochs).length()) << e + 1;
 
-                    std::cout << "\n";
+                auto stop = std::chrono::high_resolution_clock::now();
+                auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(
+                        stop - start_time);
+                std::cout << " - " << ms.count() / 1000 << "s ";
+
+                for (auto *metric: this->metrics) {
+                    std::cout << " - " << metric->name << ": "
+                              << metric->Compute(*this) << " ";
                 }
+
+
+
+                std::cout << "\n";
             }
         }
     }
@@ -73,15 +82,15 @@ public:
 
     Tensor<2> Predict(const Tensor<2> &example);
 
-    template <int TensorSampleRank>
-    Tensor<TensorSampleRank> Predict(const Tensor<TensorSampleRank> &example)
+    template<int OutputRank, int TensorSampleRank>
+    Tensor<OutputRank> Predict(const Tensor<TensorSampleRank> &example)
     {
         this->Forward(example);
 
-        if constexpr (TensorSampleRank == 2) {
+        if constexpr (OutputRank == 2) {
             return this->layers.back()->GetOutput2D();
         }
-        else if constexpr (TensorSampleRank == 3) {
+        else if constexpr (OutputRank == 3) {
             return this->layers.back()->GetOutput3D();
         }
         else {
@@ -119,7 +128,7 @@ public:
                  const std::vector<Metric *> &metrics);
 
 protected:
-    template <int TensorSampleRank>
+    template<int TensorSampleRank>
     void Forward(const Tensor<TensorSampleRank> &training_sample)
     {
         this->layers.front()->Forward(training_sample);
@@ -129,7 +138,7 @@ protected:
         }
     }
 
-    template <int TensorLabelRank>
+    template<int TensorLabelRank>
     void Backward(const Tensor<TensorLabelRank> &training_label,
                   LossFunction &loss_function)
     {

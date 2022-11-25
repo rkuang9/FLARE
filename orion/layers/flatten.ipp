@@ -7,22 +7,22 @@
 namespace orion
 {
 
+template<int InputTensorRank>
+Flatten<InputTensorRank>::Flatten()
+{
+    this->name = "flatten";
+}
+
 
 template<int InputTensorRank>
 void Flatten<InputTensorRank>::Forward(const Tensor<InputTensorRank> &input)
 {
     this->input_dims = input.dimensions();
 
-    if constexpr (InputTensorRank == 2) {
-        // why someone would flatten a fully-connected layer, idk but here it is
-        this->Z = input;
-    }
-    else {
-        // reshape input from (N,X,Y,Z) where N=batch_size, to (X*Y*Z, N)
-        this->Z = input.reshape(
-                Dims<2>(this->input_dims.TotalSize() / this->input_dims.front(),
-                        this->input_dims.front()));
-    }
+    // reshape input from (N,X,Y,...) where N=batch_size, to (N,X*Y*...)
+    this->Z = input.reshape(
+            Dims<2>(this->input_dims.front(),
+                    this->input_dims.TotalSize() / this->input_dims.front()));
 }
 
 
@@ -62,13 +62,7 @@ void Flatten<InputTensorRank>::Backward(const LossFunction &loss_function)
 template<int InputTensorRank>
 void Flatten<InputTensorRank>::Backward(const Layer &next)
 {
-    // undo flatten by undoing and reshaping to input dims
-    if constexpr (InputTensorRank == 2) {
-        this->dL_dZ = next.GetInputGradients2D();
-    }
-    else {
-        this->dL_dZ = next.GetInputGradients2D().reshape(this->input_dims);
-    }
+    this->dL_dZ = next.GetInputGradients2D().reshape(this->input_dims);
 }
 
 
@@ -93,7 +87,7 @@ const Tensor<2> &Flatten<InputTensorRank>::GetOutput2D() const
 #endif
 
 template<int InputTensorRank>
-const Tensor<2> &Flatten<InputTensorRank>::GetInputGradients2D() const
+Tensor<2> Flatten<InputTensorRank>::GetInputGradients2D() const
 {
     if constexpr (InputTensorRank != 2) {
         std::ostringstream error;
@@ -113,7 +107,7 @@ const Tensor<2> &Flatten<InputTensorRank>::GetInputGradients2D() const
 #endif
 
 template<int InputTensorRank>
-const Tensor<3> &Flatten<InputTensorRank>::GetInputGradients3D() const
+Tensor<3> Flatten<InputTensorRank>::GetInputGradients3D() const
 {
     if constexpr (InputTensorRank != 3) {
         std::ostringstream error;
@@ -133,7 +127,7 @@ const Tensor<3> &Flatten<InputTensorRank>::GetInputGradients3D() const
 #endif
 
 template<int InputTensorRank>
-const Tensor<4> &Flatten<InputTensorRank>::GetInputGradients4D() const
+Tensor<4> Flatten<InputTensorRank>::GetInputGradients4D() const
 {
     if constexpr (InputTensorRank != 4) {
         std::ostringstream error;

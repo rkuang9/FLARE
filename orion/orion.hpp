@@ -21,6 +21,7 @@
 
 
 #include "orion/sequential.hpp"
+#include "orion/dataset.hpp"
 
 
 #endif //ORION_ORION_HPP
