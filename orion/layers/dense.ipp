@@ -57,7 +57,13 @@ void Dense<Activation>::Forward(const Layer &prev)
 template<typename Activation>
 void Dense<Activation>::Backward(const Layer &next) // hidden layer backward
 {
-    this->dL_dZ = next.GetInputGradients2D() * Activation::Gradients(this->Z);
+    if constexpr (std::is_same_v<Activation, Softmax>) {
+        this->BackwardSoftmax(next.GetInputGradients2D());
+    }
+    else {
+        this->dL_dZ = *Activation::Gradients(this->Z);
+    }
+
     this->Backward();
 }
 
@@ -194,16 +200,16 @@ int Dense<Activation>::GetOutputRank() const
 
 
 template<typename Activation>
-void Dense<Activation>::BackwardSoftmax(const Tensor<2> &loss_grad)
+void Dense<Activation>::BackwardSoftmax(const Tensor<2> &gradients)
 {
-    // TODO: performance improvement by eliminating for loop, maybe bcasting loss_grad?
+    // TODO: performance improvement by eliminating for loop
     this->dL_dZ.resize(this->Z.dimensions());
 
     // pass in the layer activations to avoid recalculating the softmax values
     Tensor<3> softmax_grad = Softmax::Gradients(this->A);
 
-    for (int batch = 0; batch < loss_grad.dimension(0); batch++) {
-        this->dL_dZ.chip(batch, 0) = loss_grad.chip(batch, 0)
+    for (int batch = 0; batch < gradients.dimension(0); batch++) {
+        this->dL_dZ.chip(batch, 0) = gradients.chip(batch, 0)
                 .contract(softmax_grad.chip(batch, 0),
                           ContractDim {Axes(0, 1)});
     }
