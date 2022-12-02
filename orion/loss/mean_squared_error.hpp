@@ -22,6 +22,10 @@ public:
 private:
     template<int TensorRank>
     Scalar Loss(const Tensor<TensorRank> &predict, const Tensor<TensorRank> &label);
+
+    template<int TensorRank>
+    Tensor<TensorRank> Gradient(const Tensor<TensorRank> &predict,
+                                const Tensor<TensorRank> &label);
 };
 
 } // orion

@@ -47,7 +47,7 @@ i.e either row major or column major. The default is column major. Most arithmet
 // Insert a new element; 
  sm1.insert(i, j) = v_ij;  
 
-// Minimize the value v_ij
+// Update the value v_ij
  sm1.coeffRef(i,j) = v_ij;
  sm1.coeffRef(i,j) += v_ij;
  sm1.coeffRef(i,j) -= v_ij;

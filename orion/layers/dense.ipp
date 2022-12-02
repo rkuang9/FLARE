@@ -2,6 +2,7 @@
 // Created by macross on 8/7/22.
 //
 
+#include <type_traits>
 #include "dense.hpp"
 
 namespace orion
@@ -64,9 +65,13 @@ void Dense<Activation>::Backward(const Layer &next) // hidden layer backward
 template<typename Activation>
 void Dense<Activation>::Backward(const LossFunction &loss) // output backward
 {
-    // divide by this layer's number of output units
-    this->dL_dZ = loss.GetGradients2D() * Activation::Gradients(this->Z) /
-                  (Scalar) this->w.dimension(1);
+    if constexpr (std::is_same_v<Activation, Softmax>) {
+        this->BackwardSoftmax(loss.GetGradients2D());
+    }
+    else {
+        this->dL_dZ = loss.GetGradients2D() * Activation::Gradients(this->Z);
+    }
+
     this->Backward();
 }
 
@@ -185,6 +190,23 @@ template<typename Activation>
 int Dense<Activation>::GetOutputRank() const
 {
     return 2;
+}
+
+
+template<typename Activation>
+void Dense<Activation>::BackwardSoftmax(const Tensor<2> &loss_grad)
+{
+    // TODO: performance improvement by eliminating for loop, maybe bcasting loss_grad?
+    this->dL_dZ.resize(this->Z.dimensions());
+
+    // pass in the layer activations to avoid recalculating the softmax values
+    Tensor<3> softmax_grad = Softmax::Gradients(this->A);
+
+    for (int batch = 0; batch < loss_grad.dimension(0); batch++) {
+        this->dL_dZ.chip(batch, 0) = loss_grad.chip(batch, 0)
+                .contract(softmax_grad.chip(batch, 0),
+                          ContractDim {Axes(0, 1)});
+    }
 }
 
 } // namespace orion

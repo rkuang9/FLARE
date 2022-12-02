@@ -18,7 +18,148 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9bc2fcbe-b0b8-43b8-bddc-007a2bc116ec" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/orion/loss/categorical_cross_entropy.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/orion/loss/categorical_cross_entropy.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/Orion" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/Orion.exe" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/Eigen/CholmodSupport" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/Eigen/CholmodSupport" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/Eigen/Core" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/Eigen/Core" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/Eigen/src/Core/AssignEvaluator.h" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/Eigen/src/Core/AssignEvaluator.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/Eigen/src/Core/BandMatrix.h" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/Eigen/src/Core/BandMatrix.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/Eigen/src/Core/DenseStorage.h" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/Eigen/src/Core/DenseStorage.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/Eigen/src/Core/GenericPacketMath.h" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/Eigen/src/Core/GenericPacketMath.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/Eigen/src/Core/GlobalFunctions.h" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/Eigen/src/Core/GlobalFunctions.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/Eigen/src/Core/IndexedView.h" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/Eigen/src/Core/IndexedView.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/Eigen/src/Core/MathFunctions.h" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/Eigen/src/Core/MathFunctions.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/Eigen/src/Core/MatrixBase.h" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/Eigen/src/Core/MatrixBase.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/Eigen/src/Core/NumTraits.h" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/Eigen/src/Core/NumTraits.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/Eigen/src/Core/ProductEvaluators.h" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/Eigen/src/Core/ProductEvaluators.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/Eigen/src/Core/Redux.h" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/Eigen/src/Core/Redux.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/Eigen/src/Core/arch/AVX/MathFunctions.h" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/Eigen/src/Core/arch/AVX/MathFunctions.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/Eigen/src/Core/arch/AVX/PacketMath.h" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/Eigen/src/Core/arch/AVX/PacketMath.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/Eigen/src/Core/arch/AVX512/MathFunctions.h" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/Eigen/src/Core/arch/AVX512/MathFunctions.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/Eigen/src/Core/arch/AVX512/PacketMath.h" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/Eigen/src/Core/arch/AVX512/PacketMath.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/Eigen/src/Core/arch/AVX512/TrsmKernel.h" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/Eigen/src/Core/arch/AVX512/TrsmKernel.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/Eigen/src/Core/arch/AVX512/TypeCasting.h" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/Eigen/src/Core/arch/AVX512/TypeCasting.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/Eigen/src/Core/arch/AltiVec/Complex.h" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/Eigen/src/Core/arch/AltiVec/Complex.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/Eigen/src/Core/arch/AltiVec/MathFunctions.h" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/Eigen/src/Core/arch/AltiVec/MathFunctions.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/Eigen/src/Core/arch/AltiVec/PacketMath.h" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/Eigen/src/Core/arch/AltiVec/PacketMath.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/Eigen/src/Core/arch/Default/BFloat16.h" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/Eigen/src/Core/arch/Default/BFloat16.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/Eigen/src/Core/arch/Default/GenericPacketMathFunctions.h" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/Eigen/src/Core/arch/Default/GenericPacketMathFunctions.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/Eigen/src/Core/arch/Default/GenericPacketMathFunctionsFwd.h" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/Eigen/src/Core/arch/Default/GenericPacketMathFunctionsFwd.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/Eigen/src/Core/arch/Default/Half.h" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/Eigen/src/Core/arch/Default/Half.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/Eigen/src/Core/arch/GPU/PacketMath.h" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/Eigen/src/Core/arch/GPU/PacketMath.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/Eigen/src/Core/arch/NEON/GeneralBlockPanelKernel.h" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/Eigen/src/Core/arch/NEON/GeneralBlockPanelKernel.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/Eigen/src/Core/arch/NEON/MathFunctions.h" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/Eigen/src/Core/arch/NEON/MathFunctions.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/Eigen/src/Core/arch/NEON/PacketMath.h" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/Eigen/src/Core/arch/NEON/PacketMath.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/Eigen/src/Core/arch/SSE/MathFunctions.h" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/Eigen/src/Core/arch/SSE/MathFunctions.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/Eigen/src/Core/arch/SSE/PacketMath.h" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/Eigen/src/Core/arch/SSE/PacketMath.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/Eigen/src/Core/arch/SYCL/PacketMath.h" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/Eigen/src/Core/arch/SYCL/PacketMath.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/Eigen/src/Core/functors/BinaryFunctors.h" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/Eigen/src/Core/functors/BinaryFunctors.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/Eigen/src/Core/functors/UnaryFunctors.h" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/Eigen/src/Core/functors/UnaryFunctors.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/Eigen/src/Core/products/GeneralBlockPanelKernel.h" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/Eigen/src/Core/products/GeneralBlockPanelKernel.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/Eigen/src/Core/util/ConfigureVectorization.h" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/Eigen/src/Core/util/ConfigureVectorization.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/Eigen/src/Core/util/Constants.h" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/Eigen/src/Core/util/Constants.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/Eigen/src/Core/util/ForwardDeclarations.h" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/Eigen/src/Core/util/ForwardDeclarations.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/Eigen/src/Core/util/Macros.h" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/Eigen/src/Core/util/Macros.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/Eigen/src/Core/util/Memory.h" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/Eigen/src/Core/util/Memory.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/Eigen/src/Core/util/Meta.h" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/Eigen/src/Core/util/Meta.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/Eigen/src/Core/util/XprHelper.h" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/Eigen/src/Core/util/XprHelper.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/Eigen/src/Eigenvalues/GeneralizedEigenSolver.h" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/Eigen/src/Eigenvalues/GeneralizedEigenSolver.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/Eigen/src/Geometry/OrthoMethods.h" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/Eigen/src/Geometry/OrthoMethods.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/Eigen/src/Jacobi/Jacobi.h" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/Eigen/src/Jacobi/Jacobi.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/Eigen/src/LU/arch/InverseSize4.h" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/Eigen/src/LU/arch/InverseSize4.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/Eigen/src/SVD/BDCSVD.h" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/Eigen/src/SVD/BDCSVD.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/Eigen/src/SparseCore/CompressedStorage.h" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/Eigen/src/SparseCore/CompressedStorage.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/Eigen/src/SparseCore/SparseAssign.h" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/Eigen/src/SparseCore/SparseAssign.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/Eigen/src/SparseCore/SparseMap.h" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/Eigen/src/SparseCore/SparseMap.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/Eigen/src/SparseCore/SparseMatrix.h" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/Eigen/src/SparseCore/SparseMatrix.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/Eigen/src/SparseCore/SparseVector.h" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/Eigen/src/SparseCore/SparseVector.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/Eigen/src/SparseCore/TriangularSolver.h" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/Eigen/src/SparseCore/TriangularSolver.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/Eigen/src/SparseLU/SparseLU_heap_relax_snode.h" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/Eigen/src/SparseLU/SparseLU_heap_relax_snode.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/Eigen/src/plugins/ArrayCwiseBinaryOps.h" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/Eigen/src/plugins/ArrayCwiseBinaryOps.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/Eigen/src/plugins/ArrayCwiseUnaryOps.h" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/Eigen/src/plugins/ArrayCwiseUnaryOps.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/Eigen/src/plugins/MatrixCwiseUnaryOps.h" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/Eigen/src/plugins/MatrixCwiseUnaryOps.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/bench/bench_multi_compilers.sh" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/bench/bench_multi_compilers.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/bench/bench_unrolling" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/bench/bench_unrolling" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/bench/benchmark_suite" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/bench/benchmark_suite" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/bench/btl/data/go_mean" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/bench/btl/data/go_mean" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/bench/btl/data/mk_new_gnuplot.sh" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/bench/btl/data/mk_new_gnuplot.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/bench/btl/data/smooth_all.sh" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/bench/btl/data/smooth_all.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/bench/perf_monitoring/make_plot.sh" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/bench/perf_monitoring/make_plot.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/bench/perf_monitoring/run.sh" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/bench/perf_monitoring/run.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/bench/perf_monitoring/runall.sh" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/bench/perf_monitoring/runall.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/bench/spbench/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/bench/spbench/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/bench/tensors/eigen_sycl_bench.sh" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/bench/tensors/eigen_sycl_bench.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/blas/testing/runblastest.sh" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/blas/testing/runblastest.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/doc/Doxyfile.in" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/doc/Doxyfile.in" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/doc/PreprocessorDirectives.dox" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/doc/PreprocessorDirectives.dox" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/doc/QuickReference.dox" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/doc/QuickReference.dox" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/doc/SparseQuickReference.dox" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/doc/SparseQuickReference.dox" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/doc/TutorialMatrixArithmetic.dox" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/doc/TutorialMatrixArithmetic.dox" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/doc/TutorialSlicingIndexing.dox" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/doc/TutorialSlicingIndexing.dox" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/doc/TutorialSparse.dox" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/doc/TutorialSparse.dox" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/doc/examples/tut_arithmetic_dot_cross.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/doc/examples/tut_arithmetic_dot_cross.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/scripts/cdashtesting.cmake.in" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/scripts/cdashtesting.cmake.in" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/scripts/check.in" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/scripts/check.in" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/scripts/debug.in" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/scripts/debug.in" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/scripts/eigen_monitor_perf.sh" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/scripts/eigen_monitor_perf.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/scripts/release.in" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/scripts/release.in" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/test/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/test/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/test/adjoint.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/test/adjoint.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/test/array_cwise.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/test/array_cwise.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/test/eigensolver_generalized_real.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/test/eigensolver_generalized_real.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/test/geo_orthomethods.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/test/geo_orthomethods.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/test/jacobi.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/test/jacobi.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/test/main.h" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/test/main.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/test/mixingtypes.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/test/mixingtypes.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/test/numext.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/test/numext.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/test/packetmath.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/test/packetmath.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/test/prec_inverse_4x4.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/test/prec_inverse_4x4.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/test/serializer.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/test/serializer.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/test/visitor.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/test/visitor.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/test/zerosized.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/test/zerosized.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/unsupported/Eigen/CXX11/src/Tensor/TensorBase.h" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/unsupported/Eigen/CXX11/src/Tensor/TensorBase.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/unsupported/Eigen/CXX11/src/Tensor/TensorChipping.h" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/unsupported/Eigen/CXX11/src/Tensor/TensorChipping.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/unsupported/Eigen/CXX11/src/Tensor/TensorContractionThreadPool.h" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/unsupported/Eigen/CXX11/src/Tensor/TensorContractionThreadPool.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/unsupported/Eigen/CXX11/src/Tensor/TensorDeviceGpu.h" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/unsupported/Eigen/CXX11/src/Tensor/TensorDeviceGpu.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/unsupported/Eigen/CXX11/src/Tensor/TensorEvaluator.h" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/unsupported/Eigen/CXX11/src/Tensor/TensorEvaluator.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/unsupported/Eigen/CXX11/src/Tensor/TensorForcedEval.h" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/unsupported/Eigen/CXX11/src/Tensor/TensorForcedEval.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/unsupported/Eigen/CXX11/src/Tensor/TensorGpuHipCudaDefines.h" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/unsupported/Eigen/CXX11/src/Tensor/TensorGpuHipCudaDefines.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/unsupported/Eigen/CXX11/src/Tensor/TensorIO.h" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/unsupported/Eigen/CXX11/src/Tensor/TensorIO.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/unsupported/Eigen/CXX11/src/Tensor/TensorIndexList.h" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/unsupported/Eigen/CXX11/src/Tensor/TensorIndexList.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/unsupported/Eigen/CXX11/src/Tensor/TensorMorphing.h" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/unsupported/Eigen/CXX11/src/Tensor/TensorMorphing.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/unsupported/Eigen/CXX11/src/Tensor/TensorShuffling.h" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/unsupported/Eigen/CXX11/src/Tensor/TensorShuffling.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/unsupported/Eigen/src/IterativeSolvers/IDRS.h" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/unsupported/Eigen/src/IterativeSolvers/IDRS.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/unsupported/Eigen/src/MatrixFunctions/MatrixLogarithm.h" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/unsupported/Eigen/src/MatrixFunctions/MatrixLogarithm.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/unsupported/Eigen/src/NonLinearOptimization/HybridNonLinearSolver.h" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/unsupported/Eigen/src/NonLinearOptimization/HybridNonLinearSolver.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/unsupported/Eigen/src/SpecialFunctions/SpecialFunctionsImpl.h" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/unsupported/Eigen/src/SpecialFunctions/SpecialFunctionsImpl.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/unsupported/test/cxx11_tensor_builtins_sycl.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/unsupported/test/cxx11_tensor_builtins_sycl.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/unsupported/test/cxx11_tensor_math_sycl.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/unsupported/test/cxx11_tensor_math_sycl.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/unsupported/test/cxx11_tensor_random_sycl.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/unsupported/test/cxx11_tensor_random_sycl.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Eigen/unsupported/test/sparse_extra.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Eigen/unsupported/test/sparse_extra.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/orion/activations/sigmoid.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/orion/activations/sigmoid.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/orion/activations/softmax.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/orion/activations/softmax.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/orion/activations/softplus.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/orion/activations/softplus.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/orion/layers/conv2d.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/orion/layers/conv2d.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/orion/layers/conv2d.ipp" beforeDir="false" afterPath="$PROJECT_DIR$/orion/layers/conv2d.ipp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/orion/layers/dense.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/orion/layers/dense.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/orion/layers/dense.ipp" beforeDir="false" afterPath="$PROJECT_DIR$/orion/layers/dense.ipp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/orion/layers/embedding.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/orion/layers/embedding.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/orion/loss/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/orion/loss/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/orion/loss/binary_cross_entropy.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/orion/loss/binary_cross_entropy.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/orion/loss/binary_cross_entropy.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/orion/loss/binary_cross_entropy.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/orion/loss/include_loss.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/orion/loss/include_loss.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/orion/loss/loss_function.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/orion/loss/loss_function.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/orion/loss/mean_squared_error.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/orion/loss/mean_squared_error.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/orion/loss/mean_squared_error.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/orion/loss/mean_squared_error.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/orion/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/orion/main.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -45,26 +186,22 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;cf.advertisement.text.has.clang-format&quot;: &quot;true&quot;,
-    &quot;cf.first.check.clang-format&quot;: &quot;false&quot;,
-    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/macross/Desktop/OrionNN&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.customizations&quot;,
-    &quot;structure.view.defaults.are.configured&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.cidr.known.project.marker": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "cf.advertisement.text.has.clang-format": "true",
+    "cf.first.check.clang-format": "false",
+    "cidr.known.project.marker": "true",
+    "last_opened_file_path": "/Users/macross/Desktop/OrionNN",
+    "settings.editor.selected.configurable": "preferences.customizations",
+    "structure.view.defaults.are.configured": "true"
   }
-}</component>
+}]]></component>
   <component name="RunManager">
-    <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
-      <method v="2">
-        <option name="CLION.EXTERNAL.BUILD" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="Orion" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Orion" TARGET_NAME="Orion" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="Orion" RUN_TARGET_NAME="Orion">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
@@ -96,12 +233,32 @@
       <workItem from="1669265307305" duration="6565000" />
       <workItem from="1669279387040" duration="7000" />
       <workItem from="1669279399907" duration="5680000" />
-      <workItem from="1669325447596" duration="17874000" />
+      <workItem from="1669325447596" duration="18109000" />
+      <workItem from="1669368417016" duration="3000" />
+      <workItem from="1669368426267" duration="9468000" />
+      <workItem from="1669425011882" duration="127000" />
+      <workItem from="1669425272716" duration="3850000" />
+      <workItem from="1669430304352" duration="153000" />
+      <workItem from="1669430463153" duration="63263000" />
+      <workItem from="1669690673286" duration="62000" />
+      <workItem from="1669710222986" duration="22548000" />
+      <workItem from="1669945559605" duration="9861000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.History.Properties">
+    <option name="COLUMN_ID_ORDER">
+      <list>
+        <option value="Default.Root" />
+        <option value="Default.Author" />
+        <option value="Default.Date" />
+        <option value="Default.Subject" />
+        <option value="Space.CommitStatus" />
+      </list>
+    </option>
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">

@@ -5,8 +5,8 @@ This library intends to provide an interface and performance similar to TensorFl
 
 
 # TODO
-- Softmax activation
-- Categorical cross entropy loss
+- Softmax activation (done 12/1/2022)
+- Categorical cross entropy loss (done 12/1/2022)
 - Add progress bar to display during training
 - Evaluate a test set per epoch
 - Accuracy metrics

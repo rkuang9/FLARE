@@ -79,9 +79,7 @@ template<typename Activation>
 void Conv2D<Activation>::Backward(const LossFunction &loss_function)
 {
     // divide by number of output units of a single batch
-    this->dL_dZ = loss_function.GetGradients4D() * Activation::Gradients(this->Z) /
-                  static_cast<Scalar>(this->Z.dimensions().TotalSize() /
-                                      this->Z.dimension(0));
+    this->dL_dZ = loss_function.GetGradients4D() * Activation::Gradients(this->Z);
     this->Backward();
 }
 
@@ -105,10 +103,6 @@ void Conv2D<Activation>::Backward()
                  "Conv2D::Backward EXPECTED KERNEL GRADIENTS DIMENSIONS "
                          << this->kernels.dimensions() << ", GOT "
                          << this->dL_dk.dimensions());
-
-    /*this->dL_dX = Conv2D::ConvolutionBackwardInput(
-            this->dL_dZ, this->kernels,
-            this->dilation_dim, this->stride_dim, this->X.dimensions());*/
 }
 
 
@@ -130,7 +124,6 @@ template<typename Activation>
 Tensor<4> Conv2D<Activation>::GetInputGradients4D() const
 {
     // moved from Backward() to here as on-demand since it's not always needed
-    // achieved 382760->307508 ms runtime improvement on mnist 1 epoch, batch size 1
     return Conv2D::ConvolutionBackwardInput(
             this->dL_dZ, this->kernels,
             this->dilation_dim, this->stride_dim, this->X.dimensions());

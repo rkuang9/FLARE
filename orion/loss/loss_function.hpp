@@ -13,13 +13,11 @@
 namespace orion
 {
 
-/**
- *
- */
  /*
   * The loss function classes can contain up to 4 hard coded functions for tensor
-  * returns (2D, 3D, 4D, 5D, video probably is the highest rank for data inputs afaik)
-  * Currently unable to find a better way to implement this given the layer design
+  * returns (2D, 3D, 4D, 5D)
+  * Currently unable to find a better way to implement this given the layer
+  * base class and virtual functions
   */
 class LossFunction
 {
@@ -38,7 +36,6 @@ public:
 
     const std::vector<Scalar> &LossHistory() const
     { return this->loss_history; }
-
 
     virtual Scalar GetLoss() const
     { return this->loss_history.back(); }

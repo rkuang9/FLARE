@@ -13,6 +13,8 @@ namespace orion
 class Sigmoid
 {
 public:
+    // tensorflow automatically swaps sigmoid with softmax if categorical cross
+    // entropy is used (tf.nn.sigmoid prevents this), we will not do that here
     template<int TensorRank>
     static Tensor<TensorRank> Activate(const Tensor<TensorRank> &features)
     {

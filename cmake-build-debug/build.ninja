@@ -1,0 +1,556 @@
+## This file contains all the build statements describing the
+# compilation DAG.
+
+# =============================================================================
+# Write statements declared in CMakeLists.txt:
+# 
+# Which is the root file.
+# =============================================================================
+
+# =============================================================================
+# Project: Orion
+# Configurations: Debug
+# =============================================================================
+
+#############################################
+# Minimal version of Ninja required by this file
+
+ninja_required_version = 1.5
+
+
+#############################################
+# Set configuration variable for custom commands.
+
+CONFIGURATION = Debug
+# =============================================================================
+# Include auxiliary files.
+
+
+#############################################
+# Include rules file.
+
+include CMakeFiles/rules.ninja
+
+# =============================================================================
+
+#############################################
+# Logical path to working directory; prefix for absolute paths.
+
+cmake_ninja_workdir = /Users/macross/Desktop/OrionNN/cmake-build-debug/
+# =============================================================================
+# Object build statements for EXECUTABLE target Orion
+
+
+#############################################
+# Order-only phony target for Orion
+
+build cmake_object_order_depends_target_Orion: phony || CMakeFiles/Orion.dir
+
+build CMakeFiles/Orion.dir/orion/layers/embedding.cpp.o: CXX_COMPILER__Orion_Debug /Users/macross/Desktop/OrionNN/orion/layers/embedding.cpp || cmake_object_order_depends_target_Orion
+  DEP_FILE = CMakeFiles/Orion.dir/orion/layers/embedding.cpp.o.d
+  FLAGS = -O2 -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.0.sdk -std=gnu++17
+  INCLUDES = -I/Users/macross/Desktop/OrionNN/lib/Eigen -I/Users/macross/Desktop/OrionNN -isystem /Users/macross/Desktop/OrionNN/lib/opencv -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/core/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/flann/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/imgproc/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/ml/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/photo/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/dnn/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/features2d/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/imgcodecs/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/videoio/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/calib3d/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/highgui/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/objdetect/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/stitching/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/ts/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/video/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/gapi/include
+  OBJECT_DIR = CMakeFiles/Orion.dir
+  OBJECT_FILE_DIR = CMakeFiles/Orion.dir/orion/layers
+
+build CMakeFiles/Orion.dir/orion/layers/globalaveragepooling1d.cpp.o: CXX_COMPILER__Orion_Debug /Users/macross/Desktop/OrionNN/orion/layers/globalaveragepooling1d.cpp || cmake_object_order_depends_target_Orion
+  DEP_FILE = CMakeFiles/Orion.dir/orion/layers/globalaveragepooling1d.cpp.o.d
+  FLAGS = -O2 -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.0.sdk -std=gnu++17
+  INCLUDES = -I/Users/macross/Desktop/OrionNN/lib/Eigen -I/Users/macross/Desktop/OrionNN -isystem /Users/macross/Desktop/OrionNN/lib/opencv -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/core/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/flann/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/imgproc/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/ml/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/photo/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/dnn/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/features2d/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/imgcodecs/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/videoio/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/calib3d/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/highgui/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/objdetect/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/stitching/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/ts/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/video/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/gapi/include
+  OBJECT_DIR = CMakeFiles/Orion.dir
+  OBJECT_FILE_DIR = CMakeFiles/Orion.dir/orion/layers
+
+build CMakeFiles/Orion.dir/orion/layers/maxpooling2d.cpp.o: CXX_COMPILER__Orion_Debug /Users/macross/Desktop/OrionNN/orion/layers/maxpooling2d.cpp || cmake_object_order_depends_target_Orion
+  DEP_FILE = CMakeFiles/Orion.dir/orion/layers/maxpooling2d.cpp.o.d
+  FLAGS = -O2 -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.0.sdk -std=gnu++17
+  INCLUDES = -I/Users/macross/Desktop/OrionNN/lib/Eigen -I/Users/macross/Desktop/OrionNN -isystem /Users/macross/Desktop/OrionNN/lib/opencv -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/core/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/flann/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/imgproc/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/ml/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/photo/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/dnn/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/features2d/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/imgcodecs/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/videoio/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/calib3d/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/highgui/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/objdetect/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/stitching/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/ts/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/video/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/gapi/include
+  OBJECT_DIR = CMakeFiles/Orion.dir
+  OBJECT_FILE_DIR = CMakeFiles/Orion.dir/orion/layers
+
+build CMakeFiles/Orion.dir/orion/optimizers/adam.cpp.o: CXX_COMPILER__Orion_Debug /Users/macross/Desktop/OrionNN/orion/optimizers/adam.cpp || cmake_object_order_depends_target_Orion
+  DEP_FILE = CMakeFiles/Orion.dir/orion/optimizers/adam.cpp.o.d
+  FLAGS = -O2 -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.0.sdk -std=gnu++17
+  INCLUDES = -I/Users/macross/Desktop/OrionNN/lib/Eigen -I/Users/macross/Desktop/OrionNN -isystem /Users/macross/Desktop/OrionNN/lib/opencv -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/core/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/flann/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/imgproc/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/ml/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/photo/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/dnn/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/features2d/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/imgcodecs/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/videoio/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/calib3d/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/highgui/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/objdetect/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/stitching/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/ts/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/video/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/gapi/include
+  OBJECT_DIR = CMakeFiles/Orion.dir
+  OBJECT_FILE_DIR = CMakeFiles/Orion.dir/orion/optimizers
+
+build CMakeFiles/Orion.dir/orion/optimizers/sgd.cpp.o: CXX_COMPILER__Orion_Debug /Users/macross/Desktop/OrionNN/orion/optimizers/sgd.cpp || cmake_object_order_depends_target_Orion
+  DEP_FILE = CMakeFiles/Orion.dir/orion/optimizers/sgd.cpp.o.d
+  FLAGS = -O2 -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.0.sdk -std=gnu++17
+  INCLUDES = -I/Users/macross/Desktop/OrionNN/lib/Eigen -I/Users/macross/Desktop/OrionNN -isystem /Users/macross/Desktop/OrionNN/lib/opencv -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/core/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/flann/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/imgproc/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/ml/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/photo/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/dnn/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/features2d/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/imgcodecs/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/videoio/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/calib3d/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/highgui/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/objdetect/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/stitching/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/ts/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/video/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/gapi/include
+  OBJECT_DIR = CMakeFiles/Orion.dir
+  OBJECT_FILE_DIR = CMakeFiles/Orion.dir/orion/optimizers
+
+build CMakeFiles/Orion.dir/orion/optimizers/rmsprop.cpp.o: CXX_COMPILER__Orion_Debug /Users/macross/Desktop/OrionNN/orion/optimizers/rmsprop.cpp || cmake_object_order_depends_target_Orion
+  DEP_FILE = CMakeFiles/Orion.dir/orion/optimizers/rmsprop.cpp.o.d
+  FLAGS = -O2 -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.0.sdk -std=gnu++17
+  INCLUDES = -I/Users/macross/Desktop/OrionNN/lib/Eigen -I/Users/macross/Desktop/OrionNN -isystem /Users/macross/Desktop/OrionNN/lib/opencv -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/core/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/flann/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/imgproc/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/ml/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/photo/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/dnn/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/features2d/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/imgcodecs/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/videoio/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/calib3d/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/highgui/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/objdetect/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/stitching/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/ts/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/video/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/gapi/include
+  OBJECT_DIR = CMakeFiles/Orion.dir
+  OBJECT_FILE_DIR = CMakeFiles/Orion.dir/orion/optimizers
+
+build CMakeFiles/Orion.dir/orion/loss/binary_cross_entropy.cpp.o: CXX_COMPILER__Orion_Debug /Users/macross/Desktop/OrionNN/orion/loss/binary_cross_entropy.cpp || cmake_object_order_depends_target_Orion
+  DEP_FILE = CMakeFiles/Orion.dir/orion/loss/binary_cross_entropy.cpp.o.d
+  FLAGS = -O2 -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.0.sdk -std=gnu++17
+  INCLUDES = -I/Users/macross/Desktop/OrionNN/lib/Eigen -I/Users/macross/Desktop/OrionNN -isystem /Users/macross/Desktop/OrionNN/lib/opencv -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/core/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/flann/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/imgproc/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/ml/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/photo/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/dnn/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/features2d/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/imgcodecs/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/videoio/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/calib3d/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/highgui/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/objdetect/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/stitching/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/ts/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/video/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/gapi/include
+  OBJECT_DIR = CMakeFiles/Orion.dir
+  OBJECT_FILE_DIR = CMakeFiles/Orion.dir/orion/loss
+
+build CMakeFiles/Orion.dir/orion/loss/mean_squared_error.cpp.o: CXX_COMPILER__Orion_Debug /Users/macross/Desktop/OrionNN/orion/loss/mean_squared_error.cpp || cmake_object_order_depends_target_Orion
+  DEP_FILE = CMakeFiles/Orion.dir/orion/loss/mean_squared_error.cpp.o.d
+  FLAGS = -O2 -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.0.sdk -std=gnu++17
+  INCLUDES = -I/Users/macross/Desktop/OrionNN/lib/Eigen -I/Users/macross/Desktop/OrionNN -isystem /Users/macross/Desktop/OrionNN/lib/opencv -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/core/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/flann/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/imgproc/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/ml/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/photo/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/dnn/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/features2d/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/imgcodecs/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/videoio/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/calib3d/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/highgui/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/objdetect/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/stitching/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/ts/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/video/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/gapi/include
+  OBJECT_DIR = CMakeFiles/Orion.dir
+  OBJECT_FILE_DIR = CMakeFiles/Orion.dir/orion/loss
+
+build CMakeFiles/Orion.dir/orion/loss/categorical_cross_entropy.cpp.o: CXX_COMPILER__Orion_Debug /Users/macross/Desktop/OrionNN/orion/loss/categorical_cross_entropy.cpp || cmake_object_order_depends_target_Orion
+  DEP_FILE = CMakeFiles/Orion.dir/orion/loss/categorical_cross_entropy.cpp.o.d
+  FLAGS = -O2 -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.0.sdk -std=gnu++17
+  INCLUDES = -I/Users/macross/Desktop/OrionNN/lib/Eigen -I/Users/macross/Desktop/OrionNN -isystem /Users/macross/Desktop/OrionNN/lib/opencv -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/core/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/flann/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/imgproc/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/ml/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/photo/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/dnn/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/features2d/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/imgcodecs/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/videoio/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/calib3d/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/highgui/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/objdetect/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/stitching/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/ts/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/video/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/gapi/include
+  OBJECT_DIR = CMakeFiles/Orion.dir
+  OBJECT_FILE_DIR = CMakeFiles/Orion.dir/orion/loss
+
+build CMakeFiles/Orion.dir/orion/internal/batcher.cpp.o: CXX_COMPILER__Orion_Debug /Users/macross/Desktop/OrionNN/orion/internal/batcher.cpp || cmake_object_order_depends_target_Orion
+  DEP_FILE = CMakeFiles/Orion.dir/orion/internal/batcher.cpp.o.d
+  FLAGS = -O2 -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.0.sdk -std=gnu++17
+  INCLUDES = -I/Users/macross/Desktop/OrionNN/lib/Eigen -I/Users/macross/Desktop/OrionNN -isystem /Users/macross/Desktop/OrionNN/lib/opencv -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/core/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/flann/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/imgproc/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/ml/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/photo/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/dnn/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/features2d/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/imgcodecs/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/videoio/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/calib3d/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/highgui/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/objdetect/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/stitching/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/ts/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/video/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/gapi/include
+  OBJECT_DIR = CMakeFiles/Orion.dir
+  OBJECT_FILE_DIR = CMakeFiles/Orion.dir/orion/internal
+
+build CMakeFiles/Orion.dir/orion/internal/print_tensor.cpp.o: CXX_COMPILER__Orion_Debug /Users/macross/Desktop/OrionNN/orion/internal/print_tensor.cpp || cmake_object_order_depends_target_Orion
+  DEP_FILE = CMakeFiles/Orion.dir/orion/internal/print_tensor.cpp.o.d
+  FLAGS = -O2 -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.0.sdk -std=gnu++17
+  INCLUDES = -I/Users/macross/Desktop/OrionNN/lib/Eigen -I/Users/macross/Desktop/OrionNN -isystem /Users/macross/Desktop/OrionNN/lib/opencv -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/core/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/flann/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/imgproc/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/ml/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/photo/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/dnn/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/features2d/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/imgcodecs/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/videoio/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/calib3d/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/highgui/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/objdetect/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/stitching/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/ts/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/video/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/gapi/include
+  OBJECT_DIR = CMakeFiles/Orion.dir
+  OBJECT_FILE_DIR = CMakeFiles/Orion.dir/orion/internal
+
+build CMakeFiles/Orion.dir/orion/metrics/accuracy.cpp.o: CXX_COMPILER__Orion_Debug /Users/macross/Desktop/OrionNN/orion/metrics/accuracy.cpp || cmake_object_order_depends_target_Orion
+  DEP_FILE = CMakeFiles/Orion.dir/orion/metrics/accuracy.cpp.o.d
+  FLAGS = -O2 -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.0.sdk -std=gnu++17
+  INCLUDES = -I/Users/macross/Desktop/OrionNN/lib/Eigen -I/Users/macross/Desktop/OrionNN -isystem /Users/macross/Desktop/OrionNN/lib/opencv -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/core/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/flann/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/imgproc/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/ml/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/photo/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/dnn/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/features2d/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/imgcodecs/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/videoio/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/calib3d/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/highgui/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/objdetect/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/stitching/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/ts/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/video/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/gapi/include
+  OBJECT_DIR = CMakeFiles/Orion.dir
+  OBJECT_FILE_DIR = CMakeFiles/Orion.dir/orion/metrics
+
+build CMakeFiles/Orion.dir/orion/metrics/loss.cpp.o: CXX_COMPILER__Orion_Debug /Users/macross/Desktop/OrionNN/orion/metrics/loss.cpp || cmake_object_order_depends_target_Orion
+  DEP_FILE = CMakeFiles/Orion.dir/orion/metrics/loss.cpp.o.d
+  FLAGS = -O2 -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.0.sdk -std=gnu++17
+  INCLUDES = -I/Users/macross/Desktop/OrionNN/lib/Eigen -I/Users/macross/Desktop/OrionNN -isystem /Users/macross/Desktop/OrionNN/lib/opencv -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/core/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/flann/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/imgproc/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/ml/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/photo/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/dnn/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/features2d/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/imgcodecs/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/videoio/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/calib3d/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/highgui/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/objdetect/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/stitching/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/ts/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/video/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/gapi/include
+  OBJECT_DIR = CMakeFiles/Orion.dir
+  OBJECT_FILE_DIR = CMakeFiles/Orion.dir/orion/metrics
+
+build CMakeFiles/Orion.dir/orion/main.cpp.o: CXX_COMPILER__Orion_Debug /Users/macross/Desktop/OrionNN/orion/main.cpp || cmake_object_order_depends_target_Orion
+  DEP_FILE = CMakeFiles/Orion.dir/orion/main.cpp.o.d
+  FLAGS = -O2 -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.0.sdk -std=gnu++17
+  INCLUDES = -I/Users/macross/Desktop/OrionNN/lib/Eigen -I/Users/macross/Desktop/OrionNN -isystem /Users/macross/Desktop/OrionNN/lib/opencv -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/core/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/flann/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/imgproc/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/ml/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/photo/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/dnn/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/features2d/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/imgcodecs/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/videoio/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/calib3d/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/highgui/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/objdetect/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/stitching/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/ts/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/video/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/gapi/include
+  OBJECT_DIR = CMakeFiles/Orion.dir
+  OBJECT_FILE_DIR = CMakeFiles/Orion.dir/orion
+
+build CMakeFiles/Orion.dir/orion/sequential.cpp.o: CXX_COMPILER__Orion_Debug /Users/macross/Desktop/OrionNN/orion/sequential.cpp || cmake_object_order_depends_target_Orion
+  DEP_FILE = CMakeFiles/Orion.dir/orion/sequential.cpp.o.d
+  FLAGS = -O2 -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.0.sdk -std=gnu++17
+  INCLUDES = -I/Users/macross/Desktop/OrionNN/lib/Eigen -I/Users/macross/Desktop/OrionNN -isystem /Users/macross/Desktop/OrionNN/lib/opencv -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/core/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/flann/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/imgproc/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/ml/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/photo/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/dnn/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/features2d/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/imgcodecs/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/videoio/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/calib3d/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/highgui/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/objdetect/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/stitching/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/ts/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/video/include -isystem /Users/macross/Desktop/OrionNN/lib/opencv/opencv-4.6.0-src/modules/gapi/include
+  OBJECT_DIR = CMakeFiles/Orion.dir
+  OBJECT_FILE_DIR = CMakeFiles/Orion.dir/orion
+
+
+# =============================================================================
+# Link build statements for EXECUTABLE target Orion
+
+
+#############################################
+# Link the executable ../bin/Orion
+
+build ../bin/Orion: CXX_EXECUTABLE_LINKER__Orion_Debug CMakeFiles/Orion.dir/orion/layers/embedding.cpp.o CMakeFiles/Orion.dir/orion/layers/globalaveragepooling1d.cpp.o CMakeFiles/Orion.dir/orion/layers/maxpooling2d.cpp.o CMakeFiles/Orion.dir/orion/optimizers/adam.cpp.o CMakeFiles/Orion.dir/orion/optimizers/sgd.cpp.o CMakeFiles/Orion.dir/orion/optimizers/rmsprop.cpp.o CMakeFiles/Orion.dir/orion/loss/binary_cross_entropy.cpp.o CMakeFiles/Orion.dir/orion/loss/mean_squared_error.cpp.o CMakeFiles/Orion.dir/orion/loss/categorical_cross_entropy.cpp.o CMakeFiles/Orion.dir/orion/internal/batcher.cpp.o CMakeFiles/Orion.dir/orion/internal/print_tensor.cpp.o CMakeFiles/Orion.dir/orion/metrics/accuracy.cpp.o CMakeFiles/Orion.dir/orion/metrics/loss.cpp.o CMakeFiles/Orion.dir/orion/main.cpp.o CMakeFiles/Orion.dir/orion/sequential.cpp.o | ../lib/opencv/lib/libopencv_gapi.4.6.0.dylib ../lib/opencv/lib/libopencv_highgui.4.6.0.dylib ../lib/opencv/lib/libopencv_ml.4.6.0.dylib ../lib/opencv/lib/libopencv_objdetect.4.6.0.dylib ../lib/opencv/lib/libopencv_photo.4.6.0.dylib ../lib/opencv/lib/libopencv_stitching.4.6.0.dylib ../lib/opencv/lib/libopencv_video.4.6.0.dylib ../lib/opencv/lib/libopencv_videoio.4.6.0.dylib ../lib/opencv/lib/libopencv_imgcodecs.4.6.0.dylib ../lib/opencv/lib/libopencv_dnn.4.6.0.dylib ../lib/opencv/lib/libopencv_calib3d.4.6.0.dylib ../lib/opencv/lib/libopencv_features2d.4.6.0.dylib ../lib/opencv/lib/libopencv_flann.4.6.0.dylib ../lib/opencv/lib/libopencv_imgproc.4.6.0.dylib ../lib/opencv/lib/libopencv_core.4.6.0.dylib
+  FLAGS = -O2 -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.0.sdk
+  LINK_LIBRARIES = -Wl,-rpath,/Users/macross/Desktop/OrionNN/lib/opencv/lib  ../lib/opencv/lib/libopencv_gapi.4.6.0.dylib  ../lib/opencv/lib/libopencv_highgui.4.6.0.dylib  ../lib/opencv/lib/libopencv_ml.4.6.0.dylib  ../lib/opencv/lib/libopencv_objdetect.4.6.0.dylib  ../lib/opencv/lib/libopencv_photo.4.6.0.dylib  ../lib/opencv/lib/libopencv_stitching.4.6.0.dylib  ../lib/opencv/lib/libopencv_video.4.6.0.dylib  ../lib/opencv/lib/libopencv_videoio.4.6.0.dylib  ../lib/opencv/lib/libopencv_imgcodecs.4.6.0.dylib  ../lib/opencv/lib/libopencv_dnn.4.6.0.dylib  ../lib/opencv/lib/libopencv_calib3d.4.6.0.dylib  ../lib/opencv/lib/libopencv_features2d.4.6.0.dylib  ../lib/opencv/lib/libopencv_flann.4.6.0.dylib  ../lib/opencv/lib/libopencv_imgproc.4.6.0.dylib  ../lib/opencv/lib/libopencv_core.4.6.0.dylib
+  OBJECT_DIR = CMakeFiles/Orion.dir
+  POST_BUILD = :
+  PRE_LINK = :
+  TARGET_FILE = ../bin/Orion
+  TARGET_PDB = Orion.dbg
+
+
+#############################################
+# Utility command for edit_cache
+
+build CMakeFiles/edit_cache.util: CUSTOM_COMMAND
+  COMMAND = cd /Users/macross/Desktop/OrionNN/cmake-build-debug && /Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+  DESC = No interactive CMake dialog available...
+  restat = 1
+
+build edit_cache: phony CMakeFiles/edit_cache.util
+
+
+#############################################
+# Utility command for rebuild_cache
+
+build CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
+  COMMAND = cd /Users/macross/Desktop/OrionNN/cmake-build-debug && /Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake --regenerate-during-build -S/Users/macross/Desktop/OrionNN -B/Users/macross/Desktop/OrionNN/cmake-build-debug
+  DESC = Running CMake to regenerate build system...
+  pool = console
+  restat = 1
+
+build rebuild_cache: phony CMakeFiles/rebuild_cache.util
+
+# =============================================================================
+# Write statements declared in CMakeLists.txt:
+# /Users/macross/Desktop/OrionNN/CMakeLists.txt
+# =============================================================================
+
+
+#############################################
+# Utility command for edit_cache
+
+build orion/CMakeFiles/edit_cache.util: CUSTOM_COMMAND
+  COMMAND = cd /Users/macross/Desktop/OrionNN/cmake-build-debug/orion && /Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+  DESC = No interactive CMake dialog available...
+  restat = 1
+
+build orion/edit_cache: phony orion/CMakeFiles/edit_cache.util
+
+
+#############################################
+# Utility command for rebuild_cache
+
+build orion/CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
+  COMMAND = cd /Users/macross/Desktop/OrionNN/cmake-build-debug/orion && /Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake --regenerate-during-build -S/Users/macross/Desktop/OrionNN -B/Users/macross/Desktop/OrionNN/cmake-build-debug
+  DESC = Running CMake to regenerate build system...
+  pool = console
+  restat = 1
+
+build orion/rebuild_cache: phony orion/CMakeFiles/rebuild_cache.util
+
+# =============================================================================
+# Write statements declared in CMakeLists.txt:
+# /Users/macross/Desktop/OrionNN/orion/CMakeLists.txt
+# =============================================================================
+
+
+#############################################
+# Utility command for edit_cache
+
+build orion/activations/CMakeFiles/edit_cache.util: CUSTOM_COMMAND
+  COMMAND = cd /Users/macross/Desktop/OrionNN/cmake-build-debug/orion/activations && /Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+  DESC = No interactive CMake dialog available...
+  restat = 1
+
+build orion/activations/edit_cache: phony orion/activations/CMakeFiles/edit_cache.util
+
+
+#############################################
+# Utility command for rebuild_cache
+
+build orion/activations/CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
+  COMMAND = cd /Users/macross/Desktop/OrionNN/cmake-build-debug/orion/activations && /Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake --regenerate-during-build -S/Users/macross/Desktop/OrionNN -B/Users/macross/Desktop/OrionNN/cmake-build-debug
+  DESC = Running CMake to regenerate build system...
+  pool = console
+  restat = 1
+
+build orion/activations/rebuild_cache: phony orion/activations/CMakeFiles/rebuild_cache.util
+
+# =============================================================================
+# Write statements declared in CMakeLists.txt:
+# /Users/macross/Desktop/OrionNN/orion/CMakeLists.txt
+# =============================================================================
+
+
+#############################################
+# Utility command for edit_cache
+
+build orion/layers/CMakeFiles/edit_cache.util: CUSTOM_COMMAND
+  COMMAND = cd /Users/macross/Desktop/OrionNN/cmake-build-debug/orion/layers && /Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+  DESC = No interactive CMake dialog available...
+  restat = 1
+
+build orion/layers/edit_cache: phony orion/layers/CMakeFiles/edit_cache.util
+
+
+#############################################
+# Utility command for rebuild_cache
+
+build orion/layers/CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
+  COMMAND = cd /Users/macross/Desktop/OrionNN/cmake-build-debug/orion/layers && /Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake --regenerate-during-build -S/Users/macross/Desktop/OrionNN -B/Users/macross/Desktop/OrionNN/cmake-build-debug
+  DESC = Running CMake to regenerate build system...
+  pool = console
+  restat = 1
+
+build orion/layers/rebuild_cache: phony orion/layers/CMakeFiles/rebuild_cache.util
+
+# =============================================================================
+# Write statements declared in CMakeLists.txt:
+# /Users/macross/Desktop/OrionNN/orion/CMakeLists.txt
+# =============================================================================
+
+
+#############################################
+# Utility command for edit_cache
+
+build orion/weights/CMakeFiles/edit_cache.util: CUSTOM_COMMAND
+  COMMAND = cd /Users/macross/Desktop/OrionNN/cmake-build-debug/orion/weights && /Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+  DESC = No interactive CMake dialog available...
+  restat = 1
+
+build orion/weights/edit_cache: phony orion/weights/CMakeFiles/edit_cache.util
+
+
+#############################################
+# Utility command for rebuild_cache
+
+build orion/weights/CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
+  COMMAND = cd /Users/macross/Desktop/OrionNN/cmake-build-debug/orion/weights && /Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake --regenerate-during-build -S/Users/macross/Desktop/OrionNN -B/Users/macross/Desktop/OrionNN/cmake-build-debug
+  DESC = Running CMake to regenerate build system...
+  pool = console
+  restat = 1
+
+build orion/weights/rebuild_cache: phony orion/weights/CMakeFiles/rebuild_cache.util
+
+# =============================================================================
+# Write statements declared in CMakeLists.txt:
+# /Users/macross/Desktop/OrionNN/orion/CMakeLists.txt
+# =============================================================================
+
+
+#############################################
+# Utility command for edit_cache
+
+build orion/optimizers/CMakeFiles/edit_cache.util: CUSTOM_COMMAND
+  COMMAND = cd /Users/macross/Desktop/OrionNN/cmake-build-debug/orion/optimizers && /Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+  DESC = No interactive CMake dialog available...
+  restat = 1
+
+build orion/optimizers/edit_cache: phony orion/optimizers/CMakeFiles/edit_cache.util
+
+
+#############################################
+# Utility command for rebuild_cache
+
+build orion/optimizers/CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
+  COMMAND = cd /Users/macross/Desktop/OrionNN/cmake-build-debug/orion/optimizers && /Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake --regenerate-during-build -S/Users/macross/Desktop/OrionNN -B/Users/macross/Desktop/OrionNN/cmake-build-debug
+  DESC = Running CMake to regenerate build system...
+  pool = console
+  restat = 1
+
+build orion/optimizers/rebuild_cache: phony orion/optimizers/CMakeFiles/rebuild_cache.util
+
+# =============================================================================
+# Write statements declared in CMakeLists.txt:
+# /Users/macross/Desktop/OrionNN/orion/CMakeLists.txt
+# =============================================================================
+
+
+#############################################
+# Utility command for edit_cache
+
+build orion/loss/CMakeFiles/edit_cache.util: CUSTOM_COMMAND
+  COMMAND = cd /Users/macross/Desktop/OrionNN/cmake-build-debug/orion/loss && /Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+  DESC = No interactive CMake dialog available...
+  restat = 1
+
+build orion/loss/edit_cache: phony orion/loss/CMakeFiles/edit_cache.util
+
+
+#############################################
+# Utility command for rebuild_cache
+
+build orion/loss/CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
+  COMMAND = cd /Users/macross/Desktop/OrionNN/cmake-build-debug/orion/loss && /Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake --regenerate-during-build -S/Users/macross/Desktop/OrionNN -B/Users/macross/Desktop/OrionNN/cmake-build-debug
+  DESC = Running CMake to regenerate build system...
+  pool = console
+  restat = 1
+
+build orion/loss/rebuild_cache: phony orion/loss/CMakeFiles/rebuild_cache.util
+
+# =============================================================================
+# Write statements declared in CMakeLists.txt:
+# /Users/macross/Desktop/OrionNN/orion/CMakeLists.txt
+# =============================================================================
+
+
+#############################################
+# Utility command for edit_cache
+
+build orion/internal/CMakeFiles/edit_cache.util: CUSTOM_COMMAND
+  COMMAND = cd /Users/macross/Desktop/OrionNN/cmake-build-debug/orion/internal && /Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+  DESC = No interactive CMake dialog available...
+  restat = 1
+
+build orion/internal/edit_cache: phony orion/internal/CMakeFiles/edit_cache.util
+
+
+#############################################
+# Utility command for rebuild_cache
+
+build orion/internal/CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
+  COMMAND = cd /Users/macross/Desktop/OrionNN/cmake-build-debug/orion/internal && /Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake --regenerate-during-build -S/Users/macross/Desktop/OrionNN -B/Users/macross/Desktop/OrionNN/cmake-build-debug
+  DESC = Running CMake to regenerate build system...
+  pool = console
+  restat = 1
+
+build orion/internal/rebuild_cache: phony orion/internal/CMakeFiles/rebuild_cache.util
+
+# =============================================================================
+# Write statements declared in CMakeLists.txt:
+# /Users/macross/Desktop/OrionNN/orion/CMakeLists.txt
+# =============================================================================
+
+
+#############################################
+# Utility command for edit_cache
+
+build orion/metrics/CMakeFiles/edit_cache.util: CUSTOM_COMMAND
+  COMMAND = cd /Users/macross/Desktop/OrionNN/cmake-build-debug/orion/metrics && /Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+  DESC = No interactive CMake dialog available...
+  restat = 1
+
+build orion/metrics/edit_cache: phony orion/metrics/CMakeFiles/edit_cache.util
+
+
+#############################################
+# Utility command for rebuild_cache
+
+build orion/metrics/CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
+  COMMAND = cd /Users/macross/Desktop/OrionNN/cmake-build-debug/orion/metrics && /Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake --regenerate-during-build -S/Users/macross/Desktop/OrionNN -B/Users/macross/Desktop/OrionNN/cmake-build-debug
+  DESC = Running CMake to regenerate build system...
+  pool = console
+  restat = 1
+
+build orion/metrics/rebuild_cache: phony orion/metrics/CMakeFiles/rebuild_cache.util
+
+# =============================================================================
+# Write statements declared in CMakeLists.txt:
+# /Users/macross/Desktop/OrionNN/CMakeLists.txt
+# =============================================================================
+
+
+#############################################
+# Utility command for edit_cache
+
+build examples/CMakeFiles/edit_cache.util: CUSTOM_COMMAND
+  COMMAND = cd /Users/macross/Desktop/OrionNN/cmake-build-debug/examples && /Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+  DESC = No interactive CMake dialog available...
+  restat = 1
+
+build examples/edit_cache: phony examples/CMakeFiles/edit_cache.util
+
+
+#############################################
+# Utility command for rebuild_cache
+
+build examples/CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
+  COMMAND = cd /Users/macross/Desktop/OrionNN/cmake-build-debug/examples && /Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake --regenerate-during-build -S/Users/macross/Desktop/OrionNN -B/Users/macross/Desktop/OrionNN/cmake-build-debug
+  DESC = Running CMake to regenerate build system...
+  pool = console
+  restat = 1
+
+build examples/rebuild_cache: phony examples/CMakeFiles/rebuild_cache.util
+
+# =============================================================================
+# Target aliases.
+
+build Orion: phony ../bin/Orion
+
+# =============================================================================
+# Folder targets.
+
+# =============================================================================
+
+#############################################
+# Folder: /Users/macross/Desktop/OrionNN/cmake-build-debug
+
+build all: phony ../bin/Orion orion/all examples/all
+
+# =============================================================================
+
+#############################################
+# Folder: /Users/macross/Desktop/OrionNN/cmake-build-debug/examples
+
+build examples/all: phony
+
+# =============================================================================
+
+#############################################
+# Folder: /Users/macross/Desktop/OrionNN/cmake-build-debug/orion
+
+build orion/all: phony orion/activations/all orion/layers/all orion/weights/all orion/optimizers/all orion/loss/all orion/internal/all orion/metrics/all
+
+# =============================================================================
+
+#############################################
+# Folder: /Users/macross/Desktop/OrionNN/cmake-build-debug/orion/activations
+
+build orion/activations/all: phony
+
+# =============================================================================
+
+#############################################
+# Folder: /Users/macross/Desktop/OrionNN/cmake-build-debug/orion/internal
+
+build orion/internal/all: phony
+
+# =============================================================================
+
+#############################################
+# Folder: /Users/macross/Desktop/OrionNN/cmake-build-debug/orion/layers
+
+build orion/layers/all: phony
+
+# =============================================================================
+
+#############################################
+# Folder: /Users/macross/Desktop/OrionNN/cmake-build-debug/orion/loss
+
+build orion/loss/all: phony
+
+# =============================================================================
+
+#############################################
+# Folder: /Users/macross/Desktop/OrionNN/cmake-build-debug/orion/metrics
+
+build orion/metrics/all: phony
+
+# =============================================================================
+
+#############################################
+# Folder: /Users/macross/Desktop/OrionNN/cmake-build-debug/orion/optimizers
+
+build orion/optimizers/all: phony
+
+# =============================================================================
+
+#############################################
+# Folder: /Users/macross/Desktop/OrionNN/cmake-build-debug/orion/weights
+
+build orion/weights/all: phony
+
+# =============================================================================
+# Built-in targets
+
+
+#############################################
+# Re-run CMake if any of its inputs changed.
+
+build build.ninja: RERUN_CMAKE | ../CMakeLists.txt ../examples/CMakeLists.txt ../lib/opencv/OpenCVConfig-version.cmake ../lib/opencv/OpenCVConfig.cmake ../lib/opencv/OpenCVModules.cmake ../orion/CMakeLists.txt ../orion/activations/CMakeLists.txt ../orion/internal/CMakeLists.txt ../orion/layers/CMakeLists.txt ../orion/loss/CMakeLists.txt ../orion/metrics/CMakeLists.txt ../orion/optimizers/CMakeLists.txt ../orion/weights/CMakeLists.txt /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.23/Modules/CMakeCInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.23/Modules/CMakeCXXInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.23/Modules/CMakeCommonLanguageInclude.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.23/Modules/CMakeGenericSystem.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.23/Modules/CMakeInitializeConfigs.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.23/Modules/CMakeLanguageInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.23/Modules/CMakeSystemSpecificInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.23/Modules/CMakeSystemSpecificInitialize.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.23/Modules/Compiler/AppleClang-C.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.23/Modules/Compiler/AppleClang-CXX.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.23/Modules/Compiler/CMakeCommonCompilerMacros.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.23/Modules/Compiler/Clang.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.23/Modules/Compiler/GNU.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.23/Modules/FindPackageHandleStandardArgs.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.23/Modules/FindPackageMessage.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.23/Modules/Platform/Apple-AppleClang-C.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.23/Modules/Platform/Apple-AppleClang-CXX.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.23/Modules/Platform/Apple-Clang-C.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.23/Modules/Platform/Apple-Clang-CXX.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.23/Modules/Platform/Apple-Clang.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.23/Modules/Platform/Darwin-Initialize.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.23/Modules/Platform/Darwin.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.23/Modules/Platform/UnixPaths.cmake CMakeCache.txt CMakeFiles/3.23.2/CMakeCCompiler.cmake CMakeFiles/3.23.2/CMakeCXXCompiler.cmake CMakeFiles/3.23.2/CMakeSystem.cmake
+  pool = console
+
+
+#############################################
+# A missing CMake input file is not an error.
+
+build ../CMakeLists.txt ../examples/CMakeLists.txt ../lib/opencv/OpenCVConfig-version.cmake ../lib/opencv/OpenCVConfig.cmake ../lib/opencv/OpenCVModules.cmake ../orion/CMakeLists.txt ../orion/activations/CMakeLists.txt ../orion/internal/CMakeLists.txt ../orion/layers/CMakeLists.txt ../orion/loss/CMakeLists.txt ../orion/metrics/CMakeLists.txt ../orion/optimizers/CMakeLists.txt ../orion/weights/CMakeLists.txt /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.23/Modules/CMakeCInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.23/Modules/CMakeCXXInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.23/Modules/CMakeCommonLanguageInclude.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.23/Modules/CMakeGenericSystem.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.23/Modules/CMakeInitializeConfigs.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.23/Modules/CMakeLanguageInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.23/Modules/CMakeSystemSpecificInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.23/Modules/CMakeSystemSpecificInitialize.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.23/Modules/Compiler/AppleClang-C.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.23/Modules/Compiler/AppleClang-CXX.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.23/Modules/Compiler/CMakeCommonCompilerMacros.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.23/Modules/Compiler/Clang.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.23/Modules/Compiler/GNU.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.23/Modules/FindPackageHandleStandardArgs.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.23/Modules/FindPackageMessage.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.23/Modules/Platform/Apple-AppleClang-C.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.23/Modules/Platform/Apple-AppleClang-CXX.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.23/Modules/Platform/Apple-Clang-C.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.23/Modules/Platform/Apple-Clang-CXX.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.23/Modules/Platform/Apple-Clang.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.23/Modules/Platform/Darwin-Initialize.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.23/Modules/Platform/Darwin.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.23/Modules/Platform/UnixPaths.cmake CMakeCache.txt CMakeFiles/3.23.2/CMakeCCompiler.cmake CMakeFiles/3.23.2/CMakeCXXCompiler.cmake CMakeFiles/3.23.2/CMakeSystem.cmake: phony
+
+
+#############################################
+# Clean all the built files.
+
+build clean: CLEAN
+
+
+#############################################
+# Print all primary targets available.
+
+build help: HELP
+
+
+#############################################
+# Make the all target the default.
+
+default all

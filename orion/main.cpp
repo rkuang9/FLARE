@@ -4,9 +4,9 @@
 #include <orion/orion.hpp>
 #include <filesystem>
 
-#include <opencv2/core.hpp>
+/*#include <opencv2/core.hpp>
 #include <opencv2/imgcodecs.hpp>
-#include <opencv2/core/eigen.hpp>
+#include <opencv2/core/eigen.hpp>*/
 
 // FLARE
 // Fast Learning Architectures/Algorithms Ran Eagerly
@@ -16,112 +16,114 @@
 using namespace orion;
 
 
-void mnist()
+void softmax()
 {
-    namespace fs = std::filesystem;
+    Tensor<2> weights(3, 3);
+    weights.setValues({{1, 2, 3},
+                       {1, 2, 3},
+                       {1, 2, 3}});
 
-    Dims<3> sample_dims(28, 28, 3);
-    Dims<1> label_dims(1);
+    Tensor<2> labels(2, 3);
+    labels.setValues({{0, 0, 1},
+                      {0, 0, 1}});
 
-    Dataset dataset(sample_dims, label_dims);
+    CategoricalCrossEntropy cce;
+    SGD sgd(1);
 
-    std::string mnist_path =
-            fs::current_path().string() + "/mnist/trainingSet/trainingSet/";
+    Tensor<2> X(2, 3);
+    X.setValues({{0.2, 0.1, 0.3},
+                 {0.4, 0.5, 0.6}});
 
+    Layer *dense = new Dense<Softmax>(3, 3, false);
+    dense->SetWeights(weights);
 
-    Tensor<1> img_label(1);
+    dense->Forward(X);
+    cce.CalculateLoss(dense->GetOutput2D(), labels);
+    Tensor<2> loss_grad = cce.GetGradients2D();
+    dense->Backward(cce);
+    dense->Update(sgd);
+    std::cout << "updated weights\n" << dense->GetWeights() << "\n";
+    return;
 
-    // go through folders 0-9, labels will be the folder number
-    for (int i = 0; i < 10; i++) {
-        std::string img_path = mnist_path + std::to_string(i);
-        img_label.setValues({i == 1 ? Scalar(1) : Scalar(0)}); // 1 digit is true, not 1 digit is false
+    Tensor<3> softmax_grad = Softmax::Gradients(dense->GetOutput2D());
 
-        // give Dataset::Add the image path and it will create a tensor
-        for (auto &file: std::filesystem::directory_iterator(img_path)) {
-            dataset.Add(file.path(), img_label);
-        }
-    }
+    std::cout << "loss gradients\n" << cce.GetGradients2D() << "\n\n";
 
-    dataset.Batch(1, true);
+    std::cout << "jacobian: " << softmax_grad << "\n\n";
 
-    std::cout << "total samples: " << dataset.training_samples.size() << "\n";
+    std::cout << "chip\n" << loss_grad.chip(1, 0) << "\n" << softmax_grad.chip(1, 0)
+              << "\n";
+    Tensor<1> chipy = loss_grad.chip(1, 0);
+    std::cout << "chipy dim: " << chipy.dimensions() << "\n";
+    Tensor<2> chipper = softmax_grad.chip(1, 0);
+    std::cout << "chipper dim: " << chipper.dimensions() << "\n";
 
-    // haven't implemented softmax activation so sigmoid (true/false is one) will have to do
-    Sequential model {
-            new Conv2D<ReLU>(16, Input(28, 28, 3),
-                             Kernel(5, 5), Padding::PADDING_VALID),
-            new MaxPooling2D(PoolSize(3, 3)),
-            new Conv2D<ReLU>(32, Input(22, 22, 16),
-                             Kernel(3, 3), Padding::PADDING_VALID),
-            new Flatten<4>(),
-            new Dense<ReLU>(1152, 32, false),
-            new Dense<Sigmoid>(32, 1, false),
-    };
+    std::cout << "chippest dim: "
+              << chipy.contract(chipper, ContractDim {Axes(0, 0)}) << "\n";
 
-    Adam opt;
-    MeanSquaredError loss;
-
-    model.Compile(loss, opt, {new Loss});
-    model.Fit(dataset.training_samples, dataset.training_labels, 15, 1);
-
-    // prediction on a test sample
-    Tensor<3> image_tensor;
-    cv::Mat cv_matrix = cv::imread("/Users/macross/Desktop/OrionNN/bin/mnist/testSample/img_62.jpg");
-    cv::cv2eigen(cv_matrix, image_tensor);
-    Tensor<4> cv_image = image_tensor.reshape(Dims<4>(1, 28, 28, 3));
+    Tensor<2> dL_dZ(2, 3);
+    dL_dZ.chip(0, 0) = loss_grad.chip(0, 0).contract(softmax_grad.chip(0, 0),
+                                                     ContractDim {Axes(0, 1)});
+    std::cout << "chip 1\n";
+    dL_dZ.chip(1, 0) = loss_grad.chip(1, 0).contract(softmax_grad.chip(1, 0),
+                                                     ContractDim {Axes(0, 1)});
+    std::cout << "chip 2\n";
+    std::cout << "dL_dZ\n" << dL_dZ << "\n\n";
 
 
-    std::cout << model.Predict<2>(cv_image) << ", expected 1";
 }
 
 
-/*void debug()
+void crossentropy()
 {
-    Tensor<2> input(3, 3);
-    input.setValues({{1, 2, 1},
-                     {3, 2, 1},
-                     {3, 4, 4}});
-    Tensor<4> image = input.reshape(Dims<4>(1, 3, 3, 1));
-    Tensor<2> label(1, 1);
-    label.setValues({{0.5}});
-    Tensor<1> pweights(4);
-    pweights.setValues(
-            {0.3, 0.8, 0.5, 0.1});
-    Tensor<2> weights = pweights.reshape(Dims<2>(1, 4));
-    Tensor<2> pkernels(2, 2);
-    pkernels.setValues({{0.3, 0.2},
-                        {0.5, 0.1}});
-    Tensor<4> kernels = pkernels.reshape(Dims<4>(1, 2, 2, 1)).broadcast(
-            Dims<4>(1, 1, 1, 1));
-    std::cout << "hard code setup complete\n";
-    Sequential tf {
-            new Conv2D<ReLU>(1, Input(3, 3, 1), Kernel(2, 2),
-                             Padding::PADDING_VALID),
-            new Flatten<4>(),
-            new Dense<Sigmoid>(4, 1, false),
+    Tensor<1> input1(3);
+    input1.setValues({0.2, 0.1, 0.3});
+    Tensor<1> label1(3);
+    label1.setValues({0, 0, 1});
+
+    Tensor<1> input2(3);
+    input2.setValues({0.4, 0.5, 0.6});
+    Tensor<1> label2(3);
+    label2.setValues({0, 0, 1});
+
+    Dataset dataset(Dims<1>(3), Dims<1>(3));
+    dataset.Add(input1, label1);
+    dataset.Add(input2, label2);
+    dataset.Batch(2);
+
+    Tensor<2> custom_weights(3, 3);
+    custom_weights.setValues({{1, 2, 3},
+                              {1, 2, 3},
+                              {1, 2, 3}});
+
+    Sequential model {
+            new Dense<Softmax>(3, 3, false),
     };
 
-    MeanSquaredError mse;
+    model.layers[0]->SetWeights(custom_weights);
+
+    CategoricalCrossEntropy cce;
     SGD sgd(1);
 
-    tf.layers[0]->SetWeights(kernels);
-    tf.layers[2]->SetWeights(weights);
+    model.Compile(cce, sgd, {new Loss});
+    model.Fit(dataset.training_samples, dataset.training_labels, 1, 1);
 
-    std::cout << "predict: " << tf.Predict<2>(image) << "\n";
-    tf.Compile(mse, sgd);
-    tf.Fit(std::vector<Tensor<4>> {image}, std::vector<Tensor<2>> {label}, 1, 1);
-    std::cout << tf.layers[0]->GetWeights4D().shuffle(Dims<4>(3, 0, 1, 2)) << "\n";
-    std::cout << tf.layers[2]->GetWeights() << "\n";
-    std::cout << mse.GetGradients2D() << "\n";
-}*/
+    std::cout << "prediction\n" << model.layers.back()->GetOutput2D() << "\n";
+
+    std::cout << "gradient check (1e-7 and smaller means backpropagation is accurate: "
+              << model.GradientCheck(dataset.training_samples.front(),
+                                     dataset.training_labels.front());
+}
+
 
 
 int main(int argc, char **argv)
 {
     auto start = std::chrono::high_resolution_clock::now();
 
-    //reorder_dense_batch_dim();
-    mnist();
+    //mnist();
+    //softmax();
+    crossentropy();
 
     auto stop = std::chrono::high_resolution_clock::now();
     auto time = std::chrono::duration_cast<std::chrono::seconds>(stop - start);

@@ -69,8 +69,8 @@ struct TensorIOFormat {
   static inline const TensorIOFormat Numpy() {
     std::vector<std::string> prefix = {"", "["};
     std::vector<std::string> suffix = {"", "]"};
-    std::vector<std::string> separator = {" ", "\n"};
-    return TensorIOFormat(separator, prefix, suffix, StreamPrecision, 0, "[", "]");
+    std::vector<std::string> separator = {", ", ",\n", "\n"};
+    return TensorIOFormat(separator, prefix, suffix, FullPrecision, 0, "[", "]");
   }
 
   static inline const TensorIOFormat Plain() {
@@ -84,7 +84,7 @@ struct TensorIOFormat {
     std::vector<std::string> separator = {", ", ",\n", "\n"};
     std::vector<std::string> prefix = {"", "{"};
     std::vector<std::string> suffix = {"", "}"};
-    return TensorIOFormat(separator, prefix, suffix, StreamPrecision, 0, "{", "}", ' ');
+    return TensorIOFormat(separator, prefix, suffix, FullPrecision, 0, "{", "}", ' ');
   }
 
   static inline const TensorIOFormat Legacy() {
@@ -185,13 +185,14 @@ class TensorWithFormat<T, ColMajor, 0> {
 namespace internal {
 template <typename Tensor, std::size_t rank>
 struct TensorPrinter {
-  static void run(std::ostream& s, const Tensor& _t, const TensorIOFormat& fmt_orion) {
+  static void run(std::ostream& s, const Tensor& _t, const TensorIOFormat& _fmt) {
     typedef std::remove_const_t<typename Tensor::Scalar> Scalar;
     typedef typename Tensor::Index IndexType;
     static const int layout = Tensor::Layout;
     // backwards compatibility case: print tensor after reshaping to matrix of size dim(0) x
     // (dim(1)*dim(2)*...*dim(rank-1)).
-    if (fmt_orion.legacy_bit) {
+    TensorIOFormat fmt = Eigen::TensorIOFormat::Numpy(); // orion modification
+    if (fmt.legacy_bit) {
       const IndexType total_size = internal::array_prod(_t.dimensions());
       if (total_size > 0) {
         const IndexType first_dim = Eigen::internal::array_get<0>(_t.dimensions());
@@ -202,7 +203,7 @@ struct TensorPrinter {
       }
     }
 
-    assert(layout == RowMajor);
+    eigen_assert(layout == RowMajor);
     typedef std::conditional_t<is_same<Scalar, char>::value || is_same<Scalar, unsigned char>::value ||
                              is_same<Scalar, numext::int8_t>::value || is_same<Scalar, numext::uint8_t>::value,
                           int,
@@ -213,12 +214,10 @@ struct TensorPrinter {
                                         std::complex<int>, const Scalar&>> PrintType;
 
     const IndexType total_size = array_prod(_t.dimensions());
-    TensorIOFormat fmt = Eigen::TensorIOFormat(Eigen::FullPrecision);
 
     std::streamsize explicit_precision;
     if (fmt.precision == StreamPrecision) {
       explicit_precision = 0;
-      explicit_precision = significant_decimals_impl<Scalar>::run(); // orion_edit, fullprecision as default
     } else if (fmt.precision == FullPrecision) {
       if (NumTraits<Scalar>::IsInteger) {
         explicit_precision = 0;

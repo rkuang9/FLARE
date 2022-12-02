@@ -191,7 +191,6 @@ private:
     Tensor<4> Z; // layer input convolved with kernels
     Tensor<4> A; // activated output of layer inout convolved with kernels
     Tensor<4> dL_dZ; // gradients of layer output, received from next layer
-    Tensor<4> dL_dX; // gradients of layer input, passed as dL_dZ to previous layer
 
     Tensor<4> kernels; // weights, NHWC format, N = num filters
     Tensor<4> b; // bias

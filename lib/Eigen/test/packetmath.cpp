@@ -527,6 +527,7 @@ void packetmath() {
   CHECK_CWISE1_IF(PacketTraits::HasNegate, internal::negate, internal::pnegate);
   CHECK_CWISE1_IF(PacketTraits::HasReciprocal, REF_RECIPROCAL, internal::preciprocal);
   CHECK_CWISE1(numext::conj, internal::pconj);
+  CHECK_CWISE1_IF(PacketTraits::HasSign, numext::sign, internal::psign);
 
 
   for (int offset = 0; offset < 3; ++offset) {
@@ -789,9 +790,19 @@ void packetmath_real() {
   const int PacketSize = internal::unpacket_traits<Packet>::size;
 
   const int size = PacketSize * 4;
-  EIGEN_ALIGN_MAX Scalar data1[PacketSize * 4];
-  EIGEN_ALIGN_MAX Scalar data2[PacketSize * 4];
-  EIGEN_ALIGN_MAX Scalar ref[PacketSize * 4];
+  EIGEN_ALIGN_MAX Scalar data1[PacketSize * 4] = {};
+  EIGEN_ALIGN_MAX Scalar data2[PacketSize * 4] = {};
+  EIGEN_ALIGN_MAX Scalar ref[PacketSize * 4] = {};
+  
+  // Negate with -0.
+  if (PacketTraits::HasNegate) {
+    test::packet_helper<PacketTraits::HasNegate,Packet> h;
+    data1[0] = Scalar{-0};
+    h.store(data2, internal::pnegate(h.load(data1)));
+    typedef typename internal::make_unsigned<typename internal::make_integer<Scalar>::type>::type Bits;
+    Bits bits = numext::bit_cast<Bits>(data2[0]);
+    VERIFY_IS_EQUAL(bits, static_cast<Bits>(Bits(1)<<(sizeof(Scalar)*CHAR_BIT - 1)));
+  }
 
   for (int i = 0; i < size; ++i) {
     data1[i] = Scalar(internal::random<double>(0, 1) * std::pow(10., internal::random<double>(-6, 6)));
@@ -816,6 +827,7 @@ void packetmath_real() {
   CHECK_CWISE1_EXACT_IF(PacketTraits::HasCeil, numext::ceil, internal::pceil);
   CHECK_CWISE1_EXACT_IF(PacketTraits::HasFloor, numext::floor, internal::pfloor);
   CHECK_CWISE1_EXACT_IF(PacketTraits::HasRint, numext::rint, internal::print);
+  CHECK_CWISE1_IF(PacketTraits::HasSign, numext::sign, internal::psign);
 
   packetmath_boolean_mask_ops_real<Scalar,Packet>();
   
@@ -1340,6 +1352,7 @@ void packetmath_complex() {
       data1[i] = Scalar(internal::random<RealScalar>(), internal::random<RealScalar>());
     }
     CHECK_CWISE1_N(numext::sqrt, internal::psqrt, size);
+    CHECK_CWISE1_IF(PacketTraits::HasSign, numext::sign, internal::psign);
 
     // Test misc. corner cases.
     const RealScalar zero = RealScalar(0);

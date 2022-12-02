@@ -198,6 +198,9 @@ struct packet_traits<float> : default_packet_traits
 
     HasSin  = EIGEN_FAST_MATH,
     HasCos  = EIGEN_FAST_MATH,
+    HasACos  = 1,
+    HasASin  = 1,
+    HasATan  = 1,
     HasLog  = 1,
     HasExp  = 1,
     HasSqrt = 1,
@@ -2369,6 +2372,15 @@ template<> EIGEN_STRONG_INLINE Packet2l pabs(const Packet2l& a) {
 }
 template<> EIGEN_STRONG_INLINE Packet2ul pabs(const Packet2ul& a) { return a; }
 
+template <>
+EIGEN_STRONG_INLINE Packet2f psignbit(const Packet2f& a) {
+  return vreinterpret_f32_s32(vshr_n_s32(vreinterpret_s32_f32(a), 31));
+}
+template <>
+EIGEN_STRONG_INLINE Packet4f psignbit(const Packet4f& a) {
+  return vreinterpretq_f32_s32(vshrq_n_s32(vreinterpretq_s32_f32(a), 31));
+}
+
 template<> EIGEN_STRONG_INLINE Packet2f pfrexp<Packet2f>(const Packet2f& a, Packet2f& exponent)
 { return pfrexp_generic(a,exponent); }
 template<> EIGEN_STRONG_INLINE Packet4f pfrexp<Packet4f>(const Packet4f& a, Packet4f& exponent)
@@ -3759,10 +3771,13 @@ template<> struct packet_traits<double>  : default_packet_traits
     HasCeil = 1,
     HasRint = 1,
 
+#if EIGEN_ARCH_ARM64 && !EIGEN_APPLE_DOUBLE_NEON_BUG
+    HasExp  = 1,
+    HasLog  = 1,
+    HasATan = 1,
+#endif
     HasSin  = 0,
     HasCos  = 0,
-    HasLog  = 1,
-    HasExp  = 1,
     HasSqrt = 1,
     HasRsqrt = 1,
     HasTanh = 0,
@@ -3897,6 +3912,11 @@ template<> EIGEN_STRONG_INLINE Packet2d preverse(const Packet2d& a)
 { return vcombine_f64(vget_high_f64(a), vget_low_f64(a)); }
 
 template<> EIGEN_STRONG_INLINE Packet2d pabs(const Packet2d& a) { return vabsq_f64(a); }
+
+template <>
+EIGEN_STRONG_INLINE Packet2d psignbit(const Packet2d& a) {
+  return vreinterpretq_f64_s64(vshrq_n_s64(vreinterpretq_s64_f64(a), 63));
+}
 
 template<> EIGEN_STRONG_INLINE double predux<Packet2d>(const Packet2d& a)
 { return vaddvq_f64(a); }
@@ -4459,9 +4479,19 @@ EIGEN_STRONG_INLINE Packet8hf pabs<Packet8hf>(const Packet8hf& a) {
   return vabsq_f16(a);
 }
 
+template<>
+EIGEN_STRONG_INLINE Packet8hf psignbit(const Packet8hf& a) {
+  return vreinterpretq_f16_s16(vshrq_n_s16(vreinterpretq_s16_f16(a), 15));
+}
+
 template <>
 EIGEN_STRONG_INLINE Packet4hf pabs<Packet4hf>(const Packet4hf& a) {
   return vabs_f16(a);
+}
+
+template <>
+EIGEN_STRONG_INLINE Packet4hf psignbit(const Packet4hf& a) {
+  return vreinterpret_f16_s16( vshr_n_s16( vreinterpret_s16_f16(a), 15)); 
 }
 
 template <>

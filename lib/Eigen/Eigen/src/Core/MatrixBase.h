@@ -186,6 +186,11 @@ template<typename Derived> class MatrixBase
     const Product<Derived, DiagonalDerived, LazyProduct>
     operator*(const DiagonalBase<DiagonalDerived> &diagonal) const;
 
+    template<typename SkewDerived>
+    EIGEN_DEVICE_FUNC
+    const Product<Derived, SkewDerived, LazyProduct>
+    operator*(const SkewSymmetricBase<SkewDerived> &skew) const;
+
     template<typename OtherDerived>
     EIGEN_DEVICE_FUNC
     typename ScalarBinaryOpTraits<typename internal::traits<Derived>::Scalar,typename internal::traits<OtherDerived>::Scalar>::ReturnType
@@ -259,6 +264,8 @@ template<typename Derived> class MatrixBase
     EIGEN_DEVICE_FUNC
     const DiagonalWrapper<const Derived> asDiagonal() const;
     const PermutationWrapper<const Derived> asPermutation() const;
+    EIGEN_DEVICE_FUNC
+    const SkewSymmetricWrapper<const Derived> asSkewSymmetric() const;
 
     EIGEN_DEVICE_FUNC
     Derived& setIdentity();
@@ -272,6 +279,8 @@ template<typename Derived> class MatrixBase
 
     bool isUpperTriangular(const RealScalar& prec = NumTraits<Scalar>::dummy_precision()) const;
     bool isLowerTriangular(const RealScalar& prec = NumTraits<Scalar>::dummy_precision()) const;
+
+    bool isSkewSymmetric(const RealScalar& prec = NumTraits<Scalar>::dummy_precision()) const;
 
     template<typename OtherDerived>
     bool isOrthogonal(const MatrixBase<OtherDerived>& other,
@@ -378,20 +387,9 @@ template<typename Derived> class MatrixBase
 
 /////////// Geometry module ///////////
 
-    #ifndef EIGEN_PARSED_BY_DOXYGEN
-    /// \internal helper struct to form the return type of the cross product
-    template<typename OtherDerived> struct cross_product_return_type {
-      typedef typename ScalarBinaryOpTraits<typename internal::traits<Derived>::Scalar,typename internal::traits<OtherDerived>::Scalar>::ReturnType Scalar;
-      typedef Matrix<Scalar,MatrixBase::RowsAtCompileTime,MatrixBase::ColsAtCompileTime> type;
-    };
-    #endif // EIGEN_PARSED_BY_DOXYGEN
     template<typename OtherDerived>
     EIGEN_DEVICE_FUNC
-#ifndef EIGEN_PARSED_BY_DOXYGEN
-    inline typename cross_product_return_type<OtherDerived>::type
-#else
-    inline PlainObject
-#endif
+    inline typename internal::cross_impl<Derived, OtherDerived>::return_type
     cross(const MatrixBase<OtherDerived>& other) const;
 
     template<typename OtherDerived>
@@ -473,11 +471,9 @@ template<typename Derived> class MatrixBase
     const MatrixFunctionReturnValue<Derived> matrixFunction(StemFunction f) const;
     EIGEN_MATRIX_FUNCTION(MatrixFunctionReturnValue, cosh, hyperbolic cosine)
     EIGEN_MATRIX_FUNCTION(MatrixFunctionReturnValue, sinh, hyperbolic sine)
-#if EIGEN_HAS_CXX11_MATH
     EIGEN_MATRIX_FUNCTION(MatrixFunctionReturnValue, atanh, inverse hyperbolic cosine)
     EIGEN_MATRIX_FUNCTION(MatrixFunctionReturnValue, acosh, inverse hyperbolic cosine)
     EIGEN_MATRIX_FUNCTION(MatrixFunctionReturnValue, asinh, inverse hyperbolic sine)
-#endif
     EIGEN_MATRIX_FUNCTION(MatrixFunctionReturnValue, cos, cosine)
     EIGEN_MATRIX_FUNCTION(MatrixFunctionReturnValue, sin, sine)
     EIGEN_MATRIX_FUNCTION(MatrixSquareRootReturnValue, sqrt, square root)

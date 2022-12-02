@@ -8,5 +8,6 @@
 #include "loss_function.hpp"
 #include "binary_cross_entropy.hpp"
 #include "mean_squared_error.hpp"
+#include "categorical_cross_entropy.hpp"
 
 #endif //ORION_INCLUDE_LOSS_HPP

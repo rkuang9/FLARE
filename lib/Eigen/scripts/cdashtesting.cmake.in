@@ -18,7 +18,7 @@ set(CTEST_UPDATE_COMMAND "${CTEST_GIT_COMMAND}")
 ctest_start(${MODEL} ${CTEST_SOURCE_DIRECTORY} ${CTEST_BINARY_DIRECTORY})
 
 ctest_update(SOURCE "${CTEST_SOURCE_DIRECTORY}")
-ctest_submit(PARTS Minimize Notes)
+ctest_submit(PARTS Update Notes)
 
 # to get CTEST_PROJECT_SUBPROJECTS definition:
 include("${CTEST_SOURCE_DIRECTORY}/CTestConfig.cmake")

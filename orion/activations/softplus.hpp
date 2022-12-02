@@ -10,6 +10,7 @@
 namespace orion
 {
 
+// doesn't work with binary cross entropy
 class Softplus
 {
 public:
@@ -24,6 +25,7 @@ public:
     template <int TensorRank>
     static Tensor<TensorRank> Gradients(const Tensor<TensorRank> &features)
     {
+        // gradient of ln(1 + e^x) = e^x / (1 + e^x) = 1 / (e^-x + 1) = sigmoid(x)
         return features.sigmoid();
     }
 };

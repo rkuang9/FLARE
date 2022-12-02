@@ -134,6 +134,9 @@ private:
      */
     void Backward();
 
+    // backpropagation is a bit different than most activation functions
+    EIGEN_STRONG_INLINE void BackwardSoftmax(const Tensor<2> &loss_grad);
+
     bool use_bias = true;
 
     Tensor<2> X; // layer input matrix, stacked column-wise

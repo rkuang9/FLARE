@@ -57,7 +57,6 @@ void Embedding::Forward(const Tensor<2> &input)
 
 void Embedding::Backward(const Layer &next)
 {
-    // divide by the batch size
     this->dL_dZ = next.GetInputGradients3D();
     this->Backward();
 }
@@ -68,6 +67,7 @@ void Embedding::Backward(const LossFunction &loss_function)
 {
     throw std::logic_error("Embedding as output layer not supported");
     // TODO: implement loss_function.GetGradients3D()
+    // TODO: division is moved to loss function
     this->dL_dZ = loss_function.GetGradients2D() / (Scalar) this->X.dimension(0);
     this->Backward();
 }

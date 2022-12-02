@@ -26,7 +26,6 @@ private:
     Scalar Loss(const Tensor<TensorRank> &predict,
                 const Tensor<TensorRank> &label);
 
-
     template<int TensorRank>
     Tensor<TensorRank> Gradient(const Tensor<TensorRank> &predict,
                                 const Tensor<TensorRank> &label);

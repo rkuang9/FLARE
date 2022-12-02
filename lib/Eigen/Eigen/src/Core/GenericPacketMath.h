@@ -59,6 +59,7 @@ struct default_packet_traits
     HasMax       = 1,
     HasConj      = 1,
     HasSetLinear = 1,
+    HasSign      = 1,
     HasBlend     = 0,
     // This flag is used to indicate whether packet comparison is supported.
     // pcmp_eq, pcmp_lt and pcmp_le should be defined for it to be true.
@@ -101,8 +102,7 @@ struct default_packet_traits
     HasRound  = 0,
     HasRint   = 0,
     HasFloor  = 0,
-    HasCeil   = 0,
-    HasSign   = 0
+    HasCeil   = 0
   };
 };
 
@@ -179,7 +179,7 @@ struct eigen_packet_wrapper
  */
 template<typename Packet>
 struct is_scalar {
-  typedef typename unpacket_traits<Packet>::type Scalar;
+  using Scalar = typename unpacket_traits<Packet>::type;
   enum {
     value = internal::is_same<Packet, Scalar>::value
   };
@@ -563,13 +563,13 @@ template<typename Packet> EIGEN_DEVICE_FUNC inline Packet
 parg(const Packet& a) { using numext::arg; return arg(a); }
 
 
-/** \internal \returns \a a logically shifted by N bits to the right */
+/** \internal \returns \a a arithmetically shifted by N bits to the right */
 template<int N> EIGEN_DEVICE_FUNC inline int
 parithmetic_shift_right(const int& a) { return a >> N; }
 template<int N> EIGEN_DEVICE_FUNC inline long int
 parithmetic_shift_right(const long int& a) { return a >> N; }
 
-/** \internal \returns \a a arithmetically shifted by N bits to the right */
+/** \internal \returns \a a logically shifted by N bits to the right */
 template<int N> EIGEN_DEVICE_FUNC inline int
 plogical_shift_right(const int& a) { return static_cast<int>(static_cast<unsigned int>(a) >> N); }
 template<int N> EIGEN_DEVICE_FUNC inline long int
@@ -921,6 +921,24 @@ Packet print(const Packet& a) { using numext::rint; return rint(a); }
 template<typename Packet> EIGEN_DECLARE_FUNCTION_ALLOWING_MULTIPLE_DEFINITIONS
 Packet pceil(const Packet& a) { using numext::ceil; return ceil(a); }
 
+template<typename Packet, typename EnableIf = void>
+struct psign_impl {
+  static EIGEN_DEVICE_FUNC inline Packet run(const Packet& a) {
+    return numext::sign(a);
+  }
+};
+
+/** \internal \returns the sign of \a a (coeff-wise) */
+template<typename Packet> EIGEN_DEVICE_FUNC inline Packet
+psign(const Packet& a) {
+  return psign_impl<Packet>::run(a);
+}
+
+template<> EIGEN_DEVICE_FUNC inline bool
+psign(const bool& a) {
+  return a;
+}
+
 /** \internal \returns the first element of a packet */
 template<typename Packet>
 EIGEN_DEVICE_FUNC inline typename unpacket_traits<Packet>::type
@@ -1172,6 +1190,34 @@ template<typename Packet> EIGEN_DECLARE_FUNCTION_ALLOWING_MULTIPLE_DEFINITIONS
 Packet prsqrt(const Packet& a) {
   return preciprocal<Packet>(psqrt(a));
 }
+
+template <typename Packet, bool IsScalar = is_scalar<Packet>::value,
+    bool IsInteger = NumTraits<typename unpacket_traits<Packet>::type>::IsInteger>
+    struct psignbit_impl;
+template <typename Packet, bool IsInteger>
+struct psignbit_impl<Packet, true, IsInteger> {
+     EIGEN_DEVICE_FUNC EIGEN_ALWAYS_INLINE static constexpr Packet run(const Packet& a) { return numext::signbit(a); }
+};
+template <typename Packet>
+struct psignbit_impl<Packet, false, false> {
+    // generic implementation if not specialized in PacketMath.h
+    // slower than arithmetic shift
+    typedef typename unpacket_traits<Packet>::type Scalar;
+    EIGEN_DEVICE_FUNC EIGEN_ALWAYS_INLINE static Packet run(const Packet& a) {
+        const Packet cst_pos_one = pset1<Packet>(Scalar(1));
+        const Packet cst_neg_one = pset1<Packet>(Scalar(-1));
+        return pcmp_eq(por(pand(a, cst_neg_one), cst_pos_one), cst_neg_one);
+    }
+};
+template <typename Packet>
+struct psignbit_impl<Packet, false, true> {
+    // generic implementation for integer packets
+    EIGEN_DEVICE_FUNC EIGEN_ALWAYS_INLINE static constexpr Packet run(const Packet& a) { return pcmp_lt(a, pzero(a)); }
+};
+/** \internal \returns the sign bit of \a a as a bitmask*/
+template <typename Packet>
+EIGEN_DEVICE_FUNC EIGEN_ALWAYS_INLINE constexpr Packet
+psignbit(const Packet& a) { return psignbit_impl<Packet>::run(a); }
 
 } // end namespace internal
 

@@ -709,16 +709,6 @@
 
 #define EIGEN_CONSTEXPR constexpr
 
-// Does the compiler support C++11 math?
-// Let's be conservative and enable the default C++11 implementation only if we are sure it exists
-#ifndef EIGEN_HAS_CXX11_MATH
-  #if (EIGEN_ARCH_i386_OR_x86_64 && (EIGEN_OS_GNULINUX || EIGEN_OS_WIN_STRICT || EIGEN_OS_MAC))
-    #define EIGEN_HAS_CXX11_MATH 1
-  #else
-    #define EIGEN_HAS_CXX11_MATH 0
-  #endif
-#endif
-
 // NOTE: the required Apple's clang version is very conservative
 //       and it could be that XCode 9 works just fine.
 // NOTE: the MSVC version is based on https://en.cppreference.com/w/cpp/compiler_support
@@ -909,6 +899,22 @@
 #else
 #define EIGEN_UNUSED
 #endif
+
+#if EIGEN_COMP_GNUC
+  #define EIGEN_PRAGMA(tokens) _Pragma(#tokens)
+  #define EIGEN_DIAGNOSTICS(tokens) EIGEN_PRAGMA(GCC diagnostic tokens)
+  #define EIGEN_DIAGNOSTICS_OFF(msc, gcc) EIGEN_DIAGNOSTICS(gcc)
+#elif EIGEN_COMP_MSVC
+  #define EIGEN_PRAGMA(tokens) __pragma(tokens)
+  #define EIGEN_DIAGNOSTICS(tokens) EIGEN_PRAGMA(warning(tokens))
+  #define EIGEN_DIAGNOSTICS_OFF(msc, gcc) EIGEN_DIAGNOSTICS(msc)
+#else
+  #define EIGEN_PRAGMA(tokens)
+  #define EIGEN_DIAGNOSTICS(tokens)
+  #define EIGEN_DIAGNOSTICS_OFF(msc, gcc)
+#endif
+
+#define EIGEN_DISABLE_DEPRECATED_WARNING EIGEN_DIAGNOSTICS_OFF(disable : 4996, ignored "-Wdeprecated-declarations")
 
 // Suppresses 'unused variable' warnings.
 namespace Eigen {
@@ -1245,6 +1251,14 @@ bool all(T t, Ts ... ts){ return t && all(ts...); }
   #endif
 #else
   #define EIGEN_UNROLL_LOOP
+#endif
+
+// Notice: Use this macro with caution. The code in the if body should still
+// compile with C++14.
+#if defined(EIGEN_HAS_CXX17_IFCONSTEXPR)
+#define EIGEN_IF_CONSTEXPR(X) if constexpr (X)
+#else
+#define EIGEN_IF_CONSTEXPR(X) if (X)
 #endif
 
 #endif // EIGEN_MACROS_H

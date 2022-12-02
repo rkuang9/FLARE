@@ -63,10 +63,10 @@ struct default_digits_impl<T,false,false> // Floating point
 {
   EIGEN_DEVICE_FUNC EIGEN_CONSTEXPR
   static int run() {
-    using std::log;
+    using std::log2;
     using std::ceil;
     typedef typename NumTraits<T>::Real Real;
-    return int(ceil(-log(NumTraits<Real>::epsilon())/log(static_cast<Real>(2))));
+    return int(ceil(-log2(NumTraits<Real>::epsilon())));
   }
 };
 
@@ -95,7 +95,7 @@ EIGEN_STRONG_INLINE EIGEN_DEVICE_FUNC Tgt bit_cast(const Src& src) {
   // Load src into registers first. This allows the memcpy to be elided by CUDA.
   const Src staged = src;
   EIGEN_USING_STD(memcpy)
-  memcpy(&tgt, &staged, sizeof(Tgt));
+  memcpy(static_cast<void*>(&tgt),static_cast<const void*>(&staged), sizeof(Tgt));
   return tgt;
 }
 }  // namespace numext

@@ -259,6 +259,30 @@ pcos<Packet16f>(const Packet16f& _x) {
 
 template <>
 EIGEN_DEFINE_FUNCTION_ALLOWING_MULTIPLE_DEFINITIONS Packet16f
+pacos<Packet16f>(const Packet16f& _x) {
+  return pacos_float(_x);
+}
+
+template <>
+EIGEN_DEFINE_FUNCTION_ALLOWING_MULTIPLE_DEFINITIONS Packet16f
+pasin<Packet16f>(const Packet16f& _x) {
+  return pasin_float(_x);
+}
+
+template <>
+EIGEN_DEFINE_FUNCTION_ALLOWING_MULTIPLE_DEFINITIONS Packet16f
+patan<Packet16f>(const Packet16f& _x) {
+  return patan_float(_x);
+}
+
+template <>
+EIGEN_DEFINE_FUNCTION_ALLOWING_MULTIPLE_DEFINITIONS Packet8d
+patan<Packet8d>(const Packet8d& _x) {
+  return patan_double(_x);
+}
+
+template <>
+EIGEN_DEFINE_FUNCTION_ALLOWING_MULTIPLE_DEFINITIONS Packet16f
 ptanh<Packet16f>(const Packet16f& _x) {
   return internal::generic_fast_tanh_float(_x);
 }
