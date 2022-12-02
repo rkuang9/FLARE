@@ -1,4 +1,4 @@
 !.gitignore
 .idea/
-.cmake-build-debug/
+cmake-build-debug/
 .DS_Store
