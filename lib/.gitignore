@@ -1,4 +1,4 @@
 *
-.Eigen/
-.opencv/
+Eigen/
+opencv/
 !.gitignore
