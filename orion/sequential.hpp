@@ -10,7 +10,6 @@
 #include "orion/loss/include_loss.hpp"
 #include "orion/optimizers/include_optimizers.hpp"
 #include "orion/internal/include_internal.hpp"
-#include "orion/metrics/include_metrics.hpp"
 #include <iomanip>
 
 namespace orion
@@ -28,9 +27,9 @@ public:
     template<int TensorSampleRank, int TensorLabelRank>
     void Fit(const std::vector<Tensor<TensorSampleRank>> &inputs,
              const std::vector<Tensor<TensorLabelRank>> &labels,
-             int epochs, int batch_size = 1)
+             int epochs)
     {
-        if (inputs.size() != labels.size()) {
+        if (inputs.size() != labels.size() || inputs.empty() || labels.empty()) {
             throw std::invalid_argument("inputs should match labels 1:1");
         }
 
@@ -42,38 +41,42 @@ public:
             throw std::logic_error("missing optimizer");
         }
 
-        this->epochs = epochs;
-        this->batch_size = batch_size;
         this->total_samples = inputs.size();
+
+        // to display progress bar
+        int num_batches = inputs.size();
+        int num_bars = 25;
+        int batch_per_bar = num_batches / num_bars;
+        int progress = 0;
+        int num_inputs = inputs.size();
 
         for (int e = 0; e < epochs; e++) {
             auto start_time = std::chrono::high_resolution_clock::now();
 
-            for (int m = 0; m < inputs.size(); m++) {
+            for (int m = 0; m < num_inputs; m++) {
                 this->Forward(inputs[m]);
                 this->Backward(labels[m], *this->loss);
                 this->Update(*this->opt);
-            }
 
-            // print metrics on screen
-            if (!this->metrics.empty()) {
-                std::cout << "Epoch " << std::right
-                          << std::setw(std::to_string(epochs).length()) << e + 1;
+                // progress bar
+                if (m % batch_per_bar == 0) {
+                    auto elapsed_time = std::chrono::duration_cast<std::chrono::seconds>(
+                            std::chrono::high_resolution_clock::now() - start_time);
 
-                auto stop = std::chrono::high_resolution_clock::now();
-                auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(
-                        stop - start_time);
-                std::cout << " - " << ms.count() / 1000 << "s ";
-
-                for (auto *metric: this->metrics) {
-                    std::cout << " - " << metric->name << ": "
-                              << metric->Compute(*this) << " ";
+                    // progress bar
+                    std::cout << std::setprecision(3) << "\rEpoch "
+                              << std::setw(3) << e + 1 << " [" << std::setfill('=')
+                              << std::setw(progress) << '>' << std::setfill(' ')
+                              << std::setw(num_bars - progress + 1) << "] "
+                              << elapsed_time.count() << "s loss: "
+                              << this->loss->GetLoss();
+                    progress++;
                 }
-
-
-
-                std::cout << "\n";
             }
+
+            progress = 0; // progress bar reset for next epoch
+            std::cout << '\n';
+
         }
     }
 
@@ -105,6 +108,8 @@ public:
      * Training should stop after gradient checking since the loss history is
      * polluted with test values
      *
+     * Gradient check can fail if vanishing or exploding gradients occur
+     *
      * Currently works for Dense layers only
      * @param input   layer input tensor
      * @param label   expected output tensor
@@ -118,14 +123,7 @@ public:
 
     const LossFunction *GetLossFunction() const;
 
-    int GetEpochs() const;
-
-    int GetBatchSize() const;
-
     int GetTotalSamples() const;
-
-    void Compile(LossFunction &loss_function, Optimizer &optimizer,
-                 const std::vector<Metric *> &metrics);
 
 protected:
     template<int TensorSampleRank>
@@ -171,10 +169,7 @@ protected:
 
     LossFunction *loss = nullptr;
     Optimizer *opt = nullptr;
-    int epochs = 0; // not in use
-    int batch_size = 32; // not in use
     int total_samples = 0;
-    std::vector<Metric *> metrics;
 
 };
 

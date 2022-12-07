@@ -19,6 +19,8 @@ public:
 
     void Minimize(Tensor<1> &b, const Tensor<1> &dL_db) override;
 
+    void Step() override;
+
 private:
     Scalar momentum = 0.9;
     Scalar epsilon = 1e-7; // prevent divison by zero

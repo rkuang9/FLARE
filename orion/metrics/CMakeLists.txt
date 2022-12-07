@@ -1,6 +1,6 @@
 set(SOURCES
-        accuracy.cpp
-        loss.cpp
+        #accuracy.cpp
+        #loss.cpp
         )
 
 set(SOURCE_DIRECTORY)

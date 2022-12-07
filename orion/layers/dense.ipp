@@ -12,8 +12,7 @@ template<typename Activation>
 Dense<Activation>::Dense(int inputs, int outputs, bool use_bias,
                          const Initializer<2> &initializer) :
         use_bias(use_bias),
-        w(initializer.Initialize(
-                Tensor<2>::Dimensions(inputs, outputs), inputs, outputs))
+        w(initializer.Initialize(Dims<2>(inputs, outputs), inputs, outputs))
 {
     this->name = "dense";
 
@@ -36,7 +35,6 @@ void Dense<Activation>::Forward(const Tensor<2> &input)
     // Z = Xw + b (same as Z = wX + b but with batch dims first in X)
     this->X = input;
     this->Z = this->X.contract(this->w, ContractDim {Axes(1, 0)});
-
     if (this->use_bias) {
         // broadcast bias into the shape of Z
         //this->Z += this->b.broadcast(
@@ -44,6 +42,7 @@ void Dense<Activation>::Forward(const Tensor<2> &input)
     }
 
     this->A = Activation::Activate(this->Z);
+
 }
 
 
@@ -61,7 +60,7 @@ void Dense<Activation>::Backward(const Layer &next) // hidden layer backward
         this->BackwardSoftmax(next.GetInputGradients2D());
     }
     else {
-        this->dL_dZ = *Activation::Gradients(this->Z);
+        this->dL_dZ = next.GetInputGradients2D() * Activation::Gradients(this->Z);
     }
 
     this->Backward();

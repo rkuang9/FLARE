@@ -1,7 +1,4 @@
 set(SOURCES
-        xor_classifier.hpp
-        diabetes_logistic_regression.hpp
-        cnn_test.hpp
         )
 
 set(SOURCE_DIRECTORY)

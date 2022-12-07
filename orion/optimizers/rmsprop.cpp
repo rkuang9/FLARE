@@ -43,4 +43,9 @@ void RMSprop::Minimize(Tensor<1> &b, const Tensor<1> &dL_db)
     b -= this->learning_rate * dL_db / (velocity.sqrt() + this->epsilon);
 }
 
+void RMSprop::Step()
+{
+
+}
+
 } // namespace orion

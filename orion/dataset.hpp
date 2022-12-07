@@ -7,10 +7,13 @@
 
 #include <vector>
 #include <sstream>
+#include <fstream>
 
+#ifdef USING_OPENCV
 #include <opencv2/core.hpp>
 #include <opencv2/imgcodecs.hpp>
 #include <opencv2/core/eigen.hpp>
+#endif
 
 #include "orion/orion_types.hpp"
 
@@ -28,10 +31,19 @@ public:
     }
 
 
-    void Batch(int batch_size, bool shuffle_first = true)
+    void Batch(int batch_size, bool shuffle_first = true, bool normalize = false)
     {
         if (shuffle_first) {
             this->ShufflePreBatch();
+        }
+        else {
+            std::reverse(this->prebatch_samples.begin(),
+                         this->prebatch_samples.end());
+            std::reverse(this->prebatch_labels.begin(), this->prebatch_labels.end());
+        }
+
+        if (normalize) {
+            this->NormalizePreBatch();
         }
 
         // create the batch dimensions by adding an extra dim to the front
@@ -105,8 +117,6 @@ public:
 
         this->prebatch_samples.push_back(std::move(sample));
         this->prebatch_labels.push_back(std::move(label));
-
-
     }
 
 
@@ -127,7 +137,7 @@ public:
         }
     }
 
-
+#ifdef USING_OPENCV
     void Add(const std::string &image_path, const Tensor<LabelRank> &label)
     {
         if constexpr (SampleRank != 3) {
@@ -147,7 +157,7 @@ public:
         cv::cv2eigen(cv_matrix, image_tensor);
         this->Add(image_tensor, label);
     }
-
+#endif
 
     void Shuffle()
     {
@@ -172,7 +182,111 @@ public:
         }
     }
 
+
+    void Add(const std::string &path_to_csv,
+             const std::vector<int> &label_col_indices,
+             char delimiter = ',', bool ignore_mismatch = true)
+    {
+        // sort into descending order and remove uniques from vector
+        std::vector<int> _label_col_indices = label_col_indices;
+        std::sort(_label_col_indices.begin(), _label_col_indices.end(),
+                  std::greater<>());
+        _label_col_indices.erase(
+                std::unique(_label_col_indices.begin(), _label_col_indices.end()),
+                _label_col_indices.end());
+
+        // string holds the current csv row as string
+        std::string csv_row;
+        std::ifstream csv(path_to_csv); // holds csv file in memory
+        std::getline(csv, csv_row); // skip header
+
+        // iterate through each csv row
+        while (std::getline(csv, csv_row)) {
+            std::vector<Scalar> sample;
+            std::vector<Scalar> label;
+
+            std::stringstream row_string(csv_row);
+            std::string csv_col_value;
+            int index = 0;
+
+            // iterate through each csv value
+            while (std::getline(row_string, csv_col_value, delimiter)) {
+                std::vector<int> label_indices = _label_col_indices;
+
+                // while iterating through each csv row value, if the current index is
+                // one of the column label indices (whose vector was sorted descending),
+                // add it to the label vector, else to the sample vector
+                if (_label_col_indices.empty() || index != label_indices.back()) {
+                    sample.push_back(
+                            !csv_col_value.empty() ? std::stod(csv_col_value) : 0);
+                    index++;
+                }
+                else {
+                    label.push_back(std::stod(csv_col_value));
+                    label_indices.pop_back();
+                }
+            }
+
+            // check that the csv row has the expected amount of features
+            if ((this->sample_dims.TotalSize() + this->label_dims.TotalSize()) !=
+                sample.size() && !ignore_mismatch) {
+                throw std::invalid_argument(std::string(
+                        "Dataset::Add EXPECTED " +
+                        std::to_string(this->sample_dims.TotalSize()) +
+                        " FEATURES AND " +
+                        std::to_string(this->label_dims.TotalSize()) +
+                        " LABELS, GOT CSV ROW: " + csv_row));
+            }
+
+            this->prebatch_samples.push_back(
+                    TensorMap<SampleRank>(sample.data(), this->sample_dims));
+            this->prebatch_labels.push_back(
+                    TensorMap<LabelRank>(label.data(), this->label_dims));
+        }
+    }
+
+
+    static std::vector<std::vector<Scalar>>
+    CSVToVector(const std::string &filename, char delimiter)
+    {
+        std::vector<std::vector<Scalar>> result;
+
+        std::string csv_row;
+        std::ifstream csv(filename);
+        std::getline(csv, csv_row); // skip header
+
+        // access each row
+        while (std::getline(csv, csv_row)) {
+            std::stringstream row_string(csv_row);
+            std::string value;
+
+            std::vector<Scalar> row;
+
+            // access each value of the csv row and push to vector
+            while (std::getline(row_string, value, delimiter)) {
+                row.push_back(std::stod(value));
+            }
+
+            result.push_back(std::move(row));
+        }
+
+        return result;
+    }
+
 public:
+    void NormalizePreBatch()
+    {
+        for (Tensor<SampleRank> &tensor: this->prebatch_samples) {
+            Scalar sqrt_sum_squares = Tensor<0>(
+                    tensor.square().sum().sqrt()).coeff();
+            tensor = tensor / Tensor<0>(tensor.square().sum().sqrt()).coeff();
+        }
+    }
+
+    void ScalePreBatch(Scalar min, Scalar max)
+    {
+    }
+
     void ShufflePreBatch()
     {
         std::random_device rand_device;
@@ -187,10 +301,8 @@ public:
         }
     }
 
-
     Dims<SampleRank> sample_dims;
     Dims<LabelRank> label_dims;
-
 
     std::vector<Tensor<SampleRank + 1>> training_samples;
     std::vector<Tensor<LabelRank + 1>> training_labels;

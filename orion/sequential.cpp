@@ -139,30 +139,9 @@ const LossFunction *Sequential::GetLossFunction() const
 }
 
 
-int Sequential::GetEpochs() const
-{
-    return this->epochs;
-}
-
-
-int Sequential::GetBatchSize() const
-{
-    return this->batch_size;
-}
-
-
 int Sequential::GetTotalSamples() const
 {
     return this->total_samples;
-}
-
-
-void Sequential::Compile(LossFunction &loss_function, Optimizer &optimizer,
-                         const std::vector<Metric *> &metrics)
-{
-    this->loss = &loss_function;
-    this->opt = &optimizer;
-    this->metrics = metrics;
 }
 
 } // namespace orion

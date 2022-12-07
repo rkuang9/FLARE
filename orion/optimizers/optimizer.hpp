@@ -16,7 +16,8 @@ namespace orion
 class Optimizer
 {
 public:
-    explicit Optimizer(Scalar learning_rate) : learning_rate(learning_rate) {}
+    explicit Optimizer(Scalar learning_rate) : learning_rate(learning_rate)
+    {}
 
     virtual void Step() = 0;
 
@@ -25,9 +26,11 @@ public:
 
     virtual void Minimize(Tensor<1> &b, const Tensor<1> &dL_db) = 0;
 
-    virtual void Minimize(Tensor<4> &W, const Tensor<4> &dL_dW) {};
+    virtual void Minimize(Tensor<4> &W, const Tensor<4> &dL_dW)
+    { throw std::logic_error("Optimizer::Minimize based class called"); };
 
-    Scalar GetLearningRate() const { return this->learning_rate; };
+    Scalar GetLearningRate() const
+    { return this->learning_rate; };
 
 protected:
     Scalar learning_rate;
