@@ -2,14 +2,15 @@ cmake_minimum_required(VERSION 3.21)
 project(Orion)
 
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_FLAGS "-O2")
+set(CMAKE_CXX_FLAGS "-O2 -openmp")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 
 #add_compile_definitions("ORION_FLOAT") # use float instead of double for tensor calculations
 #add_compile_definitions("ORION_NO_DEBUG") # uncomment for release builds
 
 # include OpenCV for image-to-tensor
-#add_compile_definitions("USING_OPENCV")
+add_compile_definitions("USING_OPENCV")
+add_compile_definitions("EIGEN_USE_THREADS")
 
 
 # without this, nothing works
@@ -26,6 +27,7 @@ else ()
     message("NOT USING OPENCV")
 endif ()
 
+message(${CMAKE_BUILD_TYPE})
 
 # ignore warning for virtual functions returning nothing
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")

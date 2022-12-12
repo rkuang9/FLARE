@@ -11,7 +11,9 @@ MaxPooling2D::MaxPooling2D(const PoolSize &pool, const Stride &stride,
                            Padding padding) :
         pool(pool),
         stride(stride),
-        padding(padding)
+        padding(padding),
+        thread_pool((int) std::thread::hardware_concurrency()),
+        device(&this->thread_pool, 2)
 {
     this->name = "maxpooling2d";
 }
@@ -24,11 +26,66 @@ MaxPooling2D::MaxPooling2D(const PoolSize &pool, Padding padding)
 }
 
 
+auto MaxPooling2D::MaxPooling2DForward(
+        const Tensor<4> &inputs, const PoolSize &pool,
+        const Stride &stride, const Dilation &dilation, Padding padding)
+{
+    Eigen::Index batches = inputs.dimension(0);
+    Eigen::Index channels = inputs.dimension(3);
+    Eigen::Index input_h = inputs.dimension(1);
+    Eigen::Index input_w = inputs.dimension(2);
+
+    Eigen::Index pad_h = 0;
+    Eigen::Index pad_w = 0;
+    Eigen::Index output_h = 0;
+    Eigen::Index output_w = 0;
+
+    if (padding == Eigen::PADDING_SAME) {
+        // compute total padding required
+        output_h = std::ceil(static_cast<Scalar>(input_h) /
+                             static_cast<Scalar>(stride.height()));
+        output_w = std::ceil(static_cast<Scalar>(input_w) /
+                             static_cast<Scalar>(stride.width()));
+
+        pad_h = (output_h - 1) * stride.height() -
+                input_h + dilation.height() * (pool.height() - 1) + 1;
+        pad_w = (output_w - 1) * stride.width() -
+                input_w + dilation.width() * (pool.width() - 1) + 1;
+    }
+    else {
+        // note that in the formula here, pad_h & pad_w already contains a "2" factor
+        output_h = 1 + (input_h - dilation.height() * (pool.height() - 1) - 1) /
+                       stride.height();
+        output_w = 1 + (input_w - dilation.width() * (pool.width() - 1) - 1) /
+                       stride.width();
+    }
+
+    // 1. extract image patches to get [N,P,H,W,C], each patch is the same size as pool
+    // 2. find the max value along the height and width dimensions to get [N,P,C]
+    // 3. patch dimension P contains the max values, reshape back to [N,H,W,C]
+    return inputs
+            .extract_image_patches(
+                    pool.height(), pool.width(),
+                    stride.height(), stride.width(),
+                    dilation.height(), dilation.width(),
+                    1, 1,
+                    pad_h / 2, pad_h - pad_h / 2,
+                    pad_w / 2, pad_w - pad_w / 2,
+                    std::numeric_limits<Scalar>::lowest())
+            .maximum(Dims<2>(2, 3))
+            .reshape(Dims<4>(batches, output_h, output_w, channels));
+}
+
+
 void MaxPooling2D::Forward(const Tensor<4> &inputs)
 {
     this->X = inputs;
 
-    this->Z = MaxPooling2DForward(
+    this->Z.resize(MaxPooling2D::ForwardOutputDims(
+            inputs.dimensions(), this->pool,
+            this->stride, this->dilation, this->padding));
+
+    this->Z.template device(this->device) = MaxPooling2DForward(
             inputs, this->pool,
             this->stride, this->dilation, this->padding);
 }
@@ -89,59 +146,6 @@ int MaxPooling2D::GetInputRank() const
 int MaxPooling2D::GetOutputRank() const
 {
     return 4;
-}
-
-
-Tensor<4> MaxPooling2D::MaxPooling2DForward(
-        const Tensor<4> &inputs, const PoolSize &pool,
-        const Stride &stride, const Dilation &dilation, Padding padding)
-{
-    Eigen::Index batches = inputs.dimension(0);
-    Eigen::Index channels = inputs.dimension(3);
-    Eigen::Index input_h = inputs.dimension(1);
-    Eigen::Index input_w = inputs.dimension(2);
-
-    Eigen::Index pad_h = 0;
-    Eigen::Index pad_w = 0;
-    Eigen::Index output_h = 0;
-    Eigen::Index output_w = 0;
-
-    if (padding == Eigen::PADDING_SAME) {
-        // compute total padding required
-        output_h = std::ceil(static_cast<Scalar>(input_h) /
-                             static_cast<Scalar>(stride.height()));
-        output_w = std::ceil(static_cast<Scalar>(input_w) /
-                             static_cast<Scalar>(stride.width()));
-
-        pad_h = (output_h - 1) * stride.height() -
-                input_h + dilation.height() * (pool.height() - 1) + 1;
-        pad_w = (output_w - 1) * stride.width() -
-                input_w + dilation.width() * (pool.width() - 1) + 1;
-    }
-    else {
-        // note that in the formula here, pad_h & pad_w already contains a "2" factor
-        output_h = 1 + (input_h + pad_h -
-                        dilation.height() * (pool.height() - 1) - 1) /
-                       stride.height();
-        output_w = 1 + (input_w + pad_w -
-                        dilation.width() * (pool.width() - 1) - 1) /
-                       stride.width();
-    }
-
-    // 1. extract image patches to get [N,P,H,W,C], each patch is the same size as pool
-    // 2. find the max value along the height and width dimensions to get [N,P,C]
-    // 3. patch dimension P contains the max values, reshape back to [N,H,W,C]
-    return inputs
-            .extract_image_patches(
-                    pool.height(), pool.width(),
-                    stride.height(), stride.width(),
-                    dilation.height(), dilation.width(),
-                    1, 1,
-                    pad_h / 2, pad_h - pad_h / 2,
-                    pad_w / 2, pad_w - pad_w / 2,
-                    std::numeric_limits<Scalar>::lowest())
-            .maximum(Dims<2>(2, 3))
-            .reshape(Dims<4>(batches, output_h, output_w, channels));
 }
 
 
@@ -232,6 +236,35 @@ Tensor<4> MaxPooling2D::MaxPooling2DBackwardInput(
     return input_gradients.slice(
             Dims<4>(0, pad_h / 2, pad_w / 2, 0),
             Dims<4>(batches, input_h, input_w, channels));
+}
+
+
+Dims<4> MaxPooling2D::ForwardOutputDims(
+        const Dims<4> &input_dims, const PoolSize &pool_size,
+        const Stride &stride, const Dilation &dilation, Padding padding)
+{
+    Eigen::Index batches = input_dims[0];
+    Eigen::Index channels = input_dims[3];
+    Eigen::Index input_h = input_dims[1];
+    Eigen::Index input_w = input_dims[2];
+
+    Eigen::Index output_h = 0;
+    Eigen::Index output_w = 0;
+
+    if (padding == Eigen::PADDING_SAME) {
+        output_h = std::ceil(static_cast<Scalar>(input_h) /
+                             static_cast<Scalar>(stride.height()));
+        output_w = std::ceil(static_cast<Scalar>(input_w) /
+                             static_cast<Scalar>(stride.width()));
+    }
+    else {
+        output_h = 1 + (input_h - dilation.height() * (pool_size.height() - 1) - 1) /
+                       stride.height();
+        output_w = 1 + (input_w - dilation.width() * (pool_size.width() - 1) - 1) /
+                       stride.width();
+    }
+
+    return Dims<4>(batches, output_h, output_w, channels);
 }
 
 } // namespace orion

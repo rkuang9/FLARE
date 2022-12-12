@@ -17,7 +17,6 @@
 #include "orion/weights/include_weights.hpp"
 #include "orion/optimizers/include_optimizers.hpp"
 #include "orion/loss/include_loss.hpp"
-#include "orion/metrics/include_metrics.hpp"
 
 
 #include "orion/sequential.hpp"

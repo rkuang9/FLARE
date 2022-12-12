@@ -31,9 +31,9 @@ public:
     }
 
 
-    void Batch(int batch_size, bool shuffle_first = true, bool normalize = false)
+    void Batch(int batch_size, bool shuffle = true, bool normalize = false)
     {
-        if (shuffle_first) {
+        if (shuffle) {
             this->ShufflePreBatch();
         }
         else {
@@ -273,19 +273,17 @@ public:
         return result;
     }
 
-public:
+    std::vector<Tensor<SampleRank + 1>> training_samples;
+    std::vector<Tensor<LabelRank + 1>> training_labels;
+
+protected:
     void NormalizePreBatch()
     {
         for (Tensor<SampleRank> &tensor: this->prebatch_samples) {
-            Scalar sqrt_sum_squares = Tensor<0>(
-                    tensor.square().sum().sqrt()).coeff();
             tensor = tensor / Tensor<0>(tensor.square().sum().sqrt()).coeff();
         }
     }
 
-    void ScalePreBatch(Scalar min, Scalar max)
-    {
-    }
 
     void ShufflePreBatch()
     {
@@ -303,9 +301,6 @@ public:
 
     Dims<SampleRank> sample_dims;
     Dims<LabelRank> label_dims;
-
-    std::vector<Tensor<SampleRank + 1>> training_samples;
-    std::vector<Tensor<LabelRank + 1>> training_labels;
 
     std::vector<Tensor<SampleRank + 1>> test_samples;
     std::vector<Tensor<LabelRank + 1>> test_labels;

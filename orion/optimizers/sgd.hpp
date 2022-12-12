@@ -25,8 +25,6 @@ public:
 
     void Minimize(Tensor<4> &k, const Tensor<4> &dL_dk) override;
 
-    Scalar GetMomentum() const;
-
 private:
     Scalar momentum; // default 0 means no momentum
 

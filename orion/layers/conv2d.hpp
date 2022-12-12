@@ -10,7 +10,7 @@
 namespace orion
 {
 
-template<typename Activation>
+template<typename Activation, int threads = 2>
 class Conv2D : public Layer
 {
 
@@ -144,9 +144,9 @@ public:
      * @param stride    Stride dimensions (h, w)
      * @param dilation  Dilation dimensions (h, w)
      * @param padding   Padding enum, PADDING_VALID or PADDING_SAME
-     * @return          Tensor<4> in format NHWC
+     * @return          Tensor<4> NHWC as tensor op
      */
-    static Tensor<4> ConvolutionForward(
+    static auto ConvolutionForward(
             const Tensor<4> &input, const Tensor<4> &kernels,
             const Stride &stride, const Dilation &dilation, Padding padding);
 
@@ -160,9 +160,9 @@ public:
      * @param dilation      Forward propagation's stride (not dilation) dimensions (h, w)
      * @param padding       Padding enum used in forward propagation
      * @param output_dims   Expected dimensions of the resultant dL/dk tensor (same as kernels)
-     * @return
+     * @return              Tensor<4> NHWC as tensor op
      */
-    static Tensor<4> ConvolutionBackwardKernel(
+    static auto ConvolutionBackwardKernel(
             const Tensor<4> &layer_input, const Tensor<4> &gradients,
             const Stride &stride, const Dilation &dilation,
             Padding padding, const Dims<4> &output_dims);
@@ -176,12 +176,17 @@ public:
      * @param stride        Forward propagation's dilation (not stride) dimensions (h, w)
      * @param dilation      Forward propagation's stride (not dilation) dimensions (h, w)
      * @param result_dims   Dimensions of the forward propagation input tensor
-     * @return
+     * @return              Tensor<4> NHWC as a tensor op
      */
-    static Tensor<4> ConvolutionBackwardInput(
+    static auto ConvolutionBackwardInput(
             const Tensor<4> &gradients, const Tensor<4> &kernels,
             const Stride &stride, const Dilation &dilation,
             const Dims<4> &result_dims);
+
+
+    static Dims<4> ForwardOutputDims(
+            const Dims<4> &inputs, const Dims<4> &kernels,
+            const Stride &stride, const Dilation &dilation, Padding padding);
 
 private:
     // runs backpropagation, the Backward() override functions feed into this
@@ -203,6 +208,10 @@ private:
     Kernel kernel_dim;
     Stride stride_dim;
     Dilation dilation_dim;
+
+    // multithreading
+    Eigen::ThreadPool pool;
+    Eigen::ThreadPoolDevice device;
 
 };
 

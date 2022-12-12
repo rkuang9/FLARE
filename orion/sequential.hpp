@@ -9,7 +9,6 @@
 #include "orion/layers/include_layers.hpp"
 #include "orion/loss/include_loss.hpp"
 #include "orion/optimizers/include_optimizers.hpp"
-#include "orion/internal/include_internal.hpp"
 #include <iomanip>
 
 namespace orion
@@ -49,6 +48,7 @@ public:
         int batch_per_bar = num_batches / num_bars;
         int progress = 0;
         int num_inputs = inputs.size();
+        int epoch_count_length = std::to_string(epochs).length();
 
         for (int e = 0; e < epochs; e++) {
             auto start_time = std::chrono::high_resolution_clock::now();
@@ -59,17 +59,20 @@ public:
                 this->Update(*this->opt);
 
                 // progress bar
-                if (m % batch_per_bar == 0) {
+                if (m % batch_per_bar == 0 && m != 0) {
+
                     auto elapsed_time = std::chrono::duration_cast<std::chrono::seconds>(
                             std::chrono::high_resolution_clock::now() - start_time);
 
                     // progress bar
-                    std::cout << std::setprecision(3) << "\rEpoch "
-                              << std::setw(3) << e + 1 << " [" << std::setfill('=')
-                              << std::setw(progress) << '>' << std::setfill(' ')
-                              << std::setw(num_bars - progress + 1) << "] "
+                    std::cout << "\rEpoch "
+                              << std::setw(epoch_count_length) << std::setfill(' ')
+                              << e + 1 << " ["
+                              << std::setw(progress + 1) << std::setfill('=') << '>'
+                              << std::setw(num_bars - progress)
+                              << std::setfill('.') << "] "
                               << elapsed_time.count() << "s loss: "
-                              << this->loss->GetLoss();
+                              << std::setprecision(5) << this->loss->GetLoss();
                     progress++;
                 }
             }

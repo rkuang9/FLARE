@@ -23,16 +23,9 @@ void SGD::Minimize(Tensor<2> &W, const Tensor<2> &dL_dW)
         velocity.setZero();
     }
 
-    velocity = this->momentum * velocity + dL_dW; // TensorFlow's version
-    //velocity = this->momentum * velocity + (1 - this->momentum) * dL_dW; // Andrew Ng's version
+    velocity = this->momentum * velocity + dL_dW; // * (1 - this->momentum)
 
     W -= this->learning_rate * velocity;
-}
-
-
-void SGD::Step()
-{
-
 }
 
 
@@ -46,8 +39,7 @@ void SGD::Minimize(Tensor<1> &b, const Tensor<1> &dL_db)
         velocity.setZero();
     }
 
-    velocity = this->momentum * velocity + dL_db; // TensorFlow's version
-    //velocity = this->momentum * velocity + (1 - this->momentum) * dL_db; // Andrew Ng's version
+    velocity = this->momentum * velocity + dL_db; // * (1 - this->momentum)
 
     b -= this->learning_rate * velocity;
 }
@@ -63,16 +55,15 @@ void SGD::Minimize(Tensor<4> &k, const Tensor<4> &dL_dk)
         velocity.setZero();
     }
 
-    velocity = this->momentum * velocity + dL_dk; // TensorFlow's version
-    //velocity = this->momentum * velocity + (1 - this->momentum) * dL_db; // Andrew Ng's version
+    velocity = this->momentum * velocity + dL_dk; // * (1 - this->momentum)
 
     k -= this->learning_rate * velocity;
 }
 
 
-Scalar SGD::GetMomentum() const
+void SGD::Step()
 {
-    return this->momentum;
+
 }
 
 } // namespace orion

@@ -7,25 +7,25 @@
 namespace orion
 {
 
-template<typename Activation>
-Conv2D<Activation>::Conv2D(
+template<typename Activation, int Threads>
+Conv2D<Activation, Threads>::Conv2D(
         int num_filters, const Input &input, const Kernel &kernel,
         const Stride &stride, const Dilation &dilation, Padding padding,
         const Initializer<4> &initializer) :
         input_dim(input), kernel_dim(kernel),
         stride_dim(stride), dilation_dim(dilation),
-        padding(padding == 1 ? Eigen::PADDING_VALID : Eigen::PADDING_SAME)
+        padding(padding == 1 ? Eigen::PADDING_VALID : Eigen::PADDING_SAME),
+        pool((int) std::thread::hardware_concurrency()),
+        device(&pool, 2)
 {
 #ifdef ORION_COLMAJOR
     throw std::invalid_argument(
             "Conv2D only supports the NHWC tensor format, use ORION_ROWMAJOR instead");
 #endif
-
     orion_assert(kernel.size() == 2 && stride.size() == 2 && dilation.size() == 2,
                  "CONV2D KERNEL, STRIDE, AND DILATION DIMS EACH REQUIRE 2 VALUES");
 
     this->name = "conv2d";
-
 
     // initialize kernel values
     // https://stackoverflow.com/questions/42670274/how-to-calculate-fan-in-and-fan-out-in-xavier-initialization-for-neural-networks
@@ -40,19 +40,19 @@ Conv2D<Activation>::Conv2D(
 }
 
 
-template<typename Activation>
-Conv2D<Activation>::Conv2D(
+template<typename Activation, int Threads>
+Conv2D<Activation, Threads>::Conv2D(
         int num_filters, const Input &input, const Kernel &kernel,
         Padding padding, const Initializer<4> &initializer)
         : Conv2D(num_filters, input, kernel, Stride(1, 1),
                  Dilation(1, 1), padding, initializer)
 {
-
+    // nothing to do
 }
 
 
-template<typename Activation>
-void Conv2D<Activation>::Forward(const Tensor<4> &inputs)
+template<typename Activation, int Threads>
+void Conv2D<Activation, Threads>::Forward(const Tensor<4> &inputs)
 {
     orion_assert(inputs.dimension(3) == this->input_dim[2],
                  "Conv2D::Forward EXPECTED INPUT DIMENSIONS "
@@ -61,22 +61,28 @@ void Conv2D<Activation>::Forward(const Tensor<4> &inputs)
                          << " , INSTEAD GOT " << inputs.dimensions());
 
     this->X = inputs;
-    this->Z = Conv2D::ConvolutionForward(
+
+    this->Z.resize(this->ForwardOutputDims(
+            inputs.dimensions(), this->kernels.dimensions(),
+            this->stride_dim, this->dilation_dim, this->padding));
+
+    this->Z.template device(this->device) = Conv2D::ConvolutionForward(
             inputs, this->kernels, this->stride_dim,
             this->dilation_dim, this->padding);
+
     this->A = Activation::Activate(this->Z);
 }
 
 
-template<typename Activation>
-void Conv2D<Activation>::Forward(const Layer &prev)
+template<typename Activation, int Threads>
+void Conv2D<Activation, Threads>::Forward(const Layer &prev)
 {
     this->Forward(prev.GetOutput4D());
 }
 
 
-template<typename Activation>
-void Conv2D<Activation>::Backward(const LossFunction &loss_function)
+template<typename Activation, int Threads>
+void Conv2D<Activation, Threads>::Backward(const LossFunction &loss_function)
 {
     // divide by number of output units of a single batch
     this->dL_dZ = loss_function.GetGradients4D() * Activation::Gradients(this->Z);
@@ -84,21 +90,25 @@ void Conv2D<Activation>::Backward(const LossFunction &loss_function)
 }
 
 
-template<typename Activation>
-void Conv2D<Activation>::Backward(const Layer &next)
+template<typename Activation, int Threads>
+void Conv2D<Activation, Threads>::Backward(const Layer &next)
 {
-    this->dL_dZ = next.GetInputGradients4D() * Activation::Gradients(this->Z);
+    this->dL_dZ.resize(this->Z.dimensions());
+    this->dL_dZ.template device(this->device) =
+            next.GetInputGradients4D() * Activation::Gradients(this->Z);
     this->Backward();
 }
 
 
-template<typename Activation>
-void Conv2D<Activation>::Backward()
+template<typename Activation, int Threads>
+void Conv2D<Activation, Threads>::Backward()
 {
-    this->dL_dk = Conv2D::ConvolutionBackwardKernel(
+    this->dL_dk.resize(this->kernels.dimensions());
+    this->dL_dk.template device(this->device) = Conv2D::ConvolutionBackwardKernel(
             this->X, this->dL_dZ,
             this->dilation_dim, this->stride_dim,
             this->padding, this->kernels.dimensions());
+
     orion_assert(this->dL_dk.dimensions() == this->kernels.dimensions(),
                  "Conv2D::Backward EXPECTED KERNEL GRADIENTS DIMENSIONS "
                          << this->kernels.dimensions() << ", GOT "
@@ -106,22 +116,22 @@ void Conv2D<Activation>::Backward()
 }
 
 
-template<typename Activation>
-void Conv2D<Activation>::Update(Optimizer &optimizer)
+template<typename Activation, int Threads>
+void Conv2D<Activation, Threads>::Update(Optimizer &optimizer)
 {
     optimizer.Minimize(this->kernels, this->dL_dk);
 }
 
 
-template<typename Activation>
-const Tensor<4> &Conv2D<Activation>::GetOutput4D() const
+template<typename Activation, int Threads>
+const Tensor<4> &Conv2D<Activation, Threads>::GetOutput4D() const
 {
     return this->A;
 }
 
 
-template<typename Activation>
-Tensor<4> Conv2D<Activation>::GetInputGradients4D() const
+template<typename Activation, int Threads>
+Tensor<4> Conv2D<Activation, Threads>::GetInputGradients4D() const
 {
     // moved from Backward() to here as on-demand since it's not always needed
     return Conv2D::ConvolutionBackwardInput(
@@ -131,22 +141,22 @@ Tensor<4> Conv2D<Activation>::GetInputGradients4D() const
 }
 
 
-template<typename Activation>
-const Tensor<4> &Conv2D<Activation>::GetWeightGradients4D() const
+template<typename Activation, int Threads>
+const Tensor<4> &Conv2D<Activation, Threads>::GetWeightGradients4D() const
 {
     return this->dL_dk;
 }
 
 
-template<typename Activation>
-const Tensor<4> &Conv2D<Activation>::GetWeights4D() const
+template<typename Activation, int Threads>
+const Tensor<4> &Conv2D<Activation, Threads>::GetWeights4D() const
 {
     return this->kernels;
 }
 
 
-template<typename Activation>
-void Conv2D<Activation>::SetWeights(const Tensor<4> &weights)
+template<typename Activation, int Threads>
+void Conv2D<Activation, Threads>::SetWeights(const Tensor<4> &weights)
 {
     if (weights.dimensions() != this->kernels.dimensions()) {
         std::ostringstream error_msg;
@@ -159,8 +169,8 @@ void Conv2D<Activation>::SetWeights(const Tensor<4> &weights)
 }
 
 
-template<typename Activation>
-void Conv2D<Activation>::SetBias(const Tensor<4> &bias)
+template<typename Activation, int Threads>
+void Conv2D<Activation, Threads>::SetBias(const Tensor<4> &bias)
 {
     if (bias.dimensions() != this->b.dimensions()) {
         std::ostringstream error_msg;
@@ -173,22 +183,22 @@ void Conv2D<Activation>::SetBias(const Tensor<4> &bias)
 }
 
 
-template<typename Activation>
-int Conv2D<Activation>::GetInputRank() const
+template<typename Activation, int Threads>
+int Conv2D<Activation, Threads>::GetInputRank() const
 {
     return 4;
 }
 
 
-template<typename Activation>
-int Conv2D<Activation>::GetOutputRank() const
+template<typename Activation, int Threads>
+int Conv2D<Activation, Threads>::GetOutputRank() const
 {
     return 4;
 }
 
 
-template<typename Activation>
-Tensor<4> Conv2D<Activation>::ConvolutionForward(
+template<typename Activation, int Threads>
+auto Conv2D<Activation, Threads>::ConvolutionForward(
         const Tensor<4> &input, const Tensor<4> &kernels,
         const Stride &stride, const Dilation &dilation, Padding padding)
 {
@@ -242,8 +252,8 @@ Tensor<4> Conv2D<Activation>::ConvolutionForward(
 }
 
 
-template<typename Activation>
-Tensor<4> Conv2D<Activation>::ConvolutionBackwardKernel(
+template<typename Activation, int Threads>
+auto Conv2D<Activation, Threads>::ConvolutionBackwardKernel(
         const Tensor<4> &layer_input, const Tensor<4> &gradients,
         const Stride &stride, const Dilation &dilation,
         Padding padding, const Dims<4> &output_dims)
@@ -317,8 +327,8 @@ Tensor<4> Conv2D<Activation>::ConvolutionBackwardKernel(
 }
 
 
-template<typename Activation>
-Tensor<4> Conv2D<Activation>::ConvolutionBackwardInput(
+template<typename Activation, int Threads>
+auto Conv2D<Activation, Threads>::ConvolutionBackwardInput(
         const Tensor<4> &gradients, const Tensor<4> &kernels,
         const Stride &stride, const Dilation &dilation,
         const Dims<4> &result_dims)
@@ -374,6 +384,39 @@ Tensor<4> Conv2D<Activation>::ConvolutionBackwardInput(
     return gradients_im2col
             .contract(kernels_im2col, ContractDim {Axes(2, 1)})
             .reshape(result_dims);
+}
+
+
+template<typename Activation, int Threads>
+Dims<4> Conv2D<Activation, Threads>::ForwardOutputDims(
+        const Dims<4> &inputs, const Dims<4> &kernels,
+        const Stride &stride, const Dilation &dilation, Padding padding)
+{
+    Eigen::Index num_kernels = kernels[0];
+    Eigen::Index kernel_h = kernels[1];
+    Eigen::Index kernel_w = kernels[2];
+    Eigen::Index input_h = inputs[1];
+    Eigen::Index input_w = inputs[2];
+    Eigen::Index batch_size = inputs[0];
+
+    Eigen::Index output_h = 0;
+    Eigen::Index output_w = 0;
+
+    if (padding == Eigen::PADDING_SAME) {
+        // same padding for strided convolutions will have resolution decreased
+        output_h = std::ceil(static_cast<Scalar>(input_h) /
+                             static_cast<Scalar>(stride.height()));
+        output_w = std::ceil(static_cast<Scalar>(input_w) /
+                             static_cast<Scalar>(stride.width()));
+    }
+    else {
+        output_h = 1 + (input_h - dilation.height() * (kernel_h - 1) - 1) /
+                       stride.height();
+        output_w = 1 + (input_w - dilation.width() * (kernel_w - 1) - 1) /
+                       stride.width();
+    }
+
+    return Dims<4>(batch_size, output_h, output_w, num_kernels);
 }
 
 } // namespace orion
