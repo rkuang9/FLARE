@@ -6,7 +6,8 @@
 #define ORION_SEQUENTIAL_HPP
 
 #include "orion/orion_types.hpp"
-#include "orion/layers/include_layers.hpp"
+//#include "orion/layers/include_layers.hpp"
+#include "orion/layers/layer.hpp"
 #include "orion/loss/include_loss.hpp"
 #include "orion/optimizers/include_optimizers.hpp"
 #include <iomanip>
@@ -64,7 +65,8 @@ public:
                     auto elapsed_time = std::chrono::duration_cast<std::chrono::seconds>(
                             std::chrono::high_resolution_clock::now() - start_time);
 
-                    // progress bar
+                    // progress bar, if ran in CLion, it will print
+                    // new lines per iteration due to the PuTTY terminal
                     std::cout << "\rEpoch "
                               << std::setw(epoch_count_length) << std::setfill(' ')
                               << e + 1 << " ["

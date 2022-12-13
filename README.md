@@ -10,5 +10,5 @@ This library intends to provide an interface and performance similar to TensorFl
 - Add progress bar to display during training (done 12/6/2022)
 - Evaluate a test set per epoch
 - Accuracy metrics
-- Multithreading support
+- Multithreading support (partially done 12/12/2022, only 2 threads)
 - Parse JSON datasets

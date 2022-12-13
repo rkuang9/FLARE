@@ -80,10 +80,10 @@ const Tensor<2> &Flatten<InputTensorRank>::GetOutput2D() const
 }
 
 
-#if MACOSX == TRUE
-#pragma GCC diagnostic ignored "-Wreturn-stack-address"
-#else
+#ifdef _WIN32
 #pragma GCC diagnostic ignored "-Wreturn-local-addr"
+#elif defined __unix__ || defined __APPLE__ || defined __linux__
+#pragma GCC diagnostic ignored "-Wreturn-stack-address"
 #endif
 
 template<int InputTensorRank>
@@ -100,10 +100,10 @@ Tensor<2> Flatten<InputTensorRank>::GetInputGradients2D() const
 }
 
 
-#if MACOSX == TRUE
-#pragma GCC diagnostic ignored "-Wreturn-stack-address"
-#else
+#ifdef _WIN32
 #pragma GCC diagnostic ignored "-Wreturn-local-addr"
+#elif defined __unix__ || defined __APPLE__ || defined __linux__
+#pragma GCC diagnostic ignored "-Wreturn-stack-address"
 #endif
 
 template<int InputTensorRank>
@@ -120,10 +120,10 @@ Tensor<3> Flatten<InputTensorRank>::GetInputGradients3D() const
 }
 
 
-#if MACOSX == TRUE
-#pragma GCC diagnostic ignored "-Wreturn-stack-address"
-#else
+#ifdef _WIN32
 #pragma GCC diagnostic ignored "-Wreturn-local-addr"
+#elif defined __unix__ || defined __APPLE__ || defined __linux__
+#pragma GCC diagnostic ignored "-Wreturn-stack-address"
 #endif
 
 template<int InputTensorRank>

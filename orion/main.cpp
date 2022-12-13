@@ -1,16 +1,14 @@
 #include <iostream>
 #include <chrono>
 #include <orion/orion.hpp>
-#include <filesystem>
-#include <opencv2/opencv.hpp>
-#include "examples/CIFAR_image_detection.h"
+#include "examples/heart_attack_prediction.h"
 
 
 int main()
 {
     auto start = std::chrono::high_resolution_clock::now();
 
-    CIFAR10_CNN();
+    HeartAttackPrediction();
 
     auto stop = std::chrono::high_resolution_clock::now();
     auto time = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);

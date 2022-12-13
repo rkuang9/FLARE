@@ -146,9 +146,11 @@ public:
      * @param padding   Padding enum, PADDING_VALID or PADDING_SAME
      * @return          Tensor<4> NHWC as tensor op
      */
+    EIGEN_STRONG_INLINE
     static auto ConvolutionForward(
             const Tensor<4> &input, const Tensor<4> &kernels,
             const Stride &stride, const Dilation &dilation, Padding padding);
+
 
     /**
      * Backpropagation, calculate derivative of loss w.r.t. kernels is the convolution
@@ -162,10 +164,12 @@ public:
      * @param output_dims   Expected dimensions of the resultant dL/dk tensor (same as kernels)
      * @return              Tensor<4> NHWC as tensor op
      */
+    EIGEN_STRONG_INLINE
     static auto ConvolutionBackwardKernel(
             const Tensor<4> &layer_input, const Tensor<4> &gradients,
             const Stride &stride, const Dilation &dilation,
             Padding padding, const Dims<4> &output_dims);
+
 
     /**
      * Backpropagation through inputs, derivative of loss w.r.t. inputs is the
@@ -178,6 +182,7 @@ public:
      * @param result_dims   Dimensions of the forward propagation input tensor
      * @return              Tensor<4> NHWC as a tensor op
      */
+    EIGEN_STRONG_INLINE
     static auto ConvolutionBackwardInput(
             const Tensor<4> &gradients, const Tensor<4> &kernels,
             const Stride &stride, const Dilation &dilation,
