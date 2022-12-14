@@ -37,7 +37,7 @@ public:
     const std::vector<Scalar> &LossHistory() const
     { return this->loss_history; }
 
-    virtual Scalar GetLoss() const
+    Scalar GetLoss() const
     { return this->loss_history.back(); }
 
     const std::vector<Tensor<2>> &GradientHistory2D() const

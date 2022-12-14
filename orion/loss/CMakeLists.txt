@@ -2,6 +2,8 @@ set(SOURCES
         binary_cross_entropy.cpp
         mean_squared_error.cpp
         categorical_cross_entropy.cpp
+        mean_absolute_error.cpp
+        kl_divergence.cpp
         )
 
 set(SOURCE_DIRECTORY)

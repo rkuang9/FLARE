@@ -44,25 +44,4 @@ void BinaryCrossEntropy::CalculateLoss(const Tensor<4> &predict,
     this->gradient_history4D.emplace_back(std::move(this->Gradient(predict, label)));
 }
 
-
-template<int TensorRank>
-Scalar BinaryCrossEntropy::Loss(const Tensor<TensorRank> &predict,
-                                const Tensor<TensorRank> &label)
-{
-    Tensor<TensorRank> predict_clip = predict.clip(this->clip_min, this->clip_max);
-    return -Tensor<0>((label * (predict_clip + this->epsilon).log() +
-                       (1.0 - label) * (1.0 - predict_clip + this->epsilon).log())
-                              .mean()).coeff();
-}
-
-
-template<int TensorRank>
-Tensor<TensorRank> BinaryCrossEntropy::Gradient(const Tensor<TensorRank> &predict,
-                                                const Tensor<TensorRank> &label)
-{
-    return (-label / (predict + this->epsilon) +
-            (1 - label) / (1 - predict + this->epsilon)) /
-           (Scalar(predict.dimensions().TotalSize() / predict.dimension(0)));
-}
-
 } // namespace orion

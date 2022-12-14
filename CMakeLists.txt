@@ -5,7 +5,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_FLAGS "-O2 -openmp")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 
-add_compile_definitions("ORION_FLOAT") # use float instead of double for tensor calculations
+#add_compile_definitions("ORION_FLOAT") # use float instead of double for tensor calculations
 #add_compile_definitions("ORION_NO_DEBUG") # uncomment for release builds
 
 # include OpenCV for image-to-tensor
