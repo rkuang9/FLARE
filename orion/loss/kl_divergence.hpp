@@ -31,7 +31,8 @@ template<int TensorRank>
 Scalar KLDivergence::Loss(const Tensor<TensorRank> &predict,
                           const Tensor<TensorRank> &label)
 {
-    return Tensor<0>((label * (label / (predict + 1e-7)).log()).mean()).coeff();
+    return Tensor<0>((label * ((label + this->epsilon) / (predict + this->epsilon))
+            .log()).mean()).coeff();
 }
 
 

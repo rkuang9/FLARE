@@ -30,7 +30,7 @@ void mean_abs_error()
     std::cout << "loss: " << loss.GetLoss() << "\n";
     std::cout << "gradients: " << loss.GetGradients2D() << "\n";
 
-    
+
     std::cout << model.GradientCheck(dataset.training_samples.front(),
                                      dataset.training_labels.front());
 }
