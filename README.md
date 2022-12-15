@@ -1,6 +1,12 @@
 # OrionNN
-A neural network library in active development written in C++ and based on Eigen Tensor.
-This library intends to provide an interface and performance similar to TensorFlow 2.
+A neural network library in active development written in C++ and based on Eigen Tensor
+with an interface similar to TensorFlow.
+
+I started this project to learn more about artificial intelligence and because there aren't
+many open-source fully featured and easy to understand neural network libraries.
+
+Contribution is more than welcome, please email rkuang25@gmail.com.
+
 
 # Features
 - Layers 
