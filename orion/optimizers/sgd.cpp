@@ -10,60 +10,45 @@ namespace orion
 SGD::SGD(Scalar learning_rate, Scalar momentum) : Optimizer(learning_rate),
                                                   momentum(momentum)
 {
+    // nothing to do
 }
 
 
-void SGD::Minimize(Tensor<2> &W, const Tensor<2> &dL_dW)
+void SGD::Minimize(Tensor<2> &weights, const Tensor<2> &gradients)
 {
-    Tensor<2> &velocity = this->v_dw[W.data()];
+    Tensor<2> &velocity = this->v_dw[weights.data()];
 
     if (velocity.size() == 0) {
         // on first run, initialize zero matrix with same shape as weights
-        velocity.resize(W.dimensions());
+        velocity.resize(weights.dimensions());
         velocity.setZero();
     }
 
-    velocity = this->momentum * velocity + dL_dW; // * (1 - this->momentum)
+    velocity = this->momentum * velocity + gradients; // * (1 - this->momentum)
 
-    W -= this->learning_rate * velocity;
+    weights -= this->learning_rate * velocity;
 }
 
 
-void SGD::Minimize(Tensor<1> &b, const Tensor<1> &dL_db)
+void SGD::Minimize(Tensor<4> &kernels, const Tensor<4> &gradients)
 {
-    Tensor<1> &velocity = this->v_db[b.data()];
+    Tensor<4> &velocity = this->v_dk[kernels.data()];
 
     if (velocity.size() == 0) {
         // on first run, initialize zero matrix with same shape as bias
-        velocity.resize(b.dimensions());
+        velocity.resize(kernels.dimensions());
         velocity.setZero();
     }
 
-    velocity = this->momentum * velocity + dL_db; // * (1 - this->momentum)
+    velocity = this->momentum * velocity + gradients; // * (1 - this->momentum)
 
-    b -= this->learning_rate * velocity;
-}
-
-
-void SGD::Minimize(Tensor<4> &k, const Tensor<4> &dL_dk)
-{
-    Tensor<4> &velocity = this->v_dk[k.data()];
-
-    if (velocity.size() == 0) {
-        // on first run, initialize zero matrix with same shape as bias
-        velocity.resize(k.dimensions());
-        velocity.setZero();
-    }
-
-    velocity = this->momentum * velocity + dL_dk; // * (1 - this->momentum)
-
-    k -= this->learning_rate * velocity;
+    kernels -= this->learning_rate * velocity;
 }
 
 
 void SGD::Step()
 {
-
+    // nothing to do
 }
 
 } // namespace orion

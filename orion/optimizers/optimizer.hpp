@@ -24,10 +24,7 @@ public:
     // skip bias correction for most implementations
     virtual void Minimize(Tensor<2> &W, const Tensor<2> &dL_dW) = 0;
 
-    virtual void Minimize(Tensor<1> &b, const Tensor<1> &dL_db) = 0;
-
-    virtual void Minimize(Tensor<4> &W, const Tensor<4> &dL_dW)
-    { throw std::logic_error("Optimizer::Minimize based class called"); };
+    virtual void Minimize(Tensor<4> &W, const Tensor<4> &dL_dW) = 0;
 
     Scalar GetLearningRate() const
     { return this->learning_rate; };

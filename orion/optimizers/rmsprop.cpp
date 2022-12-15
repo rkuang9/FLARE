@@ -14,33 +14,34 @@ RMSprop::RMSprop(Scalar learning_rate, Scalar momentum) :
 }
 
 
-void RMSprop::Minimize(Tensor<2> &W, const Tensor<2> &dL_dW)
+void RMSprop::Minimize(Tensor<2> &weights, const Tensor<2> &gradients)
 {
-    Tensor<2> &velocity = this->s_dw[W.data()];
+    Tensor<2> &velocity = this->s_dw[weights.data()];
 
     if (velocity.size() == 0) {
-        velocity.resize(W.dimensions());
+        velocity.resize(weights.dimensions());
         velocity.setZero();
     }
 
-    velocity = this->momentum * velocity + (1 - this->momentum) * dL_dW * dL_dW;
+    velocity = this->momentum * velocity +
+               (1 - this->momentum) * gradients * gradients;
 
-    W -= this->learning_rate * dL_dW / (velocity.sqrt() + this->epsilon);
+    weights -= this->learning_rate * gradients / (velocity.sqrt() + this->epsilon);
 }
 
 
-void RMSprop::Minimize(Tensor<1> &b, const Tensor<1> &dL_db)
+void RMSprop::Minimize(Tensor<4> &kernels, const Tensor<4> &gradients)
 {
-    Tensor<1> &velocity = this->s_db[b.data()];
+    Tensor<4> &velocity = this->s_dk[kernels.data()];
 
     if (velocity.size() == 0) {
-        velocity.resize(b.dimensions());
+        velocity.resize(kernels.dimensions());
         velocity.setZero();
     }
 
-    velocity = this->momentum * velocity + (1 - this->momentum) * dL_db * dL_db;
+    velocity = this->momentum * velocity + (1 - this->momentum) * gradients * gradients;
 
-    b -= this->learning_rate * dL_db / (velocity.sqrt() + this->epsilon);
+    kernels -= this->learning_rate * gradients / (velocity.sqrt() + this->epsilon);
 }
 
 void RMSprop::Step()

@@ -45,7 +45,7 @@ void MNIST_CNN()
     };
 
     CategoricalCrossEntropy loss;
-    SGD opt(0.001, 0.9);
+    Adam opt;
 
     model.Compile(loss, opt);
     model.Fit(dataset.training_samples, dataset.training_labels, 15);

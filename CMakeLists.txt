@@ -8,27 +8,26 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 #add_compile_definitions("ORION_FLOAT") # use float instead of double for tensor calculations
 #add_compile_definitions("ORION_NO_DEBUG") # uncomment for release builds
 
-# include OpenCV for image-to-tensor
-add_compile_definitions("USING_OPENCV")
 add_compile_definitions("EIGEN_USE_THREADS")
 add_compile_definitions("EIGEN_DEFAULT_TO_ROW_MAJOR")
+
+add_compile_definitions("USING_OPENCV") # include OpenCV for image-to-tensor
 
 
 # without this, nothing works
 include_directories(lib/Eigen)
 
 get_directory_property(DEFINITIONS COMPILE_DEFINITIONS)
-
 if (DEFINITIONS MATCHES "USING_OPENCV")
-    message("INCLUDING OPENCV")
     set(OpenCV_DIR lib/opencv)
+    message("INCLUDING OPENCV AT PATH: " ${OpenCV_DIR})
     find_package(OpenCV REQUIRED)
     include_directories(${OpenCV_INCLUDE_DIRS})
 else ()
-    message("NOT USING OPENCV")
+    message("THIS BUILD DOES NOT INCLUDE OpenCV FOR IMAGE PARSING")
 endif ()
 
-message(${CMAKE_BUILD_TYPE})
+message("BUILD TYPE: " ${CMAKE_BUILD_TYPE})
 
 
 add_subdirectory(orion)

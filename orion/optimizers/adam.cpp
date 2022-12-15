@@ -28,32 +28,49 @@ void Adam::Step()
 
 
 // applies optimization variant in section 2 of the paper
-void Adam::Minimize(Tensor<2> &w, const Tensor<2> &g)
+void Adam::Minimize(Tensor<2> &weights, const Tensor<2> &gradients)
 {
-    Tensor<2> &m = this->momentum[w.data()]; // momentum
-    Tensor<2> &v = this->rmsprop[w.data()]; // RMSprop
+    Tensor<2> &m = this->momentum_dw[weights.data()]; // momentum
+    Tensor<2> &v = this->rmsprop_dw[weights.data()]; // RMSprop
 
     // on first run, initialize zero matrix with same shape as weights
     if (m.size() == 0) {
-        m.resize(w.dimensions());
+        m.resize(weights.dimensions());
         m.setZero();
     }
 
     if (v.size() == 0) {
-        v.resize(w.dimensions());
+        v.resize(weights.dimensions());
         v.setZero();
     }
 
-    m = this->beta1 * m + (1 - this->beta1) * g; // momentum
-    v = this->beta2 * v + (1 - this->beta2) * g.square(); // RMSprop
+    m = this->beta1 * m + (1 - this->beta1) * gradients; // momentum
+    v = this->beta2 * v + (1 - this->beta2) * gradients.square(); // RMSprop
 
-    w -= this->lr_t * m / (v.sqrt() + this->epsilon);
+    weights -= this->lr_t * m / (v.sqrt() + this->epsilon);
 }
 
 
-void Adam::Minimize(Tensor<1> &b, const Tensor<1> &dL_db)
+void Adam::Minimize(Tensor<4> &kernels, const Tensor<4> &gradients)
 {
-    throw std::logic_error("BIAS OPTIMIZATION NOT IMPLEMENTED YET");
+    Tensor<4> &m = this->momentum_dk[kernels.data()]; // momentum
+    Tensor<4> &v = this->rmsprop_dk[kernels.data()]; // RMSprop
+
+    // on first run, initialize zero matrix with same shape as weights
+    if (m.size() == 0) {
+        m.resize(kernels.dimensions());
+        m.setZero();
+    }
+
+    if (v.size() == 0) {
+        v.resize(kernels.dimensions());
+        v.setZero();
+    }
+
+    m = this->beta1 * m + (1 - this->beta1) * gradients; // momentum
+    v = this->beta2 * v + (1 - this->beta2) * gradients.square(); // RMSprop
+
+    kernels -= this->lr_t * m / (v.sqrt() + this->epsilon);
 }
 
 } // namespace orion

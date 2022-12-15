@@ -19,19 +19,16 @@ public:
 
     void Step() override;
 
-    void Minimize(Tensor<2> &W, const Tensor<2> &dL_dW) override;
+    void Minimize(Tensor<2> &weights, const Tensor<2> &gradients) override;
 
-    void Minimize(Tensor<1> &b, const Tensor<1> &dL_db) override;
-
-    void Minimize(Tensor<4> &k, const Tensor<4> &dL_dk) override;
+    void Minimize(Tensor<4> &kernels, const Tensor<4> &gradients) override;
 
 private:
-    Scalar momentum; // default 0 means no momentum
+    Scalar momentum = 0; // default 0 means no momentum
 
     // holds moving averages per layer, stored using Tensor.data() pointer as key
-    std::map<const Scalar *, Tensor<4>> v_dk; // k = kernels/filters
     std::map<const Scalar *, Tensor<2>> v_dw;
-    std::map<const Scalar *, Tensor<1>> v_db;
+    std::map<const Scalar *, Tensor<4>> v_dk;
 };
 
 } // namespace orion
