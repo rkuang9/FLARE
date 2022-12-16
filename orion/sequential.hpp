@@ -51,6 +51,10 @@ public:
         int num_inputs = inputs.size();
         int epoch_count_length = std::to_string(epochs).length();
 
+        for (auto layer: this->layers) {
+            layer->Training(true);
+        }
+
         for (int e = 0; e < epochs; e++) {
             auto start_time = std::chrono::high_resolution_clock::now();
 
@@ -81,7 +85,10 @@ public:
 
             progress = 0; // progress bar reset for next epoch
             std::cout << '\n';
+        }
 
+        for (auto layer: this->layers) {
+            layer->Training(false);
         }
     }
 

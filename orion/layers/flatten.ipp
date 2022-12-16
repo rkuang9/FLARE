@@ -46,15 +46,10 @@ template<int InputTensorRank>
 void Flatten<InputTensorRank>::Backward(const LossFunction &loss_function)
 {
     if constexpr (InputTensorRank == 2) {
-        // divide by number of output units in a single batch, [output units, batch]
-        this->dL_dZ = loss_function.GetGradients2D() /
-                      static_cast<Scalar>(this->input_dims[1]);
+        this->dL_dZ = loss_function.GetGradients2D();
     }
     else {
-        // divide by number of output units in a single batch, [batch, etc...]
-        this->dL_dZ = loss_function.GetGradients2D().reshape(this->input_dims) /
-                      static_cast<Scalar>(this->input_dims.TotalSize() /
-                                          this->input_dims[0]);
+        this->dL_dZ = loss_function.GetGradients2D().reshape(this->input_dims);
     }
 }
 

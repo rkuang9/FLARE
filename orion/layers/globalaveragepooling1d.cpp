@@ -37,7 +37,7 @@ void GlobalAveragePooling1D::Backward(const LossFunction &loss_function)
 {
     // pass the dL / dA term from dL / dZ = (dL / dA) * (dA / dZ)
     // divide by num outputs
-    this->Backward(loss_function.GetGradients2D() / (Scalar) this->Z.dimension(1));
+    this->Backward(loss_function.GetGradients2D());
 }
 
 

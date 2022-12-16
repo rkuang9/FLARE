@@ -70,6 +70,18 @@ Tensor<TensorRank> RandomNormal(const Dims<TensorRank> &dims,
     });
 }
 
+
+template<int TensorRank>
+Tensor<TensorRank> RandomBernoulli(const Dims<TensorRank> &dims, Scalar probability)
+{
+    std::random_device random;
+    std::mt19937_64 mt(random());
+
+    return Tensor<TensorRank>(dims).template nullaryExpr([&]() {
+        return std::bernoulli_distribution(probability)(mt);
+    });
+}
+
 } // namespace orion
 
 #endif //ORION_WEIGHTS_HPP

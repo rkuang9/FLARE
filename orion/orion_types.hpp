@@ -30,18 +30,18 @@ using Scalar = double;
 #endif
 
 #ifdef ORION_COLMAJOR
-template<int TensorRank, typename DataType = Scalar, int StorageType = Eigen::ColMajor>
+template<int InputTensorRank, typename DataType = Scalar, int StorageType = Eigen::ColMajor>
 #else
 template<int TensorRank, typename DataType = Scalar, int StorageType = Eigen::RowMajor>
 #endif
 using Tensor = Eigen::Tensor<DataType, TensorRank, StorageType>;
 
 #ifdef ORION_COLMAJOR
-template<int TensorRank, typename DataType = Eigen::Index, int StorageType = Eigen::ColMajor>
+template<int InputTensorRank, typename DataType = Eigen::Index, int StorageType = Eigen::ColMajor>
 #else
 template<int TensorRank, typename DataType = Eigen::Index, int StorageType = Eigen::RowMajor>
 #endif
-//using Dims = typename Eigen::Tensor<Eigen::Index, TensorRank, StorageType>::Dimensions;
+//using Dims = typename Eigen::Tensor<Eigen::Index, InputTensorRank, StorageType>::Dimensions;
 using Dims = typename Eigen::DSizes<DataType, TensorRank>;
 
 

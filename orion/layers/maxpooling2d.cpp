@@ -99,9 +99,7 @@ void MaxPooling2D::Forward(const Layer &prev)
 
 void MaxPooling2D::Backward(const LossFunction &loss_function)
 {
-    this->Backward(loss_function.GetGradients4D() /
-                   static_cast<Scalar>(this->Z.dimensions().TotalSize() /
-                                       this->Z.dimension(0)));
+    this->Backward(loss_function.GetGradients4D());
 }
 
 
