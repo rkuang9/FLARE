@@ -41,7 +41,6 @@ template<int InputTensorRank, typename DataType = Eigen::Index, int StorageType 
 #else
 template<int TensorRank, typename DataType = Eigen::Index, int StorageType = Eigen::RowMajor>
 #endif
-//using Dims = typename Eigen::Tensor<Eigen::Index, InputTensorRank, StorageType>::Dimensions;
 using Dims = typename Eigen::DSizes<DataType, TensorRank>;
 
 
@@ -63,36 +62,15 @@ using Axes = Eigen::IndexPair<int>;
 namespace orion
 {
 
-// this class was made so that Clion displays shorter arguments rather than the
-// firstDimension and secondDimension that clog up the screen width
-class Input : public Dims<3>
-{
-public:
-    Input(Eigen::Index height, Eigen::Index width, Eigen::Index channels)
-            : Tensor<3>::Dimensions(height, width, channels) {}
-
-    Eigen::Index height() const { return this->at(0); }
-    Eigen::Index width() const { return this->at(1); }
-    Eigen::Index channels() const { return this->at(2); }
-};
-
-// same deal with class Input
-class _dims2D: public Dims<2>
-{
-public:
-    _dims2D(Eigen::Index height, Eigen::Index width) : Dims<2>(height, width) {}
-
-    Eigen::Index height() const { return this->at(0); }
-    Eigen::Index width() const { return this->at(1); }
-};
-
-using Kernel = _dims2D;
-using Stride = _dims2D;
-using Dilation = _dims2D;
+using Input = Dims<3>;
+using Kernel = Dims<2>;
+using Stride = Dims<2>;
+using Dilation = Dims<2>;
+using Inflate = Dims<2>;
 using Padding = Eigen::PaddingType;
 
 // pooling typedefs
-using PoolSize = _dims2D;
+using PoolSize = Dims<2>;
 }
 
 

@@ -11,11 +11,12 @@ Contribution is more than welcome, please email rkuang25@gmail.com.
 # Features
 - Layers 
   - Dense
+  - Embedding (temporarily not working)
+  - Global Average Pooling 1D (temporarily not working)
   - Convolution 2D
   - Max Pooling 2D
   - Flatten
-  - Embedding (temporarily not working)
-  - Global Average Pooling 1D (temporarily not working)
+  - Convolution 2D Transpose (currently only supports valid padding)
 - Activation Functions
   - Sigmoid
   - Hyperbolic tangent (TanH)
@@ -26,7 +27,7 @@ Contribution is more than welcome, please email rkuang25@gmail.com.
   - Softsign
   - Scaled Exponential Linear Unit (SELU)
   - Exponential Linear Unit (ELU)
-  - Softmax (only supported for Dense layers for backpropagation)
+  - Softmax (backpropagation supported for Dense layers only)
 - Loss
   - Binary Cross-entropy
   - Mean Squared Error
@@ -58,7 +59,8 @@ Contribution is more than welcome, please email rkuang25@gmail.com.
 - Categorical cross entropy loss (done 12/1/2022)
 - Add progress bar to display during training (done 12/6/2022)
 - Multithreading support (partially done 12/12/2022, only 2 threads)
-- Support for Generative Adversarial Networks
+- Support for Generative Adversarial Networks (added Conv2DTranspose valid padding only, 12/26/2022)
+- Save and load models from files
 - Add bias support for layers
 - Parse JSON datasets
 - Evaluate a test set per epoch

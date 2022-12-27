@@ -139,17 +139,23 @@ public:
     /**
      * ConvolutionForward a batch of images with a batch of kernels
      *
-     * @param input     input tensor in format NHWC
-     * @param kernels   kernels tensor in format NHWC, where N = # filters
-     * @param stride    Stride dimensions (h, w)
-     * @param dilation  Dilation dimensions (h, w)
-     * @param padding   Padding enum, PADDING_VALID or PADDING_SAME
-     * @return          Tensor<4> NHWC as tensor op
+     * @param input        input tensor in format NHWC
+     * @param kernels      kernels tensor in format NHWC, where N = # filters
+     * @param stride       Stride dimensions (h, w)
+     * @param dilation     Dilation dimensions (h, w)
+     * @param pad_top      input tensor top side padding
+     * @param pad_bottom   input tensor bottom side padding
+     * @param pad_left     input tensor left side padding
+     * @param pad_right    input tensor right side padding
+     * @return             Tensor<4> NHWC as tensor op
      */
     EIGEN_STRONG_INLINE
     static auto ConvolutionForward(
             const Tensor<4> &input, const Tensor<4> &kernels,
-            const Stride &stride, const Dilation &dilation, Padding padding);
+            const Stride &stride, const Dilation &dilation, const Inflate &inflate,
+            const Dims<4> &output_dims,
+            Eigen::Index pad_top, Eigen::Index pad_bottom,
+            Eigen::Index pad_left, Eigen::Index pad_right);
 
 
     /**
@@ -158,17 +164,23 @@ public:
      *
      * @param layer_input   Layer input tensor in format NHWC
      * @param gradients     Output gradients in format FHWC, plays role of kernel
-     * @param stride        Forward propagation's dilation (not stride) dimensions (h, w)
-     * @param dilation      Forward propagation's stride (not dilation) dimensions (h, w)
-     * @param padding       Padding enum used in forward propagation
+     * @param stride        Forward propagation's dilation dimensions (h, w)
+     * @param dilation      Forward propagation's stride dimensions (h, w)
+     * @param inflate       Dilation on the layer input tensor
      * @param output_dims   Expected dimensions of the resultant dL/dk tensor (same as kernels)
+     * @param pad_top       input tensor top side padding
+     * @param pad_bottom    input tensor bottom side padding
+     * @param pad_left      input tensor left side padding
+     * @param pad_right     input tensor right side padding
      * @return              Tensor<4> NHWC as tensor op
      */
     EIGEN_STRONG_INLINE
     static auto ConvolutionBackwardKernel(
             const Tensor<4> &layer_input, const Tensor<4> &gradients,
-            const Stride &stride, const Dilation &dilation,
-            Padding padding, const Dims<4> &output_dims);
+            const Stride &stride, const Dilation &dilation, const Inflate &inflate,
+            const Dims<4> &output_dims,
+            Eigen::Index pad_top, Eigen::Index pad_bottom,
+            Eigen::Index pad_left, Eigen::Index pad_right);
 
 
     /**
@@ -179,23 +191,24 @@ public:
      * @param kernels       Layer kernels in format FHWC
      * @param stride        Forward propagation's dilation (not stride) dimensions (h, w)
      * @param dilation      Forward propagation's stride (not dilation) dimensions (h, w)
+     * @param inflate       Dilation on the gradients tensor
      * @param result_dims   Dimensions of the forward propagation input tensor
+     * @param pad_top       gradient tensor top side padding
+     * @param pad_bottom    gradient tensor bottom side padding
+     * @param pad_left      gradient tensor left side padding
+     * @param pad_right     gradient tensor right side padding
      * @return              Tensor<4> NHWC as a tensor op
      */
     EIGEN_STRONG_INLINE
     static auto ConvolutionBackwardInput(
             const Tensor<4> &gradients, const Tensor<4> &kernels,
-            const Stride &stride, const Dilation &dilation,
-            const Dims<4> &result_dims);
+            const Stride &stride, const Dilation &dilation, const Inflate &inflate,
+            const Dims<4> &result_dims,
+            Eigen::Index pad_top, Eigen::Index pad_bottom,
+            Eigen::Index pad_left, Eigen::Index pad_right);
 
-
-    static Dims<4> ForwardOutputDims(
-            const Dims<4> &inputs, const Dims<4> &kernels,
-            const Stride &stride, const Dilation &dilation, Padding padding);
-
-private:
-    // runs backpropagation, the Backward() override functions feed into this
-    void Backward();
+protected:
+    virtual void Backward();
 
     Tensor<4> X; // layer input image
     Tensor<4> Z; // layer input convolved with kernels
@@ -211,8 +224,8 @@ private:
     Eigen::PaddingType padding;
     Input input_dim;
     Kernel kernel_dim;
-    Stride stride_dim;
-    Dilation dilation_dim;
+    Stride stride;
+    Dilation dilation;
 
     // multithreading
     Eigen::ThreadPool pool;

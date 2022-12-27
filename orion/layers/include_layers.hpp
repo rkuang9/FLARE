@@ -13,5 +13,6 @@
 #include "maxpooling2d.hpp"
 #include "flatten.hpp"
 #include "dropout.hpp"
+#include "conv2dtranspose.hpp"
 
 #endif //ORION_INCLUDE_LAYERS_HPP

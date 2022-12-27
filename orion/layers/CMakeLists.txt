@@ -7,6 +7,7 @@ set(SOURCES
         maxpooling2d.cpp
         flatten.ipp
         dropout.ipp
+        conv2dtranspose.ipp
         )
 
 set(SOURCE_DIRECTORY)
