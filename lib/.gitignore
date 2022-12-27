@@ -1,0 +1,4 @@
+*
+Eigen/
+opencv/
+!.gitignore
