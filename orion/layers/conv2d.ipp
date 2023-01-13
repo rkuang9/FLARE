@@ -357,13 +357,12 @@ auto Conv2D<Activation, Threads>::ConvolutionBackwardKernel(
     // 2. reshape patches dim to actual kernel's height/width, [F, output_h, output_w, 1]
     // 3. repeat the channels dim to match actual kernels' channels, [F, output_h, output_w, C]
     // the resulting tensor's dimensions will match the layer kernel's dimensions
-    // since the batch dim N was summed during contraction, divide by # batches to get the avg
     // since the channels dim was broadcast, divide by # times it was done so
     return gradients_im2col
                    .contract(patches_im2col, ContractDim {Axes(1, 1)})
                    .reshape(Dims<4>(filters, output_dims[1], output_dims[2], 1))
                    .broadcast(Dims<4>(1, 1, 1, channels)) /
-           static_cast<Scalar>(batches * channels /* * channels*/);
+           static_cast<Scalar>(channels);
 }
 
 

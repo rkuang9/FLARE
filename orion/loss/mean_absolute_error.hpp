@@ -17,6 +17,8 @@ public:
 
     void CalculateLoss(const Tensor<2> &predict, const Tensor<2> &label) override;
 
+    void CalculateLoss(const Tensor<3> &predict, const Tensor<3> &label) override;
+
     void CalculateLoss(const Tensor<4> &predict, const Tensor<4> &label) override;
 
     template<int TensorRank>
@@ -27,24 +29,17 @@ public:
                                 const Tensor<TensorRank> &label);
 };
 
+
 template<int TensorRank>
 Scalar MeanAbsoluteError::Loss(const Tensor<TensorRank> &predict,
                                const Tensor<TensorRank> &label)
 {
+    orion_assert(predict.dimensions() == label.dimensions(),
+                 "predict dimensions " << predict.dimensions() <<
+                                       " don't match label dimensions "
+                                       << label.dimensions());
+
     return Tensor<0>((label - predict).abs().mean()).coeff();
-}
-
-
-template<int TensorRank>
-Tensor<TensorRank> MeanAbsoluteError::Gradient(const Tensor<TensorRank> &predict,
-                                               const Tensor<TensorRank> &label)
-{
-    return (predict != label)
-                   .select((predict > label)
-                                   .select(predict.constant(1),
-                                           predict.constant(-1)),
-                           predict.constant(0)) /
-           Scalar(predict.dimensions().TotalSize() / predict.dimension(0));
 }
 
 }

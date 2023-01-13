@@ -11,6 +11,7 @@ namespace orion
 {
 
 // https://arxiv.org/abs/1412.6980
+// applies optimization variant from the end of the paper's section 2
 class Adam : public Optimizer
 {
 public:
@@ -19,11 +20,20 @@ public:
 
     void Step() override;
 
+    void Minimize(Tensor<1> &weights, const Tensor<1> &gradients) override;
+
     void Minimize(Tensor<2> &weights, const Tensor<2> &gradients) override;
+
+    void Minimize(Tensor<3> &weights, const Tensor<3> &gradients) override;
 
     void Minimize(Tensor<4> &kernels, const Tensor<4> &gradients) override;
 
 private:
+    template<int TensorRank>
+    void Update(
+            Tensor<TensorRank> &weights, const Tensor<TensorRank> &gradients,
+            Tensor<TensorRank> &momentum, Tensor<TensorRank> &rmsprop);
+
     Scalar beta1; // momentum
     Scalar beta2; // RMSprop
 
@@ -35,8 +45,14 @@ private:
 
     // holds moving averages per layer, stored using Tensor.data() pointer as key
     // is unordered_map faster?
+    std::map<const Scalar *, Tensor<1>> momentum_db;
+    std::map<const Scalar *, Tensor<1>> rmsprop_db;
+
     std::map<const Scalar *, Tensor<2>> momentum_dw;
     std::map<const Scalar *, Tensor<2>> rmsprop_dw;
+
+    std::map<const Scalar *, Tensor<3>> momentum_dw3;
+    std::map<const Scalar *, Tensor<3>> rmsprop_dw3;
 
     std::map<const Scalar *, Tensor<4>> momentum_dk;
     std::map<const Scalar *, Tensor<4>> rmsprop_dk;

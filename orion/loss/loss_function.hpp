@@ -13,35 +13,47 @@
 namespace orion
 {
 
- /*
-  * The loss function classes can contain up to 4 hard coded functions for tensor
-  * returns (2D, 3D, 4D, 5D)
-  * Currently unable to find a better way to implement this given the layer
-  * base class and virtual functions
-  */
+/*
+ * The loss function classes can contain up to 4 hard coded functions for tensor
+ * returns (2D, 3D, 4D, 5D)
+ * Currently unable to find a better way to implement this given the layer
+ * base class and virtual functions
+ */
 class LossFunction
 {
 public:
     LossFunction() = default;
 
 
-    explicit LossFunction(Scalar epsilon) : epsilon(epsilon) {}
+    explicit LossFunction(Scalar epsilon) : epsilon(epsilon)
+    {}
 
 
     virtual void CalculateLoss(const Tensor<2> &predict,
                                const Tensor<2> &label) = 0;
 
+
+    virtual void CalculateLoss(const Tensor<3> &predict,
+                               const Tensor<3> &label) = 0;
+
     virtual void CalculateLoss(const Tensor<4> &predict,
                                const Tensor<4> &label) = 0;
+
 
     const std::vector<Scalar> &LossHistory() const
     { return this->loss_history; }
 
+
     Scalar GetLoss() const
     { return this->loss_history.back(); }
 
+
     const std::vector<Tensor<2>> &GradientHistory2D() const
     { return this->gradient_history2D; }
+
+
+    const std::vector<Tensor<3>> &GradientHistory3D() const
+    { return this->gradient_history3D; }
 
 
     const std::vector<Tensor<4>> &GradientHistory4D() const
@@ -50,6 +62,10 @@ public:
 
     const Tensor<2> &GetGradients2D() const
     { return this->gradient_history2D.back(); }
+
+
+    const Tensor<3> &GetGradients3D() const
+    { return this->gradient_history3D.back(); }
 
 
     const Tensor<4> &GetGradients4D() const
@@ -62,6 +78,7 @@ protected:
     Scalar clip_max = 1 - epsilon;
     std::vector<Scalar> loss_history;
     std::vector<Tensor<2>> gradient_history2D;
+    std::vector<Tensor<3>> gradient_history3D;
     std::vector<Tensor<4>> gradient_history4D;
 };
 

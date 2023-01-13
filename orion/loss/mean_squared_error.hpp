@@ -17,6 +17,8 @@ public:
 
     void CalculateLoss(const Tensor<2> &predict, const Tensor<2> &label) override;
 
+    void CalculateLoss(const Tensor<3> &predict, const Tensor<3> &label) override;
+
     void CalculateLoss(const Tensor<4> &predict, const Tensor<4> &label) override;
 
     template<int TensorRank>
@@ -26,22 +28,6 @@ public:
     Tensor<TensorRank> Gradient(const Tensor<TensorRank> &predict,
                                 const Tensor<TensorRank> &label);
 };
-
-
-template<int TensorRank>
-Scalar MeanSquaredError::Loss(const Tensor<TensorRank> &predict,
-                              const Tensor<TensorRank> &label)
-{
-    return Tensor<0>((label - predict).square().mean())(0);
-}
-
-template<int TensorRank>
-Tensor<TensorRank> MeanSquaredError::Gradient(const Tensor<TensorRank> &predict,
-                                              const Tensor<TensorRank> &label)
-{
-    return 2 * (predict - label) /
-           (Scalar(predict.dimensions().TotalSize() / predict.dimension(0)));
-}
 
 } // orion
 

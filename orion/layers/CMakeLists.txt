@@ -8,6 +8,7 @@ set(SOURCES
         flatten.ipp
         dropout.ipp
         conv2dtranspose.ipp
+        batch_normalization.ipp
         )
 
 set(SOURCE_DIRECTORY)

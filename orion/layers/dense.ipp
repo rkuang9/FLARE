@@ -85,8 +85,8 @@ template<typename Activation>
 void Dense<Activation>::Backward()
 {
     // dL / dw = (dL / dZ) * (dZ / dw) * (1 / m) where m = batch size
-    this->dL_dw = this->X.contract(this->dL_dZ, ContractDim {Axes(0, 0)})
-                  / (Scalar) this->X.dimension(0); // divide by batch size
+    this->dL_dw = this->X.contract(this->dL_dZ, ContractDim {Axes(0, 0)});
+                  // / (Scalar) this->X.dimension(0); // divide by batch size
 
     orion_assert(this->w.dimensions() == this->dL_dw.dimensions(),
                  this->name << " Dense::Backward weights dimensions "

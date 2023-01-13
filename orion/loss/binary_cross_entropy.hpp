@@ -19,6 +19,8 @@ public:
 
     void CalculateLoss(const Tensor<2> &predict, const Tensor<2> &label) override;
 
+    void CalculateLoss(const Tensor<3> &predict, const Tensor<3> &label) override;
+
     void CalculateLoss(const Tensor<4> &predict, const Tensor<4> &label) override;
 
     template<int TensorRank>
@@ -28,27 +30,6 @@ public:
     Tensor<TensorRank> Gradient(const Tensor<TensorRank> &predict,
                                 const Tensor<TensorRank> &label);
 };
-
-
-template<int TensorRank>
-Scalar BinaryCrossEntropy::Loss(const Tensor<TensorRank> &predict,
-                                const Tensor<TensorRank> &label)
-{
-    Tensor<TensorRank> predict_clip = predict.clip(this->clip_min, this->clip_max);
-    return -Tensor<0>((label * (predict_clip + this->epsilon).log() +
-                       (1.0 - label) * (1.0 - predict_clip + this->epsilon).log())
-                              .mean()).coeff();
-}
-
-
-template<int TensorRank>
-Tensor<TensorRank> BinaryCrossEntropy::Gradient(const Tensor<TensorRank> &predict,
-                                                const Tensor<TensorRank> &label)
-{
-    return (-label / (predict + this->epsilon) +
-            (1 - label) / (1 - predict + this->epsilon)) /
-           (Scalar(predict.dimensions().TotalSize() / predict.dimension(0)));
-}
 
 } // namespace orion
 

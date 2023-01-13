@@ -12,20 +12,44 @@ namespace orion
 Sequential::Sequential(std::initializer_list<Layer *> layers) : layers(layers)
 {
     for (int i = 0; i < this->layers.size(); i++) {
-        this->layers[i]->name =
-                "layer_" + std::to_string(i) + "_" + this->layers[i]->name;
+        this->layers[i]->name += "_" + std::to_string(i);
     }
 }
 
 
 void Sequential::Add(Layer *layer)
 {
+    layer->name += "_" + std::to_string(this->layers.size());
     this->layers.push_back(layer);
 }
 
 
 void Sequential::Compile(LossFunction &loss_function, Optimizer &optimizer)
 {
+    if (this->layers.empty()) {
+        throw std::logic_error("Sequential::Compile NO LAYERS");
+    }
+
+    bool layers_compatible = true;
+    std::vector<std::string> incompatible_layers;
+
+    for (int i = 1; i < this->layers.size(); i++) {
+        if (this->layers[i]->GetInputRank() !=
+            this->layers[i - 1]->GetOutputRank()) {
+            layers_compatible = false;
+            incompatible_layers.push_back(this->layers[i - 1]->name +
+                                          " -> " + this->layers[i]->name);
+        }
+    }
+
+    if (!layers_compatible) {
+        std::ostringstream error_msg;
+        std::copy(incompatible_layers.begin(), incompatible_layers.end(),
+                  std::ostream_iterator<std::string>(error_msg, "\n"));
+        throw std::logic_error("Sequential::Compile FOUND INCOMPATIBLE LAYERS\n" +
+                               error_msg.str());
+    }
+
     this->loss = &loss_function;
     this->opt = &optimizer;
 }
@@ -47,13 +71,6 @@ void Sequential::Update(Optimizer &optimizer)
 Layer &Sequential::operator[](int layer_index)
 {
     return *this->layers[layer_index];
-}
-
-
-Tensor<2> Sequential::Predict(const Tensor<2> &example)
-{
-    this->Forward(example);
-    return this->layers.back()->GetOutput2D();
 }
 
 
@@ -130,18 +147,6 @@ Scalar Sequential::GradientCheck(const Tensor<2> &input, const Tensor<2> &label,
     Tensor<0> result = nominator.sqrt() /
                        (denominator_left.sqrt() + denominator_right.sqrt());
     return result(0);
-}
-
-
-const LossFunction *Sequential::GetLossFunction() const
-{
-    return this->loss;
-}
-
-
-int Sequential::GetTotalSamples() const
-{
-    return this->total_samples;
 }
 
 } // namespace orion

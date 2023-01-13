@@ -19,12 +19,18 @@ public:
     explicit Optimizer(Scalar learning_rate) : learning_rate(learning_rate)
     {}
 
+
     virtual void Step() = 0;
 
-    // skip bias correction for most implementations
+
+    virtual void Minimize(Tensor<1> &W, const Tensor<1> &dL_dW) = 0;
+
     virtual void Minimize(Tensor<2> &W, const Tensor<2> &dL_dW) = 0;
 
+    virtual void Minimize(Tensor<3> &W, const Tensor<3> &dL_dW) = 0;
+
     virtual void Minimize(Tensor<4> &W, const Tensor<4> &dL_dW) = 0;
+
 
     Scalar GetLearningRate() const
     { return this->learning_rate; };

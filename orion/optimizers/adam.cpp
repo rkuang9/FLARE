@@ -3,7 +3,7 @@
 //
 
 #include "adam.hpp"
-
+#include <iostream>
 namespace orion
 {
 
@@ -27,50 +27,63 @@ void Adam::Step()
 }
 
 
-// applies optimization variant in section 2 of the paper
+void Adam::Minimize(Tensor<1> &weights, const Tensor<1> &gradients)
+{
+    Tensor<1> &momentum = this->momentum_db[weights.data()];
+    Tensor<1> &rmsprop = this->rmsprop_db[weights.data()];
+
+    this->Update(weights, gradients, momentum, rmsprop);
+}
+
+
 void Adam::Minimize(Tensor<2> &weights, const Tensor<2> &gradients)
 {
-    Tensor<2> &m = this->momentum_dw[weights.data()]; // momentum
-    Tensor<2> &v = this->rmsprop_dw[weights.data()]; // RMSprop
+    Tensor<2> &momentum = this->momentum_dw[weights.data()];
+    Tensor<2> &rmsprop = this->rmsprop_dw[weights.data()];
 
-    // on first run, initialize zero matrix with same shape as weights
-    if (m.size() == 0) {
-        m.resize(weights.dimensions());
-        m.setZero();
-    }
+    this->Update(weights, gradients, momentum, rmsprop);
+}
 
-    if (v.size() == 0) {
-        v.resize(weights.dimensions());
-        v.setZero();
-    }
 
-    m = this->beta1 * m + (1 - this->beta1) * gradients; // momentum
-    v = this->beta2 * v + (1 - this->beta2) * gradients.square(); // RMSprop
+void Adam::Minimize(Tensor<3> &weights, const Tensor<3> &gradients)
+{
+    Tensor<3> &momentum = this->momentum_dw3[weights.data()];
+    Tensor<3> &rmsprop = this->rmsprop_dw3[weights.data()];
 
-    weights -= this->lr_t * m / (v.sqrt() + this->epsilon);
+    this->Update(weights, gradients, momentum, rmsprop);
 }
 
 
 void Adam::Minimize(Tensor<4> &kernels, const Tensor<4> &gradients)
 {
-    Tensor<4> &m = this->momentum_dk[kernels.data()]; // momentum
-    Tensor<4> &v = this->rmsprop_dk[kernels.data()]; // RMSprop
+    Tensor<4> &momentum = this->momentum_dk[kernels.data()];
+    Tensor<4> &rmsprop = this->rmsprop_dk[kernels.data()];
 
-    // on first run, initialize zero matrix with same shape as weights
-    if (m.size() == 0) {
-        m.resize(kernels.dimensions());
-        m.setZero();
+    this->Update(kernels, gradients, momentum, rmsprop);
+}
+
+
+template<int TensorRank>
+void Adam::Update(
+        Tensor<TensorRank> &weights, const Tensor<TensorRank> &gradients,
+        Tensor<TensorRank> &momentum, Tensor<TensorRank> &rmsprop)
+{
+// on first run, initialize zero matrix with same shape as weights
+    if (momentum.size() == 0) {
+        momentum.resize(weights.dimensions());
+        momentum.setZero();
     }
 
-    if (v.size() == 0) {
-        v.resize(kernels.dimensions());
-        v.setZero();
+    if (rmsprop.size() == 0) {
+        rmsprop.resize(weights.dimensions());
+        rmsprop.setZero();
     }
 
-    m = this->beta1 * m + (1 - this->beta1) * gradients; // momentum
-    v = this->beta2 * v + (1 - this->beta2) * gradients.square(); // RMSprop
+    momentum = this->beta1 * momentum + (1 - this->beta1) * gradients; // momentum
+    rmsprop = this->beta2 * rmsprop +
+              (1 - this->beta2) * gradients.square(); // RMSprop
 
-    kernels -= this->lr_t * m / (v.sqrt() + this->epsilon);
+    weights -= this->lr_t * momentum / (rmsprop.sqrt() + this->epsilon);
 }
 
 } // namespace orion
