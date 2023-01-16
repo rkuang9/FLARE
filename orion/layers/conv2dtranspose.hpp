@@ -18,14 +18,27 @@ public:
                     const Stride &stride, const Dilation &dilation, Padding padding,
                     const Initializer<4> &initializer = GlorotUniform<4>());
 
+    Conv2DTranspose(int num_filters, const Input &input, const Kernel &kernel,
+                    const Stride &stride, const Dilation &dilation, Padding padding,
+                    const Dims<2> &output_padding,
+                    const Initializer<4> &initializer = GlorotUniform<4>());
+
     void Forward(const Tensor<4> &inputs) override;
 
     Tensor<4> GetInputGradients4D() const override;
 
     void SetWeights(const Tensor<4> &weights) override;
 
-public:
+private:
     void Backward() final;
+
+    Dims<4> fwd_pad; // save forward top/bottom/left/right padding, reuse in backward
+
+    // Given padding=same, stride=3, input=5, Conv2DTranspose output is 15.
+    // However, since output size in the reverse operation, Conv2D, includes an
+    // std::floor() call, an input of 13, 14, and 15 can all achieve an output of 5.
+    // Output padding controls which of the possible sizes to output
+    Dims<2> output_padding;
 };
 
 } // namespace orion

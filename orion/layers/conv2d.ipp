@@ -26,14 +26,20 @@ Conv2D<Activation, Threads>::Conv2D(
                  "CONV2D KERNEL, STRIDE, AND DILATION DIMS EACH REQUIRE 2 VALUES");
 
     if (padding != Eigen::PADDING_VALID && padding != Eigen::PADDING_SAME) {
-        throw std::invalid_argument(this->name + " invalid padding type");
+        throw std::invalid_argument(this->name + " INVALID PADDING TYPE");
+    }
+
+    if (dilation[0] <= 0 || dilation[1] <= 0) {
+        throw std::invalid_argument("DILATION DIMS MUST BE GREATER THAN 0");
+    }
+
+    if (stride[0] <= 0 || stride[1] <= 0) {
+        throw std::invalid_argument("DILATION DIMS MUST BE GREATER THAN 0");
     }
 
     // https://stackoverflow.com/questions/42670274/how-to-calculate-fan-in-and-fan-out-in-xavier-initialization-for-neural-networks
-    this->kernels = initializer.
-            Initialize(
-            Dims<4>(num_filters, kernel[0],
-                    kernel[1], input[2]),
+    this->kernels = initializer.Initialize(
+            Dims<4>(num_filters, kernel[0], kernel[1], input[2]),
             static_cast<int>(input.back() * kernel[0] * kernel[1]),
             static_cast<int>(num_filters * kernel[0] * kernel[1]));
 
@@ -70,21 +76,17 @@ void Conv2D<Activation, Threads>::Forward(const Tensor<4> &inputs)
     Eigen::Index pad_w = 0;
 
     if (this->padding == Eigen::PADDING_VALID) {
-        output_h =
-                1 + (this->X.dimension(1) -
-                     this->dilation[0] * (this->kernel_dim[0] - 1) - 1) /
-                    this->stride[0];
-        output_w =
-                1 + (this->X.dimension(2) -
-                     this->dilation[1] * (this->kernel_dim[1] - 1) - 1) /
-                    this->stride[1];
+        output_h = 1 + (this->X.dimension(1) -
+                        this->dilation[0] * (this->kernel_dim[0] - 1) - 1) /
+                       this->stride[0];
+        output_w = 1 + (this->X.dimension(2) -
+                        this->dilation[1] * (this->kernel_dim[1] - 1) - 1) /
+                       this->stride[1];
     }
     else {
         // same padding for strided convolutions will have resolution decreased
-        output_h = std::ceil(static_cast<Scalar>(this->X.dimension(1)) /
-                             static_cast<Scalar>(this->stride[0]));
-        output_w = std::ceil(static_cast<Scalar>(this->X.dimension(2)) /
-                             static_cast<Scalar>(this->stride[1]));
+        output_h = std::ceil(this->X.dimension(1) / this->stride[0]);
+        output_w = std::ceil(this->X.dimension(2) / this->stride[1]);
 
         // if uneven padding, extra goes to bottom/right
         pad_h = (output_h - 1) * this->stride[0] -
@@ -180,8 +182,8 @@ Tensor<4> Conv2D<Activation, Threads>::GetInputGradients4D() const
             this->kernels.dimension(1) +
             (this->kernels.dimension(1) - 1) * (this->dilation[0] - 1);
     const Eigen::Index kernelColsEff =
-            this->kernels.dimension(1) +
-            (this->kernels.dimension(1) - 1) * (this->dilation[1] - 1);
+            this->kernels.dimension(2) +
+            (this->kernels.dimension(2) - 1) * (this->dilation[1] - 1);
 
     const Eigen::Index outputRows = this->dL_dZ.dimension(1);
     const Eigen::Index outputCols = this->dL_dZ.dimension(2);

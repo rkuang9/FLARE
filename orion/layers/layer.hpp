@@ -131,6 +131,8 @@ public:
 
 
     /**
+     * Input gradients to be fed into previous layer. This is calculated as needed
+     * so results will not be as expected is called after te layer updated
      * @return   layer's loss gradients w.r.t. pre-activated output (dL / dZ))
      */
     virtual Tensor<2> GetInputGradients2D() const
@@ -140,6 +142,7 @@ public:
     }
 
 
+    // same documentation as GetInputGradients2D()
     virtual Tensor<3> GetInputGradients3D() const
     {
         throw std::logic_error(
@@ -147,6 +150,7 @@ public:
     }
 
 
+    // same documentation as GetInputGradients2D()
     virtual Tensor<4> GetInputGradients4D() const
     {
         throw std::logic_error(
