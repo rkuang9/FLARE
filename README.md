@@ -16,7 +16,7 @@ Contribution is more than welcome, please email rkuang25@gmail.com.
   - Convolution 2D
   - Max Pooling 2D
   - Flatten
-  - Convolution 2D Transpose (currently only supports valid padding)
+  - Convolution 2D Transpose
   - Batch Normalization
 - Activation Functions
   - Sigmoid
@@ -60,7 +60,7 @@ Contribution is more than welcome, please email rkuang25@gmail.com.
 - Categorical cross entropy loss (done 12/1/2022)
 - Add progress bar to display during training (done 12/6/2022)
 - Multithreading support (partially done 12/12/2022, only 2 threads)
-- Generative Adversarial Networks for generating images (done, added Conv2DTranspose valid padding only 12/26/2022, added BatchNormalization 1/13/2023)
+- Generative Adversarial Networks for generating images (done, added Conv2DTranspose valid padding only 12/26/2022, added BatchNormalization 1/13/2023, added output padding and same padding 1/15/2023)
 - Save and load models from files
 - Add bias support for layers
 - Parse JSON datasets
