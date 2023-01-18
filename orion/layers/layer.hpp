@@ -99,11 +99,11 @@ public:
      *
      * @param optimizer   optimizer object that performs layer parameter updates
      */
-    virtual void Update(Optimizer &optimizer)
-    {
+    virtual void Update(Optimizer &optimizer) = 0;
+    /*{
         throw std::logic_error(
                 "An error occurred, base class Layer Update was called");
-    }
+    }*/
 
 
     /**

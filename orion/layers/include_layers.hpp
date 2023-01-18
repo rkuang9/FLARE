@@ -15,5 +15,6 @@
 #include "dropout.hpp"
 #include "conv2dtranspose.hpp"
 #include "batch_normalization.hpp"
+#include "reshape.hpp"
 
 #endif //ORION_INCLUDE_LAYERS_HPP
