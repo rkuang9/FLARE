@@ -10,37 +10,22 @@ void GAN()
 {
     using namespace orion;
 
-    Tensor<4> image(2, 3, 3, 1);
-    image.setRandom();
+    Tensor<2> image(2, 2);
+    image.setValues({{1, 2}, {4, 5}});
 
-    Tensor<2> labels(2, 9);
-    labels.setZero();
+    Tensor<2> labels = image.constant(0.0);
 
     MeanSquaredError loss;
+    std::cout << "input\n" << image << "\n";
 
-    // flatten an image into a rank 2 tensor
-    Reshape<4, 2> reshape({2, -1});
-    reshape.Forward(image);
-    loss.CalculateLoss(reshape.GetOutput2D(), labels);
-    reshape.Backward(loss);
+    Activation<Sigmoid, 2> transfer;
+    transfer.Forward(image);
+    std::cout << "sigmoid\n" << transfer.GetOutput2D() << "\n";
 
-    assert(reshape.GetInputGradients4D().dimensions() == image.dimensions());
-    std::cout << "reshape layer output: " << reshape.GetOutput2D().dimensions() <<
-              "\n" << reshape.GetOutput2D() << "\n";
-    std::cout << "reshape layer gradient dimensions: "
-              << reshape.GetInputGradients4D().dimensions() << "\n\n";
+    loss.CalculateLoss(transfer.GetOutput2D(),  labels);
 
-    // the above reshaping is equivalent to flattening
-    Flatten<4> flatten;
-    flatten.Forward(image);
-    loss.CalculateLoss(flatten.GetOutput2D(), labels);
-    flatten.Backward(loss);
-
-    assert(flatten.GetInputGradients4D().dimensions() == image.dimensions());
-    std::cout << "flatten layer output: " << flatten.GetOutput2D().dimensions() <<
-              "\n" << flatten.GetOutput2D() << "\n";
-    std::cout << "flatten layer gradient dimensions: "
-              << flatten.GetInputGradients4D().dimensions() << "\n";
+    transfer.Backward(loss);
+    std::cout << "input grads\n" << transfer.GetInputGradients2D() << "\n";
 }
 
 

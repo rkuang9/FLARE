@@ -10,6 +10,7 @@ set(SOURCES
         conv2dtranspose.ipp
         batch_normalization.ipp
         reshape.ipp
+        activation.ipp
         )
 
 set(SOURCE_DIRECTORY)
