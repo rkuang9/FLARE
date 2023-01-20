@@ -11,6 +11,7 @@ set(SOURCES
         batch_normalization.ipp
         reshape.ipp
         activation.ipp
+        leaky_relu.ipp
         )
 
 set(SOURCE_DIRECTORY)

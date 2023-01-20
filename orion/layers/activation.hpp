@@ -16,7 +16,7 @@ class Activation: public Layer
 public:
     Activation();
 
-    void Forward(const Tensor<TensorRank> &inputs) override;
+    virtual void Forward(const Tensor<TensorRank> &inputs) override;
 
     void Forward(const Layer &prev) override;
 
@@ -32,17 +32,17 @@ public:
 
     const Tensor<4> &GetOutput4D() const override;
 
-    Tensor<2> GetInputGradients2D() const override;
+    virtual Tensor<2> GetInputGradients2D() const override;
 
-    Tensor<3> GetInputGradients3D() const override;
+    virtual Tensor<3> GetInputGradients3D() const override;
 
-    Tensor<4> GetInputGradients4D() const override;
+    virtual Tensor<4> GetInputGradients4D() const override;
 
     int GetInputRank() const override;
 
     int GetOutputRank() const override;
 
-private:
+protected:
     Tensor<TensorRank> X;
     Tensor<TensorRank> Z;
     Tensor<TensorRank> dL_dZ;

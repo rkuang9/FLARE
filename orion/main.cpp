@@ -6,26 +6,67 @@ orion::Dims<4> NCHW(0, 3, 1, 2);
 orion::Dims<5> NPCHW(0, 1, 4, 2, 3);
 
 
-void GAN()
+void test(const orion::Sigmoid &sigmoid)
+{
+
+}
+
+
+void Generator()
 {
     using namespace orion;
 
-    Tensor<2> image(2, 2);
-    image.setValues({{1, 2}, {4, 5}});
+    Tensor<2> noise(2, 3);
+    noise.setValues({{0.5, -1, 0.7}, {-1, -0.5, -3}});
 
-    Tensor<2> labels = image.constant(0.0);
+    Tensor<2> label = noise.constant(0.0);
+    std::cout << "noise\n" << noise << "\n";
 
     MeanSquaredError loss;
-    std::cout << "input\n" << image << "\n";
 
-    Activation<Sigmoid, 2> transfer;
-    transfer.Forward(image);
-    std::cout << "sigmoid\n" << transfer.GetOutput2D() << "\n";
 
-    loss.CalculateLoss(transfer.GetOutput2D(),  labels);
+    LeakyReLU<2> leaky;
+    leaky.Forward(noise);
+    loss.CalculateLoss(leaky.GetOutput2D(), label);
+    leaky.Backward(loss);
 
-    transfer.Backward(loss);
-    std::cout << "input grads\n" << transfer.GetInputGradients2D() << "\n";
+    std::cout << "output\n" << leaky.GetOutput2D() << "\n";
+    std::cout << "input gradients\n" << leaky.GetInputGradients2D() << "\n";
+    return;
+
+    Sequential model {
+            new Dense<Linear>(100, 7 * 7 * 256, false),
+            new BatchNormalization<2, 1>(Dims<1>(1)),
+            new Activation<ReLU, 2>,
+
+            new Reshape<2, 4>({1, 7, 7, 256}),
+
+            new Conv2DTranspose<Linear>(128, Input(7, 7, 256), Kernel(5, 5),
+                                        Stride(1, 1), Dilation(1, 1),
+                                        Padding::PADDING_SAME),
+            new BatchNormalization<4, 1>(Dims<1>(3)),
+            new Activation<ReLU, 4>,
+
+            new Conv2DTranspose<Linear>(64, Input(7, 7, 128), Kernel(5, 5),
+                                        Stride(2, 2), Dilation(1, 1),
+                                        Padding::PADDING_SAME),
+            new BatchNormalization<4, 1>(Dims<1>(3)),
+            new Activation<ReLU, 4>,
+
+            new Conv2DTranspose<TanH>(1, Input(14, 14, 64), Kernel(5, 5),
+                                      Stride(2, 2), Dilation(1, 1),
+                                      Padding::PADDING_SAME),
+    };
+
+    std::cout << "noise\n" << noise << "\n";
+
+    model.Predict<4>(noise);
+}
+
+
+void GAN()
+{
+    Generator();
 }
 
 
