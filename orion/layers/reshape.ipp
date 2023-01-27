@@ -106,21 +106,9 @@ void Reshape<InputTensorRank, OutputTensorRank>::Forward(const Layer &prev)
 
 
 template<int InputTensorRank, int OutputTensorRank>
-void Reshape<InputTensorRank, OutputTensorRank>::Backward(
-        const LossFunction &loss_function)
+void Reshape<InputTensorRank, OutputTensorRank>::Backward(const Tensor<OutputTensorRank> &gradients)
 {
-    if constexpr (OutputTensorRank == 2) {
-        this->dL_dZ = loss_function.GetGradients2D();
-    }
-    else if constexpr (OutputTensorRank == 3) {
-        this->dL_dZ = loss_function.GetGradients3D();
-    }
-    else if (OutputTensorRank == 4) {
-        this->dL_dZ = loss_function.GetGradients4D();
-    }
-    else {
-        throw std::logic_error("Reshape::Backward UNSUPPORTED OUTPUT TENSOR RANK");
-    }
+    this->dL_dZ = gradients;
 }
 
 

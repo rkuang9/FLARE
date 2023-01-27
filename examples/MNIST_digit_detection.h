@@ -44,14 +44,10 @@ void MNIST_CNN()
             new Dense<Softmax>(5408, 10, false),
     };
 
-    CategoricalCrossEntropy loss;
+    CategoricalCrossEntropy<2> loss;
     Adam opt;
 
-    model.Compile(loss, opt);
-    model.Fit(dataset.training_samples, dataset.training_labels, 15);
-
-    const std::vector<Scalar> &loss_history = loss.LossHistory();
-
+    model.Fit(dataset.training_samples, dataset.training_labels, 15, loss, opt);
 
     std::cout << model.Predict<2>(dataset.training_samples.front()) << "\nexpect\n"
               << dataset.training_labels.front() << "\n";

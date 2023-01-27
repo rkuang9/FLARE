@@ -43,13 +43,13 @@ void Flatten<InputTensorRank>::Forward(const Layer &prev)
 
 
 template<int InputTensorRank>
-void Flatten<InputTensorRank>::Backward(const LossFunction &loss_function)
+void Flatten<InputTensorRank>::Backward(const Tensor<InputTensorRank> &gradients)
 {
     if constexpr (InputTensorRank == 2) {
-        this->dL_dZ = loss_function.GetGradients2D();
+        this->dL_dZ = gradients;
     }
     else {
-        this->dL_dZ = loss_function.GetGradients2D().reshape(this->input_dims);
+        this->dL_dZ = gradients.reshape(this->input_dims);
     }
 }
 

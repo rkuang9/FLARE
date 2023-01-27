@@ -25,13 +25,13 @@ public:
 
     void Forward(const Tensor<4> &inputs) override;
 
+    void Backward(const Tensor<4> &gradients) override;
+
     Tensor<4> GetInputGradients4D() const override;
 
     void SetWeights(const Tensor<4> &weights) override;
 
 private:
-    void Backward() final;
-
     Dims<4> fwd_pad; // save forward top/bottom/left/right padding, reuse in backward
 
     // Given padding=same, stride=3, input=5, Conv2DTranspose output is 15.

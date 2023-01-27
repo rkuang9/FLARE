@@ -19,6 +19,7 @@ namespace orion
  * Currently unable to find a better way to implement this given the layer
  * base class and virtual functions
  */
+template<int TensorRank>
 class LossFunction
 {
 public:
@@ -26,60 +27,57 @@ public:
 
 
     explicit LossFunction(Scalar epsilon) : epsilon(epsilon)
-    {}
+    {
+
+    }
 
 
-    virtual void CalculateLoss(const Tensor<2> &predict,
-                               const Tensor<2> &label) = 0;
+    virtual Scalar Loss(const Tensor<TensorRank> &predict,
+                        const Tensor<TensorRank> &label) = 0;
 
 
-    virtual void CalculateLoss(const Tensor<3> &predict,
-                               const Tensor<3> &label) = 0;
-
-    virtual void CalculateLoss(const Tensor<4> &predict,
-                               const Tensor<4> &label) = 0;
+    virtual Tensor<TensorRank> Gradient(const Tensor<TensorRank> &predict,
+                                        const Tensor<TensorRank> &label) = 0;
 
 
-    const std::vector<Scalar> &LossHistory() const
-    { return this->loss_history; }
+    LossFunction<TensorRank> &operator()(const Tensor<TensorRank> &predict,
+                                         const Tensor<TensorRank> &label)
+    {
+        this->loss = this->Loss(predict, label);
+        this->gradients = this->Gradient(predict, label);
+        return *this;
+    }
 
 
-    Scalar GetLoss() const
-    { return this->loss_history.back(); }
+    void operator+(LossFunction<TensorRank> &other)
+    {
+        this->loss += other.loss;
+        this->gradients += other.gradients;
+    }
 
 
-    const std::vector<Tensor<2>> &GradientHistory2D() const
-    { return this->gradient_history2D; }
+    Scalar &GetLoss()
+    {
+        return this->loss;
+    }
 
 
-    const std::vector<Tensor<3>> &GradientHistory3D() const
-    { return this->gradient_history3D; }
-
-
-    const std::vector<Tensor<4>> &GradientHistory4D() const
-    { return this->gradient_history4D; }
-
-
-    const Tensor<2> &GetGradients2D() const
-    { return this->gradient_history2D.back(); }
-
-
-    const Tensor<3> &GetGradients3D() const
-    { return this->gradient_history3D.back(); }
-
-
-    const Tensor<4> &GetGradients4D() const
-    { return this->gradient_history4D.back(); }
+    Tensor<TensorRank> &GetGradients()
+    {
+        return this->gradients;
+    }
 
 
 protected:
     Scalar epsilon = 1e-07; // numeric stability constant
     Scalar clip_min = epsilon;
     Scalar clip_max = 1 - epsilon;
-    std::vector<Scalar> loss_history;
-    std::vector<Tensor<2>> gradient_history2D;
-    std::vector<Tensor<3>> gradient_history3D;
-    std::vector<Tensor<4>> gradient_history4D;
+
+    Scalar loss;
+    Tensor<2> gradient2D;
+    Tensor<3> gradient3D;
+    Tensor<4> gradient4D;
+    Tensor<TensorRank> gradients;
 };
 
 }

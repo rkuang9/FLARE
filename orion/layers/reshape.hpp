@@ -22,7 +22,7 @@ public:
 
     void Forward(const Layer &prev) override;
 
-    void Backward(const LossFunction &loss_function) override;
+    void Backward(const Tensor<OutputTensorRank> &gradients) override;
 
     void Backward(const Layer &next) override;
 

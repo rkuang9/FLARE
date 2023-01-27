@@ -10,23 +10,32 @@
 namespace orion
 {
 
-class MeanSquaredError : public LossFunction
+template<int TensorRank>
+class MeanSquaredError : public LossFunction<TensorRank>
 {
 public:
-    explicit MeanSquaredError(int history_size = 1000);
+    MeanSquaredError() = default;
 
-    void CalculateLoss(const Tensor<2> &predict, const Tensor<2> &label) override;
 
-    void CalculateLoss(const Tensor<3> &predict, const Tensor<3> &label) override;
+    Scalar Loss(const Tensor<TensorRank> &predict, const Tensor<TensorRank> &label)
+    {
+        orion_assert(predict.dimensions() == label.dimensions(),
+                     "predict dimensions " << predict.dimensions() <<
+                                           " don't match label dimensions " <<
+                                           label.dimensions());
+        return Tensor<0>((label - predict).square().mean())(0);
+    }
 
-    void CalculateLoss(const Tensor<4> &predict, const Tensor<4> &label) override;
 
-    template<int TensorRank>
-    Scalar Loss(const Tensor<TensorRank> &predict, const Tensor<TensorRank> &label);
-
-    template<int TensorRank>
     Tensor<TensorRank> Gradient(const Tensor<TensorRank> &predict,
-                                const Tensor<TensorRank> &label);
+                                const Tensor<TensorRank> &label)
+    {
+        orion_assert(predict.dimensions() == label.dimensions(),
+                     "predict dimensions " << predict.dimensions() <<
+                                           " don't match label dimensions "
+                                           << label.dimensions());
+        return 2 * (predict - label) / static_cast<Scalar>(predict.size());
+    }
 };
 
 } // orion

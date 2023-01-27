@@ -45,17 +45,9 @@ void Dropout<InputTensorRank>::Forward(const Layer &prev)
 
 
 template<int InputTensorRank>
-void Dropout<InputTensorRank>::Backward(const LossFunction &loss_function)
+void Dropout<InputTensorRank>::Backward(const Tensor<InputTensorRank> &gradients)
 {
-    if constexpr (InputTensorRank == 2) {
-        this->dL_dZ = loss_function.GetGradients2D();
-    }
-    else if constexpr (InputTensorRank == 4) {
-        this->dL_dZ = loss_function.GetGradients4D();
-    }
-    else {
-        throw std::logic_error("Dropout::Backward unsupported rank");
-    }
+    this->dL_dZ = gradients;
 }
 
 
@@ -64,6 +56,9 @@ void Dropout<InputTensorRank>::Backward(const Layer &next)
 {
     if constexpr (InputTensorRank == 2) {
         this->dL_dZ = next.GetInputGradients2D();
+    }
+    else if constexpr (InputTensorRank == 3) {
+        this->dL_dZ = next.GetInputGradients3D();
     }
     else if constexpr (InputTensorRank == 4) {
         this->dL_dZ = next.GetInputGradients4D();

@@ -1,38 +1,19 @@
 #include <iostream>
 #include <chrono>
 #include <orion/orion.hpp>
+#include <examples/MNIST_digit_detection.h>
 
 orion::Dims<4> NCHW(0, 3, 1, 2);
 orion::Dims<5> NPCHW(0, 1, 4, 2, 3);
 
 
-void test(const orion::Sigmoid &sigmoid)
+using namespace orion;
+
+
+/*
+Sequential Generator()
 {
-
-}
-
-
-void Generator()
-{
-    using namespace orion;
-
-    Tensor<2> noise(2, 3);
-    noise.setValues({{0.5, -1, 0.7}, {-1, -0.5, -3}});
-
-    Tensor<2> label = noise.constant(0.0);
-    std::cout << "noise\n" << noise << "\n";
-
-    MeanSquaredError loss;
-
-
-    LeakyReLU<2> leaky;
-    leaky.Forward(noise);
-    loss.CalculateLoss(leaky.GetOutput2D(), label);
-    leaky.Backward(loss);
-
-    std::cout << "output\n" << leaky.GetOutput2D() << "\n";
-    std::cout << "input gradients\n" << leaky.GetInputGradients2D() << "\n";
-    return;
+    Tensor<2> noise = RandomUniform(Dims<2>(1, 100), -1, 1);
 
     Sequential model {
             new Dense<Linear>(100, 7 * 7 * 256, false),
@@ -58,15 +39,38 @@ void Generator()
                                       Padding::PADDING_SAME),
     };
 
-    std::cout << "noise\n" << noise << "\n";
-
-    model.Predict<4>(noise);
+    return model;
 }
+
+
+Sequential Discriminator()
+{
+    Sequential model {
+            new Conv2D<Linear>(64, Input(28, 28, 1), Kernel(5, 5),
+                               Stride(2, 2), Dilation(1, 1),
+                               Padding::PADDING_SAME),
+            new LeakyReLU<4>(),
+            new Dropout<4>(0.3),
+
+            new Conv2D<Linear>(128, Input(14, 14, 64), Kernel(5, 5),
+                               Stride(2, 2), Dilation(1, 1),
+                               Padding::PADDING_SAME),
+            new LeakyReLU<4>(),
+            new Dropout<4>(0.3),
+
+            new Flatten<4>(),
+            new Dense<Sigmoid>(7 * 7 * 128, 1, false),
+    };
+
+    return model;
+}*/
 
 
 void GAN()
 {
-    Generator();
+    using namespace orion;
+
+    MNIST_CNN();
 }
 
 

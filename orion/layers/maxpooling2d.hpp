@@ -71,7 +71,7 @@ public:
      *
      * @param loss_function   a reference to the loss object
      */
-    void Backward(const LossFunction &loss_function) override;
+    void Backward(const Tensor<4> &gradients) override;
 
     /**
      * Backward propagation for hidden layers, does the same as Backward(loss_function)
@@ -135,9 +135,6 @@ public:
             const Stride &stride, const Dilation &dilation, Padding padding);
 
 private:
-    // runs backpropagation, the Backward() override functions feed into this
-    void Backward(const Tensor<4> &gradients);
-
     Tensor<4> X;
     Tensor<4> Z;
     Tensor<4> dL_dX;

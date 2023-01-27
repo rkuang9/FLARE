@@ -56,37 +56,24 @@ void Dense<Activation>::Forward(const Layer &prev)
 template<typename Activation>
 void Dense<Activation>::Backward(const Layer &next) // hidden layer backward
 {
-    if constexpr (std::is_same_v<Activation, Softmax>) {
-        this->BackwardSoftmax(next.GetInputGradients2D());
-    }
-    else {
-        this->dL_dZ = next.GetInputGradients2D() * Activation::Gradients(this->Z);
-    }
-
-    this->Backward();
+    this->Backward(next.GetInputGradients2D());
 }
 
 
 template<typename Activation>
-void Dense<Activation>::Backward(const LossFunction &loss) // output backward
+void Dense<Activation>::Backward(const Tensor<2> &gradients) // output backward
 {
     if constexpr (std::is_same_v<Activation, Softmax>) {
-        this->BackwardSoftmax(loss.GetGradients2D());
+        // softmax requires different calculations
+        this->BackwardSoftmax(gradients);
     }
     else {
-        this->dL_dZ = loss.GetGradients2D() * Activation::Gradients(this->Z);
+        this->dL_dZ = gradients * Activation::Gradients(this->Z);
     }
 
-    this->Backward();
-}
-
-
-template<typename Activation>
-void Dense<Activation>::Backward()
-{
     // dL / dw = (dL / dZ) * (dZ / dw) * (1 / m) where m = batch size
     this->dL_dw = this->X.contract(this->dL_dZ, ContractDim {Axes(0, 0)});
-                  // / (Scalar) this->X.dimension(0); // divide by batch size
+    // / (Scalar) this->X.dimension(0); // divide by batch size
 
     orion_assert(this->w.dimensions() == this->dL_dw.dimensions(),
                  this->name << " Dense::Backward weights dimensions "

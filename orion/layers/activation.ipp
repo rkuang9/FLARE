@@ -44,21 +44,10 @@ void Activation<activation, TensorRank>::Forward(const Layer &prev)
 
 
 template<typename activation, int TensorRank>
-void Activation<activation, TensorRank>::Backward(const LossFunction &loss_function)
+void Activation<activation, TensorRank>::Backward(
+        const Tensor<TensorRank> &gradients)
 {
-    if constexpr (TensorRank == 2) {
-        this->dL_dZ = loss_function.GetGradients2D();
-    }
-    else if constexpr (TensorRank == 3) {
-        this->dL_dZ = loss_function.GetGradients3D();
-    }
-    else if constexpr (TensorRank == 4) {
-        this->dL_dZ = loss_function.GetGradients4D();
-    }
-    else {
-        throw std::logic_error(
-                "Activation::Backward UNSUPPORTED INPUT TENSOR RANK");
-    }
+    this->dL_dZ = gradients;
 }
 
 

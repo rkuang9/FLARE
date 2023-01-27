@@ -60,12 +60,11 @@ public:
 
     /**
      * Backward propagation for output layers, calculates
-     * loss gradients w.r.t. Z using the loss gradients recorded
-     * in the loss object
+     * loss gradients w.r.t. Z
      *
      * @param loss_function   a reference to the loss object
      */
-    void Backward(const LossFunction &loss_function) override;
+    void Backward(const Tensor<4> &gradients) override;
 
 
     /**
@@ -208,8 +207,6 @@ public:
             Eigen::Index pad_left, Eigen::Index pad_right);
 
 protected:
-    virtual void Backward();
-
     Tensor<4> X; // layer input image
     Tensor<4> Z; // layer input convolved with kernels
     Tensor<4> A; // activated output of layer inout convolved with kernels

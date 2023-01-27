@@ -117,26 +117,19 @@ void Conv2D<Activation, Threads>::Forward(const Layer &prev)
 
 
 template<typename Activation, int Threads>
-void Conv2D<Activation, Threads>::Backward(const LossFunction &loss_function)
+void Conv2D<Activation, Threads>::Backward(const Layer &next)
 {
-    this->dL_dZ = loss_function.GetGradients4D() * Activation::Gradients(this->Z);
-    this->Backward();
+    this->Backward(next.GetInputGradients4D());
 }
 
 
 template<typename Activation, int Threads>
-void Conv2D<Activation, Threads>::Backward(const Layer &next)
+void Conv2D<Activation, Threads>::Backward(const Tensor<4> &gradients)
 {
     this->dL_dZ.resize(this->Z.dimensions());
     this->dL_dZ.template device(this->device) =
-            next.GetInputGradients4D() * Activation::Gradients(this->Z);
-    this->Backward();
-}
+            gradients * Activation::Gradients(this->Z);
 
-
-template<typename Activation, int Threads>
-void Conv2D<Activation, Threads>::Backward()
-{
     // if uneven padding, extra goes to bottom/right, negative padding will remove
     Eigen::Index pad_h =
             (this->kernels.dimension(1) - 1) * this->dilation[0] -

@@ -134,8 +134,12 @@ void Conv2DTranspose<Activation, Threads>::Forward(const Tensor<4> &inputs)
 
 
 template<typename Activation, int Threads>
-void Conv2DTranspose<Activation, Threads>::Backward()
+void Conv2DTranspose<Activation, Threads>::Backward(const Tensor<4> &gradients)
 {
+    this->dL_dZ.resize(this->Z);
+    this->dL_dZ.template device(this->device) =
+            gradients * Activation::Gradients(this->Z);
+
     this->dL_dk.template device(this->device) =
             Conv2D<Activation, Threads>::ConvolutionBackwardKernel(
                     this->X, this->dL_dZ,

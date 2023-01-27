@@ -7,10 +7,9 @@
 
 #include "orion/orion_types.hpp"
 #include "orion/orion_assert.hpp"
-#include "orion/activations/include_activations.hpp"
+//#include "orion/activations/include_activations.hpp"
 #include "orion/weights/include_weights.hpp"
 #include "orion/optimizers/include_optimizers.hpp"
-#include "orion/loss/include_loss.hpp"
 
 namespace orion
 {
@@ -69,12 +68,21 @@ public:
     }
 
 
-    /**
-     * Backward propagation for output layers
-     *
-     * @param loss_function   loss object that calculates and records loss
-     */
-    virtual void Backward(const LossFunction &loss_function)
+    virtual void Backward(const Tensor<2> &gradients)
+    {
+        throw std::logic_error(
+                "An error occurred, base class Layer Backward was called");
+    }
+
+
+    virtual void Backward(const Tensor<3> &gradients)
+    {
+        throw std::logic_error(
+                "An error occurred, base class Layer Backward was called");
+    }
+
+
+    virtual void Backward(const Tensor<4> &gradients)
     {
         throw std::logic_error(
                 "An error occurred, base class Layer Backward was called");

@@ -26,12 +26,13 @@ public:
     void Add(Layer *layer);
 
 
-    void Compile(LossFunction &loss_function, Optimizer &optimizer);
+    void ValidateLayers();
 
 
     template<int TensorSampleRank, int TensorLabelRank>
     void Fit(const std::vector<Tensor<TensorSampleRank>> &inputs,
-             const std::vector<Tensor<TensorLabelRank>> &labels, int epochs);
+             const std::vector<Tensor<TensorLabelRank>> &labels, int epochs,
+             LossFunction<TensorLabelRank> &loss_function, Optimizer &opt);
 
 
     Layer &operator[](int layer_index);
@@ -39,6 +40,15 @@ public:
 
     template<int OutputRank, int TensorSampleRank>
     Tensor<OutputRank> Predict(const Tensor<TensorSampleRank> &input);
+
+    template<int TensorSampleRank>
+    void Forward(const Tensor<TensorSampleRank> &training_sample);
+
+    template<int TensorLabelRank>
+    void Backward(const Tensor<TensorLabelRank> &training_label,
+                  LossFunction<TensorLabelRank> &loss_function);
+
+    void Update(Optimizer &optimizer);
 
 
     /**
@@ -53,29 +63,17 @@ public:
      * Currently works for Dense layers only
      * @param input   layer input tensor
      * @param label   expected output tensor
+     * @param loss_function type of loss to use
      * @param epsilon accuracy to which gradients and limit approximation agree to
      * @return
      */
     Scalar GradientCheck(const Tensor<2> &input, const Tensor<2> &label,
-                         Scalar epsilon = 1e-7);
+                         LossFunction<2> &loss_function, Scalar epsilon = 1e-7);
 
     std::vector<Layer *> layers;
 
-protected:
-    template<int TensorSampleRank>
-    void Forward(const Tensor<TensorSampleRank> &training_sample);
-
-    template<int TensorLabelRank>
-    void Backward(const Tensor<TensorLabelRank> &training_label,
-                  LossFunction &loss_function);
-
-    void Update(Optimizer &optimizer);
-
-
-    LossFunction *loss = nullptr;
-    Optimizer *opt = nullptr;
-
 };
+
 
 template<int OutputRank, int TensorSampleRank>
 Tensor<OutputRank> Sequential::Predict(const Tensor<TensorSampleRank> &input)
@@ -107,23 +105,23 @@ void Sequential::Forward(const Tensor<TensorSampleRank> &training_sample)
 
 template<int TensorLabelRank>
 void Sequential::Backward(const Tensor<TensorLabelRank> &training_label,
-                          LossFunction &loss_function)
+                          LossFunction<TensorLabelRank> &loss_function)
 {
-
     if constexpr (TensorLabelRank == 2) {
-        loss_function.CalculateLoss(this->layers.back()->GetOutput2D(),
-                                    training_label);
+        loss_function(this->layers.back()->GetOutput2D(), training_label);
     }
     else if constexpr (TensorLabelRank == 3) {
-        loss_function.CalculateLoss(this->layers.back()->GetOutput3D(),
-                                    training_label);
+        loss_function(this->layers.back()->GetOutput3D(), training_label);
     }
     else if constexpr (TensorLabelRank == 4) {
-        loss_function.CalculateLoss(this->layers.back()->GetOutput4D(),
-                                    training_label);
+        loss_function(this->layers.back()->GetOutput4D(), training_label);
+    }
+    else {
+        throw std::logic_error("Sequential::Backward UNSUPPORTED TENSOR RANK " +
+                               std::to_string(TensorLabelRank));
     }
 
-    this->layers.back()->Backward(loss_function);
+    this->layers.back()->Backward(loss_function.GetGradients());
 
     for (int i = this->layers.size() - 2; i >= 0; --i) {
         this->layers[i]->Backward(*this->layers[i + 1]);
@@ -134,19 +132,14 @@ void Sequential::Backward(const Tensor<TensorLabelRank> &training_label,
 template<int TensorSampleRank, int TensorLabelRank>
 void Sequential::Fit(const std::vector<Tensor<TensorSampleRank>> &inputs,
                      const std::vector<Tensor<TensorLabelRank>> &labels,
-                     int epochs)
+                     int epochs, LossFunction<TensorLabelRank> &loss_function,
+                     Optimizer &opt)
 {
     if (inputs.size() != labels.size() || inputs.empty() || labels.empty()) {
         throw std::invalid_argument("inputs should match labels 1:1");
     }
 
-    if (!this->loss) {
-        throw std::logic_error("missing loss function");
-    }
-
-    if (!this->opt) {
-        throw std::logic_error("missing optimizer");
-    }
+    this->ValidateLayers();
 
     // to display progress bar
     int num_batches = inputs.size();
@@ -165,8 +158,8 @@ void Sequential::Fit(const std::vector<Tensor<TensorSampleRank>> &inputs,
 
         for (int m = 0; m < num_inputs; m++) {
             this->Forward(inputs[m]);
-            this->Backward(labels[m], *this->loss);
-            this->Update(*this->opt);
+            this->Backward(labels[m], loss_function);
+            this->Update(opt);
 
             // progress bar
             if (m % batch_per_bar == 0 && m != 0) {
@@ -183,7 +176,7 @@ void Sequential::Fit(const std::vector<Tensor<TensorSampleRank>> &inputs,
                           << std::setw(num_bars - progress)
                           << std::setfill('.') << "] "
                           << elapsed_time.count() << "s loss: "
-                          << std::setprecision(5) << this->loss->GetLoss();
+                          << std::setprecision(5) << loss_function.GetLoss();
                 progress++;
             }
         }

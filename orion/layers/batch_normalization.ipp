@@ -159,25 +159,6 @@ void BatchNormalization<TensorRank, NormDimCount>::Forward(const Layer &prev)
 
 
 template<int TensorRank, int NormDimCount>
-void BatchNormalization<TensorRank, NormDimCount>::Backward(const LossFunction &loss)
-{
-    if constexpr (TensorRank == 2) {
-        this->Backward(loss.GetGradients2D());
-    }
-    else if constexpr (TensorRank == 3) {
-        this->Backward(loss.GetGradients3D());
-    }
-    else if constexpr (TensorRank == 4) {
-        this->Backward(loss.GetGradients4D());
-    }
-    else {
-        throw std::logic_error("BatchNormalization::Backward " +
-                               std::to_string(TensorRank) + " IS NOT SUPPORTED");
-    }
-}
-
-
-template<int TensorRank, int NormDimCount>
 void BatchNormalization<TensorRank, NormDimCount>::Backward(const Layer &layer)
 {
     if constexpr (TensorRank == 2) {

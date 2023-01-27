@@ -23,7 +23,7 @@ public:
 
     void Forward(const Layer &prev) override;
 
-    void Backward(const LossFunction &loss) override;
+    void Backward(const Tensor<TensorRank> &gradients) override;
 
     void Backward(const Layer &layer) override;
 
@@ -53,8 +53,6 @@ public:
     Tensor<NormDimCount> gamma;
 
 private:
-    void Backward(const Tensor<TensorRank> &gradients);
-
     auto GetInputGradients(const Tensor<TensorRank> &gradients) const;
 
     Tensor<TensorRank> X; // inputs

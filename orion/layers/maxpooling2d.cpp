@@ -97,21 +97,15 @@ void MaxPooling2D::Forward(const Layer &prev)
 }
 
 
-void MaxPooling2D::Backward(const LossFunction &loss_function)
+void MaxPooling2D::Backward(const Tensor<4> &gradients)
 {
-    this->Backward(loss_function.GetGradients4D());
+    this->dL_dZ = gradients;
 }
 
 
 void MaxPooling2D::Backward(const Layer &next)
 {
-    this->Backward(next.GetInputGradients4D());
-}
-
-
-void MaxPooling2D::Backward(const Tensor<4> &gradients)
-{
-    this->dL_dZ = gradients;
+    this->dL_dZ = next.GetInputGradients4D();
 }
 
 

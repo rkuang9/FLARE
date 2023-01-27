@@ -24,7 +24,7 @@ void Sequential::Add(Layer *layer)
 }
 
 
-void Sequential::Compile(LossFunction &loss_function, Optimizer &optimizer)
+void Sequential::ValidateLayers()
 {
     if (this->layers.empty()) {
         throw std::logic_error("Sequential::Compile NO LAYERS");
@@ -49,9 +49,6 @@ void Sequential::Compile(LossFunction &loss_function, Optimizer &optimizer)
         throw std::logic_error("Sequential::Compile FOUND INCOMPATIBLE LAYERS\n" +
                                error_msg.str());
     }
-
-    this->loss = &loss_function;
-    this->opt = &optimizer;
 }
 
 
@@ -59,7 +56,7 @@ void Sequential::Update(Optimizer &optimizer)
 {
     for (Layer *layer: this->layers) {
         // update each layer's learnable parameters
-        layer->Update(*this->opt);
+        layer->Update(optimizer);
     }
 
     // let the optimizer know to move to the next iteration t
@@ -75,11 +72,11 @@ Layer &Sequential::operator[](int layer_index)
 
 
 Scalar Sequential::GradientCheck(const Tensor<2> &input, const Tensor<2> &label,
-                                 Scalar epsilon)
+                                 LossFunction<2> &loss_function, Scalar epsilon)
 {
     // perform the first training pass to compute dL/dw (without updating)
     this->Forward(input);
-    this->Backward(label, *this->loss);
+    this->Backward(label, loss_function);
 
     std::vector<Tensor<2>> approx_gradients;
     std::vector<Tensor<2>> actual_gradients;
@@ -110,15 +107,15 @@ Scalar Sequential::GradientCheck(const Tensor<2> &input, const Tensor<2> &label,
                 theta(row, col) += epsilon;
                 this->layers[i]->SetWeights(theta);
                 this->Forward(input);
-                this->loss->CalculateLoss(this->layers.back()->GetOutput2D(), label);
-                Scalar J_plus = this->loss->GetLoss();
+                loss_function(this->layers.back()->GetOutput2D(), label);
+                Scalar J_plus = loss_function.GetLoss();
 
                 // J(0...0-E...0) term, 2* to undo J_plus too
                 theta(row, col) -= 2 * epsilon;
                 this->layers[i]->SetWeights(theta);
                 this->Forward(input);
-                this->loss->CalculateLoss(this->layers.back()->GetOutput2D(), label);
-                Scalar J_minus = this->loss->GetLoss();
+                loss_function(this->layers.back()->GetOutput2D(), label);
+                Scalar J_minus = loss_function.GetLoss();
 
                 dtheta_approx(row, col) = (J_plus - J_minus) / (2 * epsilon);
 

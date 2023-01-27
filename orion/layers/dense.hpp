@@ -47,13 +47,12 @@ public:
 
 
     /**
-     * Backward propagation as the output layer, calculates
-     * loss gradients w.r.t. Z using the loss gradients recorded
-     * in the loss object
+     * Backward propagation, computes the loss gradients
+     * w.r.t. weights and bias (dL / dw, dL / db)
      *
-     * @param loss_function   a reference to the loss object
+     * dL / dZ is calculated in the other Backward() function overrides
      */
-    void Backward(const LossFunction &loss_function) override;
+    void Backward(const Tensor<2> &gradients) override;
 
 
     /**
@@ -126,15 +125,7 @@ public:
     int GetOutputRank() const override;
 
 private:
-    /**
-     * Backward propagation, computes the loss gradients
-     * w.r.t. weights and bias (dL / dw, dL / db)
-     *
-     * dL / dZ is calculated in the other Backward() function overrides
-     */
-    void Backward();
-
-    // backpropagation is a bit different than most activation functions
+    // backpropagation is a bit different from most activation functions
     EIGEN_STRONG_INLINE void BackwardSoftmax(const Tensor<2> &gradients);
 
     bool use_bias = true;

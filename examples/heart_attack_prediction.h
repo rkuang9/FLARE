@@ -7,6 +7,7 @@
 
 #include <orion/orion.hpp>
 
+
 // Working example, requires fine-tuning but passes gradient check (unless gradients vanish)
 // At only 303 samples and labels, it's possible that this dataset is too small
 // heart attack dataset from:
@@ -26,16 +27,20 @@ void HeartAttackPrediction()
             new Dense<Sigmoid>(256, 1, false),
     };
 
-    BinaryCrossEntropy loss;
+    MeanSquaredError<2> loss;
     Adam opt;
 
-    model.Compile(loss, opt);
-    model.Fit(dataset.training_samples, dataset.training_labels, 14);
+    model.Fit(dataset.training_samples, dataset.training_labels, 14, loss, opt);
 
     for (int i = 0; i < dataset.training_samples.size(); i++) {
         std::cout << "predict " << model.Predict<2>(dataset.training_samples[i])
                   << ", label " << dataset.training_labels[i] << "\n";
     }
+
+    std::cout << "gradient check: "
+              << model.GradientCheck(dataset.training_samples.front(),
+                                     dataset.training_labels.front(), loss);
 }
+
 
 #endif //ORION_HEART_ATTACK_PREDICTION_H

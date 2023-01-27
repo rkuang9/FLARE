@@ -14,7 +14,7 @@ template<int InputTensorRank>
 class Dropout : public Layer
 {
 public:
-    explicit Dropout(Scalar drop_chance);
+    explicit Dropout(Scalar dropout_rate);
 
     ~Dropout() override = default;
 
@@ -22,7 +22,7 @@ public:
 
     void Forward(const Layer &prev) override;
 
-    void Backward(const LossFunction &loss_function) override;
+    void Backward(const Tensor<InputTensorRank> &gradients) override;
 
     void Backward(const Layer &next) override;
 
