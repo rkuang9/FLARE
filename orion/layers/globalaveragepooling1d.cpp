@@ -25,7 +25,7 @@ void GlobalAveragePooling1D::Forward(const Layer &prev)
 }
 
 
-void GlobalAveragePooling1D::Backward(const Layer &next)
+void GlobalAveragePooling1D::Backward(Layer &next)
 {
     // next.weights.transpose * next.dL_dZ
     this->Backward(next.GetWeights().contract(
@@ -55,6 +55,7 @@ void GlobalAveragePooling1D::Backward(const Tensor<2> &gradients)
         // reshape each gradient row into the dimensions of one batch
         this->dL_dZ.chip(row, 0) = grad.chip(row, 0) // 0 = row dimension
                 .reshape(Tensor<2>::Dimensions(1, grad.dimension(1)))
+                .eval()
                 .broadcast(Tensor<2>::Dimensions(this->X.dimension(1), 1));
     }
 
@@ -71,7 +72,7 @@ const Tensor<2> &GlobalAveragePooling1D::GetOutput2D() const
 }
 
 
-Tensor<3> GlobalAveragePooling1D::GetInputGradients3D() const
+Tensor<3> GlobalAveragePooling1D::GetInputGradients3D()
 {
     return this->dL_dZ; // TODO: re-evaluate dL_dX calculation
 }

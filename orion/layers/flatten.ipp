@@ -29,11 +29,14 @@ void Flatten<InputTensorRank>::Forward(const Tensor<InputTensorRank> &input)
 template<int InputTensorRank>
 void Flatten<InputTensorRank>::Forward(const Layer &prev)
 {
-    if constexpr (InputTensorRank == 4) {
-        this->Forward(prev.GetOutput4D());
+    if constexpr (InputTensorRank == 2) {
+        this->Forward(prev.GetOutput2D());
     }
     else if constexpr (InputTensorRank == 3) {
         this->Forward(prev.GetOutput3D());
+    }
+    else if constexpr (InputTensorRank == 4) {
+        this->Forward(prev.GetOutput4D());
     }
     else {
         throw std::invalid_argument(
@@ -55,7 +58,7 @@ void Flatten<InputTensorRank>::Backward(const Tensor<InputTensorRank> &gradients
 
 
 template<int InputTensorRank>
-void Flatten<InputTensorRank>::Backward(const Layer &next)
+void Flatten<InputTensorRank>::Backward(Layer &next)
 {
     this->dL_dZ = next.GetInputGradients2D().reshape(this->input_dims);
 }
@@ -81,8 +84,9 @@ const Tensor<2> &Flatten<InputTensorRank>::GetOutput2D() const
 #pragma GCC diagnostic ignored "-Wreturn-stack-address"
 #endif
 
+
 template<int InputTensorRank>
-Tensor<2> Flatten<InputTensorRank>::GetInputGradients2D() const
+const Tensor<2> &Flatten<InputTensorRank>::GetInputGradients2D()
 {
     if constexpr (InputTensorRank != 2) {
         std::ostringstream error;
@@ -101,8 +105,9 @@ Tensor<2> Flatten<InputTensorRank>::GetInputGradients2D() const
 #pragma GCC diagnostic ignored "-Wreturn-stack-address"
 #endif
 
+
 template<int InputTensorRank>
-Tensor<3> Flatten<InputTensorRank>::GetInputGradients3D() const
+const Tensor<3> &Flatten<InputTensorRank>::GetInputGradients3D()
 {
     if constexpr (InputTensorRank != 3) {
         std::ostringstream error;
@@ -121,8 +126,9 @@ Tensor<3> Flatten<InputTensorRank>::GetInputGradients3D() const
 #pragma GCC diagnostic ignored "-Wreturn-stack-address"
 #endif
 
+
 template<int InputTensorRank>
-Tensor<4> Flatten<InputTensorRank>::GetInputGradients4D() const
+const Tensor<4> &Flatten<InputTensorRank>::GetInputGradients4D()
 {
     if constexpr (InputTensorRank != 4) {
         std::ostringstream error;

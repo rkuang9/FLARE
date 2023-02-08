@@ -35,7 +35,7 @@ void MNIST_CNN()
               << dataset.training_samples.size() << "\n";
 
     Sequential model {
-            new Conv2D<ReLU>(32, Input(28, 28, 3), Kernel(3, 3),
+            new Conv2D<ReLU>(32, 3, Kernel(3, 3),
                              Padding::PADDING_VALID),
             // 16, 26, 26, 32
             new MaxPooling2D(PoolSize(2, 2)),

@@ -17,6 +17,14 @@ public:
     KLDivergence() = default;
 
 
+    KLDivergence &operator+(LossFunction<TensorRank> &other) override
+    {
+        this->loss += other.GetLoss();
+        this->gradients += other.GetGradients();
+        return *this;
+    }
+
+
     Scalar Loss(const Tensor<TensorRank> &predict,
                 const Tensor<TensorRank> &label) override
     {

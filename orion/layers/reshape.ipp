@@ -25,6 +25,8 @@ Reshape<InputTensorRank, OutputTensorRank>::Reshape(
             this->unfixed_dim = i;
         }
     }
+
+    this->name = "reshape";
 }
 
 
@@ -54,6 +56,8 @@ Reshape<InputTensorRank, OutputTensorRank>::Reshape(
             this->unfixed_dim = i;
         }
     }
+
+    this->name = "reshape";
 }
 
 
@@ -113,15 +117,15 @@ void Reshape<InputTensorRank, OutputTensorRank>::Backward(const Tensor<OutputTen
 
 
 template<int InputTensorRank, int OutputTensorRank>
-void Reshape<InputTensorRank, OutputTensorRank>::Backward(const Layer &next)
+void Reshape<InputTensorRank, OutputTensorRank>::Backward(Layer &next)
 {
-    if constexpr (InputTensorRank == 2) {
+    if constexpr (OutputTensorRank == 2) {
         this->dL_dZ = next.GetInputGradients2D();
     }
-    else if constexpr (InputTensorRank == 3) {
+    else if constexpr (OutputTensorRank == 3) {
         this->dL_dZ = next.GetInputGradients3D();
     }
-    else if (InputTensorRank == 4) {
+    else if (OutputTensorRank == 4) {
         this->dL_dZ = next.GetInputGradients4D();
     }
     else {
@@ -174,7 +178,7 @@ const Tensor<4> &Reshape<InputTensorRank, OutputTensorRank>::GetOutput4D() const
 
 
 template<int InputTensorRank, int OutputTensorRank>
-Tensor<2> Reshape<InputTensorRank, OutputTensorRank>::GetInputGradients2D() const
+const Tensor<2> &Reshape<InputTensorRank, OutputTensorRank>::GetInputGradients2D()
 {
     if constexpr (InputTensorRank != 2) {
         throw std::logic_error(
@@ -182,12 +186,12 @@ Tensor<2> Reshape<InputTensorRank, OutputTensorRank>::GetInputGradients2D() cons
                 std::to_string(InputTensorRank) + " TENSOR");
     }
 
-    return this->dL_dZ.reshape(input_dims);
+    return this->dL_dZ.reshape(this->input_dims);
 }
 
 
 template<int InputTensorRank, int OutputTensorRank>
-Tensor<3> Reshape<InputTensorRank, OutputTensorRank>::GetInputGradients3D() const
+const Tensor<3> &Reshape<InputTensorRank, OutputTensorRank>::GetInputGradients3D()
 {
     if constexpr (InputTensorRank != 3) {
         throw std::logic_error(
@@ -200,7 +204,7 @@ Tensor<3> Reshape<InputTensorRank, OutputTensorRank>::GetInputGradients3D() cons
 
 
 template<int InputTensorRank, int OutputTensorRank>
-Tensor<4> Reshape<InputTensorRank, OutputTensorRank>::GetInputGradients4D() const
+const Tensor<4> &Reshape<InputTensorRank, OutputTensorRank>::GetInputGradients4D()
 {
     if constexpr (InputTensorRank != 4) {
         throw std::logic_error(

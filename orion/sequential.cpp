@@ -71,6 +71,14 @@ Layer &Sequential::operator[](int layer_index)
 }
 
 
+void Sequential::Training(bool training)
+{
+    for (auto layer: this->layers) {
+        layer->Training(training);
+    }
+}
+
+
 Scalar Sequential::GradientCheck(const Tensor<2> &input, const Tensor<2> &label,
                                  LossFunction<2> &loss_function, Scalar epsilon)
 {

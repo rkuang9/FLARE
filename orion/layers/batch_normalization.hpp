@@ -25,7 +25,7 @@ public:
 
     void Backward(const Tensor<TensorRank> &gradients) override;
 
-    void Backward(const Layer &layer) override;
+    void Backward(Layer &next) override;
 
     void Update(Optimizer &opt) override;
 
@@ -35,11 +35,11 @@ public:
 
     const Tensor<4> &GetOutput4D() const override;
 
-    Tensor<2> GetInputGradients2D() const override;
+    const Tensor<2> &GetInputGradients2D() override;
 
-    Tensor<3> GetInputGradients3D() const override;
+    const Tensor<3> &GetInputGradients3D() override;
 
-    Tensor<4> GetInputGradients4D() const override;
+    const Tensor<4> &GetInputGradients4D() override;
 
     int GetInputRank() const override;
 
@@ -53,7 +53,7 @@ public:
     Tensor<NormDimCount> gamma;
 
 private:
-    auto GetInputGradients(const Tensor<TensorRank> &gradients) const;
+    void CalculateInputGradients(const Tensor<TensorRank> &gradients);
 
     Tensor<TensorRank> X; // inputs
     Tensor<TensorRank> X_norm;
@@ -62,6 +62,7 @@ private:
     Tensor<TensorRank> dL_dZ;   // output gradients from next layer or a loss function
     Tensor<NormDimCount> dL_db; // beta gradients w.r.t. loss
     Tensor<NormDimCount> dL_dy; // gamma gradients w.r.t. loss
+    Tensor<TensorRank> dL_dX;   // layer input gradients
     bool weights_are_set = false;
 
     // hyperparameters
@@ -83,8 +84,8 @@ private:
     Dims<TensorRank - NormDimCount> collapsed_dims; // dimensions not in norm_axes
 
     // multithreading
-    Eigen::ThreadPool pool;
-    Eigen::ThreadPoolDevice device;
+    Eigen::ThreadPool pool = Eigen::ThreadPool((int) std::thread::hardware_concurrency());
+    Eigen::ThreadPoolDevice device = Eigen::ThreadPoolDevice(&pool, 2);
 
     // false for inference, true for training
     bool training_mode = false;

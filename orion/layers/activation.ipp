@@ -12,7 +12,7 @@ Activation<activation, TensorRank>::Activation():
         pool((int) std::thread::hardware_concurrency()),
         device(&pool, 2)
 {
-
+    this->name = "activation";
 }
 
 
@@ -52,8 +52,10 @@ void Activation<activation, TensorRank>::Backward(
 
 
 template<typename activation, int TensorRank>
-void Activation<activation, TensorRank>::Backward(const Layer &next)
+void Activation<activation, TensorRank>::Backward(Layer &next)
 {
+    this->dL_dZ.resize(this->Z.dimensions());
+
     if constexpr (TensorRank == 2) {
         this->dL_dZ = next.GetInputGradients2D();
     }
@@ -117,7 +119,7 @@ const Tensor<4> &Activation<activation, TensorRank>::GetOutput4D() const
 
 
 template<typename activation, int TensorRank>
-Tensor<2> Activation<activation, TensorRank>::GetInputGradients2D() const
+const Tensor<2> &Activation<activation, TensorRank>::GetInputGradients2D()
 {
     if constexpr (TensorRank != 2) {
         throw std::logic_error(
@@ -127,12 +129,15 @@ Tensor<2> Activation<activation, TensorRank>::GetInputGradients2D() const
 
     // forward pass: z = g(x)
     // backward pass (input): dL/dX = dL/dZ * dZ/dX = dL/dZ * g'(x)
-    return this->dL_dZ * activation::Gradients(this->X);
+    this->dL_dX.resize(this->X.dimensions());
+    this->dL_dX.template device(this->device) =
+            this->dL_dZ * activation::Gradients(this->X);
+    return this->dL_dX;
 }
 
 
 template<typename activation, int TensorRank>
-Tensor<3> Activation<activation, TensorRank>::GetInputGradients3D() const
+const Tensor<3> &Activation<activation, TensorRank>::GetInputGradients3D()
 {
     if constexpr (TensorRank != 3) {
         throw std::logic_error(
@@ -140,12 +145,15 @@ Tensor<3> Activation<activation, TensorRank>::GetInputGradients3D() const
                 std::to_string(TensorRank) + " TENSOR");
     }
 
-    return this->dL_dZ * activation::Gradients(this->X);
+    this->dL_dX.resize(this->X.dimensions());
+    this->dL_dX.template device(this->device) =
+            this->dL_dZ * activation::Gradients(this->X);
+    return this->dL_dX;
 }
 
 
 template<typename activation, int TensorRank>
-Tensor<4> Activation<activation, TensorRank>::GetInputGradients4D() const
+const Tensor<4> &Activation<activation, TensorRank>::GetInputGradients4D()
 {
     if constexpr (TensorRank != 4) {
         throw std::logic_error(
@@ -153,7 +161,10 @@ Tensor<4> Activation<activation, TensorRank>::GetInputGradients4D() const
                 std::to_string(TensorRank) + " TENSOR");
     }
 
-    return this->dL_dZ * activation::Gradients(this->X);
+    this->dL_dX.resize(this->X.dimensions());
+    this->dL_dX.template device(this->device) =
+            this->dL_dZ * activation::Gradients(this->X);
+    return this->dL_dX;
 }
 
 

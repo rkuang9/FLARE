@@ -32,6 +32,14 @@ public:
     }
 
 
+    LossFunction(const LossFunction &copy)
+    {
+        this->epsilon = copy.epsilon;
+        this->loss = copy.loss;
+        this->gradients = copy.gradients;
+    }
+
+
     virtual Scalar Loss(const Tensor<TensorRank> &predict,
                         const Tensor<TensorRank> &label) = 0;
 
@@ -49,11 +57,7 @@ public:
     }
 
 
-    void operator+(LossFunction<TensorRank> &other)
-    {
-        this->loss += other.loss;
-        this->gradients += other.gradients;
-    }
+    virtual LossFunction<TensorRank> &operator+(LossFunction<TensorRank> &other) = 0;
 
 
     Scalar &GetLoss()
@@ -74,9 +78,6 @@ protected:
     Scalar clip_max = 1 - epsilon;
 
     Scalar loss;
-    Tensor<2> gradient2D;
-    Tensor<3> gradient3D;
-    Tensor<4> gradient4D;
     Tensor<TensorRank> gradients;
 };
 

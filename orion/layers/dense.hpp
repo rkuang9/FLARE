@@ -43,7 +43,7 @@ public:
      *
      * @param next   a reference to the next layer
      */
-    void Backward(const Layer &next) override;
+    void Backward(Layer &next) override;
 
 
     /**
@@ -76,7 +76,7 @@ public:
     /**
      * @return   layer's loss gradients w.r.t. pre-activated output (dL / dZ))
      */
-    Tensor<2> GetInputGradients2D() const override;
+    const Tensor<2> &GetInputGradients2D() override;
 
 
     /**
@@ -140,6 +140,10 @@ private:
     Tensor<2> b; // bias vector
     Tensor<2> dL_dw; // loss gradients w.r.t. weights
     Tensor<2> dL_db; // loss gradients w.r.t. bias
+
+    // multithreading
+    Eigen::ThreadPool pool = Eigen::ThreadPool((int) std::thread::hardware_concurrency());
+    Eigen::ThreadPoolDevice device = Eigen::ThreadPoolDevice(&pool, 2);
 
 };
 

@@ -18,11 +18,11 @@ public:
 
     void Forward(const Tensor<TensorRank> &inputs) override;
 
-    Tensor<2> GetInputGradients2D() const override;
+    const Tensor<2> &GetInputGradients2D() override;
 
-    Tensor<3> GetInputGradients3D() const override;
+    const Tensor<3> &GetInputGradients3D() override;
 
-    Tensor<4> GetInputGradients4D() const override;
+    const Tensor<4> &GetInputGradients4D() override;
 
 private:
     const Scalar leak = 0.3;

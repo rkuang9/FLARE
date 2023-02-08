@@ -27,13 +27,13 @@ public:
 
     void Forward(const Layer &prev) override;
 
-    void Backward(const Layer &next) override;
+    void Backward(Layer &next) override;
 
     void Backward(const LossFunction &loss_function) override;
 
     const Tensor<2> &GetOutput2D() const override;
 
-    Tensor<3> GetInputGradients3D() const override;
+    const Tensor<3> &GetInputGradients3D() override;
 
     const Tensor<2> &GetWeights() const override;
 

@@ -13,7 +13,7 @@ LeakyReLU<TensorRank>::LeakyReLU(Scalar leak):
         pool((int) std::thread::hardware_concurrency()),
         device(&pool, 2)
 {
-    // nothing to do
+    this->name = "leakyrelu";
 }
 
 
@@ -27,7 +27,7 @@ void LeakyReLU<TensorRank>::Forward(const Tensor<TensorRank> &inputs)
 
 
 template<int TensorRank>
-Tensor<2> LeakyReLU<TensorRank>::GetInputGradients2D() const
+const Tensor<2> &LeakyReLU<TensorRank>::GetInputGradients2D()
 {
     if constexpr (TensorRank != 2) {
         throw std::logic_error(
@@ -36,13 +36,16 @@ Tensor<2> LeakyReLU<TensorRank>::GetInputGradients2D() const
     }
 
     auto one = static_cast<Scalar>(1.0);
-    return this->dL_dZ * (this->X >= this->leak)
-            .select(this->X.constant(one), this->X.constant(this->leak));
+    this->dL_dX.resize(this->X.dimensions());
+    this->dL_dX.template device(this->device) =
+            this->dL_dZ * (this->X >= this->leak)
+                    .select(this->X.constant(one), this->X.constant(this->leak));
+    return this->dL_dX;
 }
 
 
 template<int TensorRank>
-Tensor<3> LeakyReLU<TensorRank>::GetInputGradients3D() const
+const Tensor<3> &LeakyReLU<TensorRank>::GetInputGradients3D()
 {
     if constexpr (TensorRank != 3) {
         throw std::logic_error(
@@ -51,23 +54,28 @@ Tensor<3> LeakyReLU<TensorRank>::GetInputGradients3D() const
     }
 
     auto one = static_cast<Scalar>(1.0);
-    return this->dL_dZ * (this->X >= this->leak)
-            .select(this->X.constant(one), this->X.constant(this->leak));
+    this->dL_dX.resize(this->X.dimensions());
+    this->dL_dX.template device(this->device) =
+            this->dL_dZ * (this->X >= this->leak)
+                    .select(this->X.constant(one), this->X.constant(this->leak));
+    return this->dL_dX;
 }
 
 
 template<int TensorRank>
-Tensor<4> LeakyReLU<TensorRank>::GetInputGradients4D() const
+const Tensor<4> &LeakyReLU<TensorRank>::GetInputGradients4D()
 {
     if constexpr (TensorRank != 4) {
         throw std::logic_error(
                 "LeakyReLU::GetInputGradients4D CALLED ON A RANK " +
                 std::to_string(TensorRank) + " TENSOR");
     }
-
     auto one = static_cast<Scalar>(1.0);
-    return this->dL_dZ * (this->X >= this->leak)
-            .select(this->X.constant(one), this->X.constant(this->leak));
+    this->dL_dX.resize(this->X.dimensions());
+    this->dL_dX.template device(this->device) =
+            this->dL_dZ * (this->X >= this->leak)
+                    .select(this->X.constant(one), this->X.constant(this->leak));
+    return this->dL_dX;
 }
 
 } // namespace orion

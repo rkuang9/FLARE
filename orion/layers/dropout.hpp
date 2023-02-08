@@ -24,7 +24,7 @@ public:
 
     void Backward(const Tensor<InputTensorRank> &gradients) override;
 
-    void Backward(const Layer &next) override;
+    void Backward(Layer &next) override;
 
     void Update(Optimizer &) override;
 
@@ -34,11 +34,11 @@ public:
 
     const Tensor<4> &GetOutput4D() const override;
 
-    Tensor<2> GetInputGradients2D() const override;
+    const Tensor<2> &GetInputGradients2D() override;
 
-    Tensor<3> GetInputGradients3D() const override;
+    const Tensor<3> &GetInputGradients3D() override;
 
-    Tensor<4> GetInputGradients4D() const override;
+    const Tensor<4> &GetInputGradients4D() override;
 
     int GetInputRank() const override;
 
@@ -57,6 +57,7 @@ public:
 private:
     Tensor<InputTensorRank> Z;
     Tensor<InputTensorRank> dL_dZ;
+    Tensor<InputTensorRank> dL_dX;
 
     // a tensor of 0s and 1s created from a Bernoulli distribution
     // for zeroing out features when multiplied with the layer input
@@ -66,6 +67,10 @@ private:
 
     // saves the dropout rate when layer is set for inference mode (no dropout)
     Scalar _dropout_rate_copy;
+
+    Eigen::ThreadPool pool = Eigen::ThreadPool((int) std::thread::hardware_concurrency());
+    Eigen::ThreadPoolDevice device = Eigen::ThreadPoolDevice(&pool, 2);
+
 };
 
 } // namespace orion

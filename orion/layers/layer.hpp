@@ -28,7 +28,8 @@ public:
     virtual void Forward(const Tensor<2> &inputs)
     {
         throw std::logic_error(
-                "An error occurred, base class Layer Forward was called");
+                "An error occurred, base class Layer Forward was called on " +
+                this->name);
     }
 
 
@@ -40,7 +41,8 @@ public:
     virtual void Forward(const Tensor<3> &inputs)
     {
         throw std::logic_error(
-                "An error occurred, base class Layer Forward was called");
+                "An error occurred, base class Layer Forward was called on " +
+                this->name);
     }
 
 
@@ -52,7 +54,8 @@ public:
     virtual void Forward(const Tensor<4> &inputs)
     {
         throw std::logic_error(
-                "An error occurred, base class Layer Forward was called");
+                "An error occurred, base class Layer Forward was called on " +
+                this->name);
     }
 
 
@@ -64,28 +67,32 @@ public:
     virtual void Forward(const Layer &prev)
     {
         throw std::logic_error(
-                "An error occurred, base class Layer Forward was called");
+                "An error occurred, base class Layer Forward was called on " +
+                this->name);
     }
 
 
     virtual void Backward(const Tensor<2> &gradients)
     {
         throw std::logic_error(
-                "An error occurred, base class Layer Backward was called");
+                "An error occurred, base class Layer Backward was called on " +
+                this->name);
     }
 
 
     virtual void Backward(const Tensor<3> &gradients)
     {
         throw std::logic_error(
-                "An error occurred, base class Layer Backward was called");
+                "An error occurred, base class Layer Backward was called on " +
+                this->name);
     }
 
 
     virtual void Backward(const Tensor<4> &gradients)
     {
         throw std::logic_error(
-                "An error occurred, base class Layer Backward was called");
+                "An error occurred, base class Layer Backward was called on " +
+                this->name);
     }
 
 
@@ -94,10 +101,11 @@ public:
      *
      * @param next   a reference to the next layer
      */
-    virtual void Backward(const Layer &next)
+    virtual void Backward(Layer &next)
     {
         throw std::logic_error(
-                "An error occurred, base class Layer Backward was called");
+                "An error occurred, base class Layer Backward was called on " +
+                this->name);
     }
 
 
@@ -108,10 +116,6 @@ public:
      * @param optimizer   optimizer object that performs layer parameter updates
      */
     virtual void Update(Optimizer &optimizer) = 0;
-    /*{
-        throw std::logic_error(
-                "An error occurred, base class Layer Update was called");
-    }*/
 
 
     /**
@@ -120,21 +124,24 @@ public:
     virtual const Tensor<2> &GetOutput2D() const
     {
         throw std::logic_error(
-                "An error occurred, base class Layer GetOutput2D was called");
+                "An error occurred, base class Layer GetOutput2D was called on " +
+                this->name);
     }
 
 
     virtual const Tensor<3> &GetOutput3D() const
     {
         throw std::logic_error(
-                "An error occurred, base class Layer GetOutput3D was called");
+                "An error occurred, base class Layer GetOutput3D was called on " +
+                this->name);
     }
 
 
     virtual const Tensor<4> &GetOutput4D() const
     {
         throw std::logic_error(
-                "An error occurred, base class Layer GetOutput4D was called");
+                "An error occurred, base class Layer GetOutput4D was called on " +
+                this->name);
     }
 
 
@@ -143,26 +150,29 @@ public:
      * so results will not be as expected is called after te layer updated
      * @return   layer's loss gradients w.r.t. pre-activated output (dL / dZ))
      */
-    virtual Tensor<2> GetInputGradients2D() const
+    virtual const Tensor<2> &GetInputGradients2D()
     {
         throw std::logic_error(
-                "An error occurred, base class Layer GetInputGradients2D was called");
+                "An error occurred, base class Layer GetInputGradients2D was called on " +
+                this->name);
     }
 
 
     // same documentation as GetInputGradients2D()
-    virtual Tensor<3> GetInputGradients3D() const
+    virtual const Tensor<3> &GetInputGradients3D()
     {
         throw std::logic_error(
-                "An error occurred, base class Layer GetInputGradients3D was called");
+                "An error occurred, base class Layer GetInputGradients3D was called on " +
+                this->name);
     }
 
 
     // same documentation as GetInputGradients2D()
-    virtual Tensor<4> GetInputGradients4D() const
+    virtual const Tensor<4> &GetInputGradients4D()
     {
         throw std::logic_error(
-                "An error occurred, base class Layer GetInputGradients4D was called");
+                "An error occurred, base class Layer GetInputGradients4D was called on " +
+                this->name);
     }
 
 
@@ -172,14 +182,16 @@ public:
     virtual const Tensor<2> &GetWeights() const
     {
         throw std::logic_error(
-                "An error occurred, base class Layer GetWeights was called");
+                "An error occurred, base class Layer GetWeights was called  on " +
+                this->name);
     }
 
 
     virtual const Tensor<4> &GetWeights4D() const
     {
         throw std::logic_error(
-                "An error occurred, base class Layer GetWeights4D was called");
+                "An error occurred, base class Layer GetWeights4D was called on " +
+                this->name);
     }
 
 
@@ -189,14 +201,16 @@ public:
     virtual const Tensor<2> &GetWeightGradients() const
     {
         throw std::logic_error(
-                "An error occurred, base class Layer GetWeightGradients was called");
+                "An error occurred, base class Layer GetWeightGradients was called  on " +
+                this->name);
     }
 
 
     virtual const Tensor<4> &GetWeightGradients4D() const
     {
         throw std::logic_error(
-                "An error occurred, base class Layer GetWeightGradients4D was call");
+                "An error occurred, base class Layer GetWeightGradients4D was call on " +
+                this->name);
     }
 
 
@@ -208,14 +222,16 @@ public:
     virtual void SetWeights(const Tensor<2> &weights)
     {
         throw std::logic_error(
-                "An error occurred, base class Layer SetWeights was called");
+                "An error occurred, base class Layer SetWeights was called on " +
+                this->name);
     }
 
 
     virtual void SetWeights(const Tensor<4> &weights)
     {
         throw std::logic_error(
-                "An error occurred, base class Layer SetWeights was called");
+                "An error occurred, base class Layer SetWeights was called on " +
+                this->name);
     }
 
 
@@ -225,7 +241,8 @@ public:
     virtual const Tensor<2> &GetBias() const
     {
         throw std::logic_error(
-                "An error occurred, base class Layer GetBias was called");
+                "An error occurred, base class Layer GetBias was called on " +
+                this->name);
     }
 
 
@@ -237,14 +254,16 @@ public:
     virtual void SetBias(const Tensor<2> &bias)
     {
         throw std::logic_error(
-                "An error occurred, base class Layer SetBias was called");
+                "An error occurred, base class Layer SetBias was called on " +
+                this->name);
     }
 
 
     virtual void SetBias(const Tensor<4> &bias)
     {
         throw std::logic_error(
-                "An error occurred, base class Layer SetBias was called");
+                "An error occurred, base class Layer SetBias was called on " +
+                this->name);
     }
 
 

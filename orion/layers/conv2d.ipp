@@ -9,14 +9,13 @@ namespace orion
 
 template<typename Activation, int Threads>
 Conv2D<Activation, Threads>::Conv2D(
-        int num_filters, const Input &input, const Kernel &kernel,
+        int num_filters, int input_channels, const Kernel &kernel,
         const Stride &stride, const Dilation &dilation, Padding padding,
         const Initializer<4> &initializer) :
-        input_dim(input), kernel_dim(kernel),
-        stride(stride), dilation(dilation),
+        kernel_dim(kernel), stride(stride), dilation(dilation),
         padding(padding == 1 ? Eigen::PADDING_VALID : Eigen::PADDING_SAME),
         pool((int) std::thread::hardware_concurrency()),
-        device(&pool, 2)
+        device(&pool, Threads)
 {
 #ifdef ORION_COLMAJOR
     throw std::invalid_argument(
@@ -37,11 +36,11 @@ Conv2D<Activation, Threads>::Conv2D(
         throw std::invalid_argument("DILATION DIMS MUST BE GREATER THAN 0");
     }
 
-    // https://stackoverflow.com/questions/42670274/how-to-calculate-fan-in-and-fan-out-in-xavier-initialization-for-neural-networks
+    auto receptive_field_size = kernel.TotalSize(); // kernel height * width
     this->kernels = initializer.Initialize(
-            Dims<4>(num_filters, kernel[0], kernel[1], input[2]),
-            static_cast<int>(input.back() * kernel[0] * kernel[1]),
-            static_cast<int>(num_filters * kernel[0] * kernel[1]));
+            Dims<4>(num_filters, kernel[0], kernel[1], input_channels),
+            static_cast<int>(input_channels * receptive_field_size),
+            static_cast<int>(num_filters * receptive_field_size));
 
     this->dL_dk.resize(this->kernels.dimensions());
     this->name = "conv2d";
@@ -50,9 +49,9 @@ Conv2D<Activation, Threads>::Conv2D(
 
 template<typename Activation, int Threads>
 Conv2D<Activation, Threads>::Conv2D(
-        int num_filters, const Input &input, const Kernel &kernel,
+        int num_filters, int input_channels, const Kernel &kernel,
         Padding padding, const Initializer<4> &initializer)
-        : Conv2D(num_filters, input, kernel, Stride(1, 1),
+        : Conv2D(num_filters, input_channels, kernel, Stride(1, 1),
                  Dilation(1, 1), padding, initializer)
 {
     // nothing to do
@@ -62,11 +61,10 @@ Conv2D<Activation, Threads>::Conv2D(
 template<typename Activation, int Threads>
 void Conv2D<Activation, Threads>::Forward(const Tensor<4> &inputs)
 {
-    orion_assert(inputs.dimension(3) == this->input_dim[2],
-                 "Conv2D::Forward EXPECTED INPUT DIMENSIONS "
-                         << Dims<4>(inputs.dimension(0), this->input_dim[0],
-                                    this->input_dim[1], this->input_dim[2])
-                         << " , INSTEAD GOT " << inputs.dimensions());
+    orion_assert(inputs.dimension(3) == this->kernels.dimensions().back(),
+                 "Conv2D::Forward EXPECTED A TENSOR WITH "
+                         << this->kernels.dimensions().back() << "CHANNELS" <<
+                         ", INSTEAD GOT " << inputs.dimensions().back());
 
     this->X = inputs;
 
@@ -117,7 +115,7 @@ void Conv2D<Activation, Threads>::Forward(const Layer &prev)
 
 
 template<typename Activation, int Threads>
-void Conv2D<Activation, Threads>::Backward(const Layer &next)
+void Conv2D<Activation, Threads>::Backward(Layer &next)
 {
     this->Backward(next.GetInputGradients4D());
 }
@@ -168,7 +166,7 @@ const Tensor<4> &Conv2D<Activation, Threads>::GetOutput4D() const
 
 
 template<typename Activation, int Threads>
-Tensor<4> Conv2D<Activation, Threads>::GetInputGradients4D() const
+const Tensor<4> &Conv2D<Activation, Threads>::GetInputGradients4D()
 {
     // the following padding calculations were taken from TensorFlow's SpatialConvolutionBacKWardInput
     const Eigen::Index kernelRowsEff =
@@ -198,12 +196,15 @@ Tensor<4> Conv2D<Activation, Threads>::GetInputGradients4D() const
     const Eigen::Index padding_right =
             this->X.dimension(2) - (outputCols - 1) * this->stride[1] -
             2 - padding_left + kernelColsEff;
+    // end of TensorFlow padding calculations
 
-    return Conv2D::ConvolutionBackwardInput(
+    this->dL_dX.resize(this->X.dimensions());
+    this->dL_dX.template device(this->device) = Conv2D::ConvolutionBackwardInput(
             this->dL_dZ, this->kernels,
             this->dilation, Dilation(1, 1), this->stride,
             this->X.dimensions(),
             padding_top, padding_bottom, padding_left, padding_right);
+    return this->dL_dX;
 }
 
 
@@ -315,10 +316,6 @@ auto Conv2D<Activation, Threads>::ConvolutionBackwardKernel(
     Eigen::Index patches = output_dims[1] * output_dims[2]; // H * W from [F,H,W,C]
     Eigen::Index size_per_kernel = batches * grad_h * grad_w * channels;
 
-    orion_assert(batches == layer_input.dimension(0),
-                 "Conv2D::ConvolutionBackwardKernel EXPECTED GRADIENTS BATCH SIZE "
-                         << layer_input.dimension(0) << ", GOT " << batches);
-
     // reshape gradients to im2col tensor by:
     // 1. reorder dimensions from [N,H,W,F] to [F,N,H,W], F = # kernels
     // 2. reintroduce the channels dim by reshaping to, [F,N,H,W,1]
@@ -329,6 +326,7 @@ auto Conv2D<Activation, Threads>::ConvolutionBackwardKernel(
             .shuffle(Dims<4>(3, 0, 1, 2))
             .eval()
             .reshape(Dims<5>(filters, batches, grad_h, grad_w, 1))
+            .eval()
             .broadcast(Dims<5>(1, 1, 1, 1, channels))
             .reshape(Dims<2>(filters, size_per_kernel));
 
@@ -356,6 +354,7 @@ auto Conv2D<Activation, Threads>::ConvolutionBackwardKernel(
     return gradients_im2col
                    .contract(patches_im2col, ContractDim {Axes(1, 1)})
                    .reshape(Dims<4>(filters, output_dims[1], output_dims[2], 1))
+                   .eval()
                    .broadcast(Dims<4>(1, 1, 1, channels)) /
            static_cast<Scalar>(channels);
 }

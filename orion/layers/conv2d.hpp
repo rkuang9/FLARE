@@ -18,19 +18,19 @@ public:
     /**
      * 2D convolutional layer, performs convolution on images
      *
-     * @param num_filters   # filters used (a collection of filters make a kernel)
-     * @param input         input dimensions, Input(height, width, channels)
-     * @param kernel        kernel dimensions, Kernel(height, width)
-     * @param stride        stride dimensions, Stride(height, width)
-     * @param dilation      dilation dimensions, Dilation(height, width)
-     * @param padding       padding type, Padding::PADDING_VALID or Padding::PADDING_SAME
-     * @param initializer   method of kernel initialization
+     * @param num_filters    num filters to use
+     * @param input_channels input tensor channels
+     * @param kernel         kernel dimensions, Kernel(height, width)
+     * @param stride         stride dimensions, Stride(height, width)
+     * @param dilation       dilation dimensions, Dilation(height, width)
+     * @param padding        padding type, Padding::PADDING_VALID or Padding::PADDING_SAME
+     * @param initializer    kernel initialization method
      */
-    Conv2D(int num_filters, const Input &input, const Kernel &kernel,
+    Conv2D(int num_filters, int input_channels, const Kernel &kernel,
            const Stride &stride, const Dilation &dilation, Padding padding,
            const Initializer<4> &initializer = GlorotUniform<4>());
 
-    Conv2D(int num_filters, const Input &input, const Kernel &kernel,
+    Conv2D(int num_filters, int input_channels, const Kernel &kernel,
            Padding padding = Padding::PADDING_VALID,
            const Initializer<4> &initializer = GlorotUniform<4>());
 
@@ -73,7 +73,7 @@ public:
      *
      * @param next   a reference to the next layer
      */
-    void Backward(const Layer &next) override;
+    void Backward(Layer &next) override;
 
 
     /**
@@ -97,7 +97,7 @@ public:
     /**
      * @return   layer's loss gradients w.r.t. pre-activated output (dL / dZ))
      */
-    Tensor<4> GetInputGradients4D() const override;
+    const Tensor<4> &GetInputGradients4D() override;
 
 
     /**
@@ -200,9 +200,9 @@ public:
      */
     EIGEN_STRONG_INLINE
     static auto ConvolutionBackwardInput(
-            const Tensor<4> &gradients, const Tensor<4> &kernels,
-            const Stride &stride, const Dilation &dilation, const Inflate &inflate,
-            const Dims<4> &result_dims,
+             const Tensor<4> &gradients,  const Tensor<4> &kernels,
+             const Stride &stride,  const Dilation &dilation,  const Inflate &inflate,
+             const Dims<4> &result_dims,
             Eigen::Index pad_top, Eigen::Index pad_bottom,
             Eigen::Index pad_left, Eigen::Index pad_right);
 
@@ -211,6 +211,7 @@ protected:
     Tensor<4> Z; // layer input convolved with kernels
     Tensor<4> A; // activated output of layer inout convolved with kernels
     Tensor<4> dL_dZ; // gradients of layer output, received from next layer
+    Tensor<4> dL_dX; // gradients of layer input
 
     Tensor<4> kernels; // weights, NHWC format, N = num filters
     Tensor<4> b; // bias
@@ -218,11 +219,10 @@ protected:
     Tensor<4> dL_db; // loss gradients w.r.t. bias
 
     // convolution hyperparameters
-    Eigen::PaddingType padding;
-    Input input_dim;
-    Kernel kernel_dim;
-    Stride stride;
-    Dilation dilation;
+    const Eigen::PaddingType padding;
+    const Kernel kernel_dim;
+    const Stride stride;
+    const Dilation dilation;
 
     // multithreading
     Eigen::ThreadPool pool;

@@ -15,6 +15,7 @@ Dense<Activation>::Dense(int inputs, int outputs, bool use_bias,
         w(initializer.Initialize(Dims<2>(inputs, outputs), inputs, outputs))
 {
     this->name = "dense";
+    this->dL_dw.resize(this->w.dimensions());
 
     if (this->use_bias) {
         throw std::invalid_argument("bias not available");
@@ -34,7 +35,12 @@ void Dense<Activation>::Forward(const Tensor<2> &input)
 
     // Z = Xw + b (same as Z = wX + b but with batch dims first in X)
     this->X = input;
-    this->Z = this->X.contract(this->w, ContractDim {Axes(1, 0)});
+
+    // resize output tensor to [batch, output_units]
+    this->Z.resize(input.dimension(0), this->w.dimension(1));
+    this->Z.template device(this->device) =
+            this->X.contract(this->w, ContractDim {Axes(1, 0)});
+
     if (this->use_bias) {
         // broadcast bias into the shape of Z
         //this->Z += this->b.broadcast(
@@ -54,7 +60,7 @@ void Dense<Activation>::Forward(const Layer &prev)
 
 
 template<typename Activation>
-void Dense<Activation>::Backward(const Layer &next) // hidden layer backward
+void Dense<Activation>::Backward(Layer &next) // hidden layer backward
 {
     this->Backward(next.GetInputGradients2D());
 }
@@ -68,12 +74,15 @@ void Dense<Activation>::Backward(const Tensor<2> &gradients) // output backward
         this->BackwardSoftmax(gradients);
     }
     else {
-        this->dL_dZ = gradients * Activation::Gradients(this->Z);
+        this->dL_dZ.resize(this->Z.dimensions());
+        this->dL_dZ.template device(this->device) =
+                gradients * Activation::Gradients(this->Z);
     }
 
-    // dL / dw = (dL / dZ) * (dZ / dw) * (1 / m) where m = batch size
-    this->dL_dw = this->X.contract(this->dL_dZ, ContractDim {Axes(0, 0)});
-    // / (Scalar) this->X.dimension(0); // divide by batch size
+    // dL / dw = (dL / dZ) * (dZ / dw)
+    this->dL_dw.template device(this->device) =
+            this->X.contract(this->dL_dZ, ContractDim {Axes(0, 0)});
+
 
     orion_assert(this->w.dimensions() == this->dL_dw.dimensions(),
                  this->name << " Dense::Backward weights dimensions "
@@ -116,9 +125,12 @@ const Tensor<2> &Dense<Activation>::GetOutput2D() const
 
 
 template<typename Activation>
-Tensor<2> Dense<Activation>::GetInputGradients2D() const
+const Tensor<2> &Dense<Activation>::GetInputGradients2D()
 {
-    return this->dL_dZ.contract(this->w, ContractDim {Axes(1, 1)});
+    this->dL_dX.resize(this->X.dimensions());
+    this->dL_dX.template device(this->device) = this->dL_dZ.contract(
+            this->w, ContractDim {Axes(1, 1)});
+    return this->dL_dX;
 }
 
 
@@ -195,9 +207,11 @@ void Dense<Activation>::BackwardSoftmax(const Tensor<2> &gradients)
     Tensor<3> softmax_grad = Softmax::Gradients(this->A);
 
     for (int batch = 0; batch < gradients.dimension(0); batch++) {
-        this->dL_dZ.chip(batch, 0) = gradients.chip(batch, 0)
-                .contract(softmax_grad.chip(batch, 0),
-                          ContractDim {Axes(0, 1)});
+        // TODO: since it is using a threading device, does it need resizing?
+        this->dL_dZ.chip(batch, 0).template device(this->device) =
+                gradients.chip(batch, 0)
+                        .contract(softmax_grad.chip(batch, 0),
+                                  ContractDim {Axes(0, 1)});
     }
 }
 

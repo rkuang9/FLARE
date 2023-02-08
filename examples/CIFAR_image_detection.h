@@ -43,18 +43,17 @@ void CIFAR10_CNN()
     std::cout << "\nTotal number of training samples: " << cifar.training_samples.size() << "\n";
 
     Sequential model {
-            new Conv2D<ReLU>(32, Input(32, 32, 3), Kernel(3, 3),
+            new Conv2D<ReLU>(32, 3, Kernel(3, 3),
                              Padding::PADDING_VALID),
             new MaxPooling2D(PoolSize(2, 2)),
             new Flatten<4>(),
             new Dense<Softmax>(7200, 10, false),
     };
 
-    CategoricalCrossEntropy loss;
+    CategoricalCrossEntropy<2> loss;
     SGD opt(0.001, 0.9);
 
-    model.Compile(loss, opt);
-    model.Fit(cifar.training_samples, cifar.training_labels, 10);
+    model.Fit(cifar.training_samples, cifar.training_labels, 10, loss, opt);
 }
 
 #endif //ORION_CIFAR_IMAGE_DETECTION_H

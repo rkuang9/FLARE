@@ -39,7 +39,8 @@ public:
 
 
     template<int OutputRank, int TensorSampleRank>
-    Tensor<OutputRank> Predict(const Tensor<TensorSampleRank> &input);
+    const Tensor<OutputRank> &Predict(const Tensor<TensorSampleRank> &input,
+                                      bool training_mode = false);
 
     template<int TensorSampleRank>
     void Forward(const Tensor<TensorSampleRank> &training_sample);
@@ -48,7 +49,12 @@ public:
     void Backward(const Tensor<TensorLabelRank> &training_label,
                   LossFunction<TensorLabelRank> &loss_function);
 
+    template<int TensorLabelRank>
+    void Backward(const Tensor<TensorLabelRank> &gradients);
+
     void Update(Optimizer &optimizer);
+
+    void Training(bool training);
 
 
     /**
@@ -76,8 +82,10 @@ public:
 
 
 template<int OutputRank, int TensorSampleRank>
-Tensor<OutputRank> Sequential::Predict(const Tensor<TensorSampleRank> &input)
+const Tensor<OutputRank> &Sequential::Predict(const Tensor<TensorSampleRank> &input,
+                                              bool training_mode)
 {
+    this->Training(training_mode);
     this->Forward(input);
 
     if constexpr (OutputRank == 2) {
@@ -187,6 +195,17 @@ void Sequential::Fit(const std::vector<Tensor<TensorSampleRank>> &inputs,
 
     for (auto layer: this->layers) {
         layer->Training(false);
+    }
+}
+
+
+template<int TensorLabelRank>
+void Sequential::Backward(const Tensor<TensorLabelRank> &gradients)
+{
+    this->layers.back()->Backward(gradients);
+
+    for (int i = this->layers.size() - 2; i >= 0; --i) {
+        this->layers[i]->Backward(*this->layers[i + 1]);
     }
 }
 

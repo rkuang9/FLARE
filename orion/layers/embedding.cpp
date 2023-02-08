@@ -55,7 +55,7 @@ void Embedding::Forward(const Tensor<2> &input)
 }
 
 
-void Embedding::Backward(const Layer &next)
+void Embedding::Backward(Layer &next)
 {
     this->dL_dZ = next.GetInputGradients3D();
     this->Backward();

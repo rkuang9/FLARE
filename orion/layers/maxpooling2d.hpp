@@ -39,7 +39,7 @@ public:
      * @param padding    Padding enum, PADDING_VALID or PADDING_SAME
      * @return           tensor in format NHWC containing extracted max values
      */
-    static auto MaxPooling2DForward(
+    void MaxPooling2DForward(
             const Tensor<4> &inputs, const PoolSize &pool,
             const Stride &stride, const Dilation &dilation, Padding padding);
 
@@ -79,7 +79,7 @@ public:
      *
      * @param next   a reference to the next layer
      */
-    void Backward(const Layer &next) override;
+    void Backward(Layer &next) override;
 
 
     /**
@@ -97,7 +97,7 @@ public:
     /**
      * @return   layer's loss gradients w.r.t. pre-activated output (dL / dZ))
      */
-    Tensor<4> GetInputGradients4D() const override;
+    const Tensor<4> &GetInputGradients4D() override;
 
 
     /**
@@ -124,7 +124,7 @@ public:
      * @param padding      padding used in forward pass, PADDING_VALID or PADDING_SAME
      * @return             tensor in format NHWC with same dimensions as inputs
      */
-    static Tensor<4> MaxPooling2DBackwardInput(
+    void MaxPooling2DBackwardInput(
             const Tensor<4> &inputs, const Tensor<4> &gradients,
             const PoolSize &pool,
             const Stride &stride, const Dilation &dilation, Padding padding);

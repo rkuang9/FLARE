@@ -30,8 +30,8 @@ public:
         auto features_sum = features
                 .exp()
                 .sum(Dims<1>(dimension))
-                .eval()
                 .reshape(predict_sum_dims)
+                .eval()
                 .broadcast(bcast);
         return features.exp() / features_sum;
     }

@@ -24,8 +24,15 @@ public:
     }
 
 
+    CategoricalCrossEntropy& operator+(LossFunction<TensorRank> &other) override {
+        this->loss += other.GetLoss();
+        this->gradients += other.GetGradients();
+        return *this;
+    }
+
+
     Scalar Loss(const Tensor<TensorRank> &predict,
-                const Tensor<TensorRank> &label)
+                const Tensor<TensorRank> &label) override
     {
         orion_assert(predict.dimensions() == label.dimensions(),
                      "predict dimensions " << predict.dimensions() <<
@@ -50,7 +57,7 @@ public:
         bcast.back() = predict.dimension(TensorRank - 1);
 
         auto predict_norm = predict / predict.sum(Dims<1>(TensorRank - 1)).reshape(
-                predict_summed).broadcast(bcast);
+                predict_summed).eval().broadcast(bcast);
 
         return Tensor<0>(
                 (-label * predict_norm.clip(this->clip_min, this->clip_max).log())
@@ -61,7 +68,7 @@ public:
 
 
     Tensor<TensorRank> Gradient(const Tensor<TensorRank> &predict,
-                                const Tensor<TensorRank> &label)
+                                const Tensor<TensorRank> &label) override
     {
         orion_assert(predict.dimensions() == label.dimensions(),
                      "predict dimensions " << predict.dimensions() <<
@@ -79,13 +86,13 @@ public:
         auto label_predict_sum =
                 label
                         .sum(Dims<1>(TensorRank - 1))
-                        .eval()
                         .reshape(label_sum_dims)
+                        .eval()
                         .broadcast(bcast) /
                 predict
                         .sum(Dims<1>(TensorRank - 1))
-                        .eval()
                         .reshape(predict_sum_dims)
+                        .eval()
                         .broadcast(bcast);
 
         return (-label / predict + label_predict_sum);

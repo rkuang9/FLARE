@@ -17,7 +17,16 @@ public:
     MeanSquaredError() = default;
 
 
-    Scalar Loss(const Tensor<TensorRank> &predict, const Tensor<TensorRank> &label)
+    MeanSquaredError &operator+(LossFunction<TensorRank> &other) override
+    {
+        this->loss += other.GetLoss();
+        this->gradients += other.GetGradients();
+        return *this;
+    }
+
+
+    Scalar Loss(const Tensor<TensorRank> &predict,
+                const Tensor<TensorRank> &label) override
     {
         orion_assert(predict.dimensions() == label.dimensions(),
                      "predict dimensions " << predict.dimensions() <<
@@ -28,7 +37,7 @@ public:
 
 
     Tensor<TensorRank> Gradient(const Tensor<TensorRank> &predict,
-                                const Tensor<TensorRank> &label)
+                                const Tensor<TensorRank> &label) override
     {
         orion_assert(predict.dimensions() == label.dimensions(),
                      "predict dimensions " << predict.dimensions() <<

@@ -29,17 +29,17 @@ public:
 
     void Backward(const Tensor<InputTensorRank> &gradients) override;
 
-    void Backward(const Layer &next) override;
+    void Backward(Layer &next) override;
 
     void Update(Optimizer &) override;
 
     const Tensor<2> &GetOutput2D() const override;
 
-    Tensor<2> GetInputGradients2D() const override;
+    const Tensor<2> &GetInputGradients2D() override;
 
-    Tensor<3> GetInputGradients3D() const override;
+    const Tensor<3> &GetInputGradients3D() override;
 
-    Tensor<4> GetInputGradients4D() const override;
+    const Tensor<4> &GetInputGradients4D() override;
 
     int GetInputRank() const override;
 
@@ -50,6 +50,8 @@ private:
 
     Tensor<2> Z;
     Tensor<InputTensorRank> dL_dZ;
+    Tensor<InputTensorRank> dL_dX;
+
 };
 
 } // namespace orion

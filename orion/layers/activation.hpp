@@ -10,8 +10,8 @@
 namespace orion
 {
 
-template <typename activation, int TensorRank>
-class Activation: public Layer
+template<typename activation, int TensorRank>
+class Activation : public Layer
 {
 public:
     Activation();
@@ -22,7 +22,7 @@ public:
 
     void Backward(const Tensor<TensorRank> &gradients) override;
 
-    void Backward(const Layer &next) override;
+    void Backward(Layer &next) override;
 
     void Update(Optimizer &) override;
 
@@ -32,11 +32,11 @@ public:
 
     const Tensor<4> &GetOutput4D() const override;
 
-    virtual Tensor<2> GetInputGradients2D() const override;
+    const Tensor<2> &GetInputGradients2D() override;
 
-    virtual Tensor<3> GetInputGradients3D() const override;
+    const Tensor<3> &GetInputGradients3D() override;
 
-    virtual Tensor<4> GetInputGradients4D() const override;
+    const Tensor<4> &GetInputGradients4D() override;
 
     int GetInputRank() const override;
 
@@ -49,7 +49,8 @@ protected:
     Tensor<TensorRank> dL_dX;
 
     // multithreading
-    Eigen::ThreadPool pool = Eigen::ThreadPool((int) std::thread::hardware_concurrency());
+    Eigen::ThreadPool pool = Eigen::ThreadPool(
+            (int) std::thread::hardware_concurrency());
     Eigen::ThreadPoolDevice device = Eigen::ThreadPoolDevice(&pool, 2);
 };
 

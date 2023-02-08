@@ -26,7 +26,7 @@ MaxPooling2D::MaxPooling2D(const PoolSize &pool, Padding padding)
 }
 
 
-auto MaxPooling2D::MaxPooling2DForward(
+void MaxPooling2D::MaxPooling2DForward(
         const Tensor<4> &inputs, const PoolSize &pool,
         const Stride &stride, const Dilation &dilation, Padding padding)
 {
@@ -63,7 +63,7 @@ auto MaxPooling2D::MaxPooling2DForward(
     // 1. extract image patches to get [N,P,H,W,C], each patch is the same size as pool
     // 2. find the max value along the height and width dimensions to get [N,P,C]
     // 3. patch dimension P contains the max values, reshape back to [N,H,W,C]
-    return inputs
+    this->Z.device(this->device) = inputs
             .extract_image_patches(
                     pool[0], pool[1],
                     stride[0], stride[1],
@@ -85,9 +85,8 @@ void MaxPooling2D::Forward(const Tensor<4> &inputs)
             inputs.dimensions(), this->pool,
             this->stride, this->dilation, this->padding));
 
-    this->Z.template device(this->device) = MaxPooling2DForward(
-            inputs, this->pool,
-            this->stride, this->dilation, this->padding);
+    MaxPooling2DForward(inputs, this->pool,
+                        this->stride, this->dilation, this->padding);
 }
 
 
@@ -103,7 +102,7 @@ void MaxPooling2D::Backward(const Tensor<4> &gradients)
 }
 
 
-void MaxPooling2D::Backward(const Layer &next)
+void MaxPooling2D::Backward(Layer &next)
 {
     this->dL_dZ = next.GetInputGradients4D();
 }
@@ -121,11 +120,14 @@ const Tensor<4> &MaxPooling2D::GetOutput4D() const
 }
 
 
-Tensor<4> MaxPooling2D::GetInputGradients4D() const
+const Tensor<4> &MaxPooling2D::GetInputGradients4D()
 {
-    return MaxPooling2D::MaxPooling2DBackwardInput(
+    this->dL_dX.resize(this->X.dimensions());
+
+    MaxPooling2D::MaxPooling2DBackwardInput(
             this->X, this->dL_dZ, this->pool,
             this->stride, this->dilation, this->padding);
+    return this->dL_dX;
 }
 
 
@@ -141,9 +143,9 @@ int MaxPooling2D::GetOutputRank() const
 }
 
 
-Tensor<4> MaxPooling2D::MaxPooling2DBackwardInput(
-        const Tensor<4> &inputs, const Tensor<4> &gradients, const PoolSize &pool,
-        const Stride &stride, const Dilation &dilation, Padding padding)
+void MaxPooling2D::MaxPooling2DBackwardInput(
+        const Tensor<4> &inputs, const Tensor<4> &gradients, const PoolSize &pool_,
+        const Stride &stride_, const Dilation &dilation_, Padding padding_)
 {
     Eigen::Index batches = inputs.dimension(0);
     Eigen::Index input_h = inputs.dimension(1);
@@ -158,17 +160,17 @@ Tensor<4> MaxPooling2D::MaxPooling2DBackwardInput(
 
     Eigen::array<std::pair<int, int>, 4> pad_dims;
 
-    if (padding == Eigen::PADDING_SAME) {
+    if (padding_ == Eigen::PADDING_SAME) {
         // compute total padding used in forward propagation
         Eigen::Index output_h = std::ceil(static_cast<Scalar>(input_h) /
-                                          static_cast<Scalar>(stride[0]));
+                                          static_cast<Scalar>(stride_[0]));
         Eigen::Index output_w = std::ceil(static_cast<Scalar>(input_w) /
-                                          static_cast<Scalar>(stride[1]));
+                                          static_cast<Scalar>(stride_[1]));
 
-        pad_h = (output_h - 1) * stride[0] -
-                input_h + dilation[0] * (pool[0] - 1) + 1;
-        pad_w = (output_w - 1) * stride[1] -
-                input_w + dilation[1] * (pool[1] - 1) + 1;
+        pad_h = (output_h - 1) * stride_[0] -
+                input_h + dilation_[0] * (pool_[0] - 1) + 1;
+        pad_w = (output_w - 1) * stride_[1] -
+                input_w + dilation_[1] * (pool_[1] - 1) + 1;
     }
 
     // pad_dims the input tensor as was done during forward propagation
@@ -188,12 +190,12 @@ Tensor<4> MaxPooling2D::MaxPooling2DBackwardInput(
     for (Eigen::Index n = 0; n < batches; n++) {
         for (Eigen::Index h = 0; h < grad_h; h++) {
             // set the pool window's first and last row & col indices
-            Eigen::Index pool_start_r = h * stride[0];
-            Eigen::Index pool_end_r = pool_start_r + pool[0];
+            Eigen::Index pool_start_r = h * stride_[0];
+            Eigen::Index pool_end_r = pool_start_r + pool_[0];
 
             for (Eigen::Index w = 0; w < grad_w; w++) {
-                Eigen::Index pool_start_c = w * stride[1];
-                Eigen::Index pool_end_c = pool_start_c + pool[1];
+                Eigen::Index pool_start_c = w * stride_[1];
+                Eigen::Index pool_end_c = pool_start_c + pool_[1];
 
                 // in each channel, find the pool window's maximum value's row,col
                 for (Eigen::Index c = 0; c < channels; c++) {
@@ -225,7 +227,7 @@ Tensor<4> MaxPooling2D::MaxPooling2DBackwardInput(
     }
 
     // return the input gradients without the padding
-    return input_gradients.slice(
+    this->dL_dX.device(this->device) = input_gradients.slice(
             Dims<4>(0, pad_h / 2, pad_w / 2, 0),
             Dims<4>(batches, input_h, input_w, channels));
 }

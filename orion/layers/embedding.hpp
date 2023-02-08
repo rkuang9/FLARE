@@ -18,7 +18,7 @@ public:
 
     void Forward(const Tensor<2> &input) override;
 
-    void Backward(const Layer &next) override;
+    void Backward(Layer &next) override;
 
     void Backward(const LossFunction &loss_function) override;
 

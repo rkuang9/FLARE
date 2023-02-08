@@ -14,11 +14,11 @@ template<typename Activation, int Threads = 2>
 class Conv2DTranspose : public Conv2D<Activation, Threads>
 {
 public:
-    Conv2DTranspose(int num_filters, const Input &input, const Kernel &kernel,
+    Conv2DTranspose(int num_filters, int input_channels, const Kernel &kernel,
                     const Stride &stride, const Dilation &dilation, Padding padding,
                     const Initializer<4> &initializer = GlorotUniform<4>());
 
-    Conv2DTranspose(int num_filters, const Input &input, const Kernel &kernel,
+    Conv2DTranspose(int num_filters, int input_channels, const Kernel &kernel,
                     const Stride &stride, const Dilation &dilation, Padding padding,
                     const Dims<2> &output_padding,
                     const Initializer<4> &initializer = GlorotUniform<4>());
@@ -27,7 +27,7 @@ public:
 
     void Backward(const Tensor<4> &gradients) override;
 
-    Tensor<4> GetInputGradients4D() const override;
+    const Tensor<4> &GetInputGradients4D() override;
 
     void SetWeights(const Tensor<4> &weights) override;
 

@@ -12,9 +12,7 @@ BatchNormalization<TensorRank, NormDimCount>::BatchNormalization(
         const Dims<NormDimCount> &norm_axes, Scalar momentum,
         Scalar epsilon, bool training, bool center, bool scale):
         norm_axes(norm_axes), momentum(momentum), epsilon(epsilon),
-        training_mode(training), center(center), scale(scale),
-        pool((int) std::thread::hardware_concurrency()),
-        device(&pool, 2)
+        training_mode(training), center(center), scale(scale)
 {
     this->name = "batch_norm";
 
@@ -22,7 +20,7 @@ BatchNormalization<TensorRank, NormDimCount>::BatchNormalization(
 
     if (this->norm_axes.back() > (TensorRank - 1)) {
         throw std::invalid_argument(
-                "SPECIFIED NORM AXES ARE EXCEED INPUT TENSOR RANK");
+                "SPECIFIED NORM AXES EXCEED INPUT TENSOR RANK");
     }
 
     // populate the dimensions that will be collapsed to calculate mean and variance
@@ -42,17 +40,18 @@ void BatchNormalization<TensorRank, NormDimCount>::Forward(
 {
     this->X = inputs;
 
+    // this resizing is required for multithreading
+    this->X_norm.resize(inputs.dimensions());
+    this->Z.resize(inputs.dimensions());
+    this->input_minus_mean.resize(inputs.dimensions());
+    this->variance_plus_epsilon.resize(inputs.dimensions());
+
     if (!this->weights_are_set) {
         Dims<NormDimCount> weight_dims;
 
         for (auto i = 0; i < this->norm_axes.size(); i++) {
             weight_dims[i] = inputs.dimension(this->norm_axes[i]);
         }
-
-        this->X_norm.resize(inputs.dimensions());
-        this->Z.resize(inputs.dimensions());
-        this->input_minus_mean.resize(inputs.dimensions());
-        this->variance_plus_epsilon.resize(inputs.dimensions());
 
         this->gamma.resize(weight_dims);
         this->gamma.setConstant(1.0);
@@ -81,28 +80,40 @@ void BatchNormalization<TensorRank, NormDimCount>::Forward(
     }
 
     if (this->training_mode) {
-        this->input_minus_mean.template device(this->device) =
-                inputs - inputs.mean(this->collapsed_dims).eval()
-                        .reshape(this->restore_reshape)
-                        .broadcast(this->restore_bcast);
+        // the following implements Algorithm 1 of the batch normalization paper
+        // by Sergey Ioffe and Christian Szegedy
 
+        // mini-batch mean, cached for reuse in backpropagation
+        this->input_minus_mean.template device(this->device) =
+                inputs - inputs.mean(this->collapsed_dims)
+                        .reshape(this->restore_reshape)
+                        .eval()
+                        .broadcast(this->restore_bcast).eval();
+
+        // mini-batch variance, cached for reuse in backpropagation
         this->variance_plus_epsilon.template device(this->device) =
                 this->input_minus_mean
-                        .square().mean(this->collapsed_dims).eval()
+                        .square().mean(this->collapsed_dims)
                         .reshape(this->restore_reshape)
-                        .broadcast(this->restore_bcast);
+                        .eval()
+                        .broadcast(this->restore_bcast).eval() + this->epsilon;
 
+        // normalize, x_norm = (x - x_mean) / sqrt(var + epsilon)
+        this->X_norm.resize(inputs.dimensions());
         this->X_norm.template device(this->device) =
                 this->input_minus_mean * this->variance_plus_epsilon.rsqrt();
 
+        // scale and shift, z = gamma * x_norm + beta
         this->Z.template device(this->device) =
                 this->X_norm * this->gamma
                         .reshape(this->restore_reshape)
-                        .broadcast(this->restore_bcast) +
+                        .eval()
+                        .broadcast(this->restore_bcast).eval() +
                 this->beta.reshape(this->restore_reshape)
-                        .broadcast(this->restore_bcast);
+                        .eval()
+                        .broadcast(this->restore_bcast).eval();
 
-
+        // calculate moving mean and moving variance, these are frozen during inference
         this->moving_mean.template device(this->device) =
                 this->moving_mean * this->momentum +
                 inputs.mean(this->collapsed_dims).eval() *
@@ -121,20 +132,20 @@ void BatchNormalization<TensorRank, NormDimCount>::Forward(
         this->Z.template device(this->device) =
                 this->gamma
                         .reshape(this->restore_reshape)
-                        .broadcast(this->restore_bcast) *
+                        .eval()
+                        .broadcast(this->restore_bcast).eval() *
                 (inputs - this->moving_mean
                         .reshape(this->restore_reshape)
-                        .broadcast(this->restore_bcast)) /
+                        .eval()
+                        .broadcast(this->restore_bcast).eval()) /
                 (this->moving_variance
                          .reshape(this->restore_reshape)
-                         .broadcast(this->restore_bcast) +
+                         .eval()
+                         .broadcast(this->restore_bcast).eval() +
                  this->Z.constant(this->epsilon)).sqrt() +
                 this->beta.reshape(this->restore_reshape)
-                        .broadcast(this->restore_bcast);
-
-        // in case training(false) ends up part of gradient descent, set X_norm to Z,
-        // but it is a programming mistake if this happens
-        this->X_norm = this->Z;
+                        .eval()
+                        .broadcast(this->restore_bcast).eval();
     }
 }
 
@@ -159,16 +170,16 @@ void BatchNormalization<TensorRank, NormDimCount>::Forward(const Layer &prev)
 
 
 template<int TensorRank, int NormDimCount>
-void BatchNormalization<TensorRank, NormDimCount>::Backward(const Layer &layer)
+void BatchNormalization<TensorRank, NormDimCount>::Backward(Layer &next)
 {
     if constexpr (TensorRank == 2) {
-        this->Backward(layer.GetOutput2D());
+        this->Backward(next.GetOutput2D());
     }
     else if constexpr (TensorRank == 3) {
-        this->Backward(layer.GetOutput3D());
+        this->Backward(next.GetOutput3D());
     }
     else if constexpr (TensorRank == 4) {
-        this->Backward(layer.GetOutput4D());
+        this->Backward(next.GetOutput4D());
     }
     else {
         throw std::logic_error("BatchNormalization::Backward " +
@@ -265,7 +276,8 @@ const Tensor<4> &BatchNormalization<TensorRank, NormDimCount>::GetOutput4D() con
 
 
 template<int TensorRank, int NormDimCount>
-Tensor<2> BatchNormalization<TensorRank, NormDimCount>::GetInputGradients2D() const
+const Tensor<2> &
+BatchNormalization<TensorRank, NormDimCount>::GetInputGradients2D()
 {
     if constexpr (TensorRank != 2) {
         throw std::logic_error(
@@ -273,9 +285,9 @@ Tensor<2> BatchNormalization<TensorRank, NormDimCount>::GetInputGradients2D() co
                 std::to_string(TensorRank) + " TENSOR");
     }
 
-    Tensor<TensorRank> input_grad(this->Z.dimensions());
-    input_grad.template device(this->device) = this->GetInputGradients(this->dL_dZ);
-    return input_grad;
+    this->dL_dX.resize(this->X.dimensions());
+    this->CalculateInputGradients(this->dL_dZ);
+    return this->dL_dX;
 }
 
 
@@ -287,7 +299,8 @@ Tensor<2> BatchNormalization<TensorRank, NormDimCount>::GetInputGradients2D() co
 
 
 template<int TensorRank, int NormDimCount>
-Tensor<3> BatchNormalization<TensorRank, NormDimCount>::GetInputGradients3D() const
+const Tensor<3> &
+BatchNormalization<TensorRank, NormDimCount>::GetInputGradients3D()
 {
     if constexpr (TensorRank != 3) {
         throw std::logic_error(
@@ -295,9 +308,9 @@ Tensor<3> BatchNormalization<TensorRank, NormDimCount>::GetInputGradients3D() co
                 std::to_string(TensorRank) + " TENSOR");
     }
 
-    Tensor<TensorRank> input_grad(this->Z.dimensions());
-    input_grad.template device(this->device) = this->GetInputGradients(this->dL_dZ);
-    return input_grad;
+    this->dL_dX.resize(this->X.dimensions());
+    this->CalculateInputGradients(this->dL_dZ);
+    return this->dL_dX;
 }
 
 
@@ -309,7 +322,8 @@ Tensor<3> BatchNormalization<TensorRank, NormDimCount>::GetInputGradients3D() co
 
 
 template<int TensorRank, int NormDimCount>
-Tensor<4> BatchNormalization<TensorRank, NormDimCount>::GetInputGradients4D() const
+const Tensor<4> &
+BatchNormalization<TensorRank, NormDimCount>::GetInputGradients4D()
 {
     if constexpr (TensorRank != 4) {
         throw std::logic_error(
@@ -317,9 +331,9 @@ Tensor<4> BatchNormalization<TensorRank, NormDimCount>::GetInputGradients4D() co
                 std::to_string(TensorRank) + " TENSOR");
     }
 
-    Tensor<TensorRank> input_grad(this->Z.dimensions());
-    input_grad.template device(this->device) = this->GetInputGradients(this->dL_dZ);
-    return input_grad;
+    this->dL_dX.resize(this->X.dimensions());
+    this->CalculateInputGradients(this->dL_dZ);
+    return this->dL_dX;
 }
 
 
@@ -345,8 +359,8 @@ void BatchNormalization<TensorRank, NormDimCount>::Training(bool is_training)
 
 
 template<int TensorRank, int NormDimCount>
-auto BatchNormalization<TensorRank, NormDimCount>::GetInputGradients(
-        const Tensor<TensorRank> &gradients) const
+void BatchNormalization<TensorRank, NormDimCount>::CalculateInputGradients(
+        const Tensor<TensorRank> &gradients)
 {
     Scalar collapsed_dim_size = 1;
 
@@ -356,27 +370,31 @@ auto BatchNormalization<TensorRank, NormDimCount>::GetInputGradients(
 
     auto norm_grad = gradients * this->gamma
             .reshape(this->restore_reshape)
+            .eval()
             .broadcast(this->restore_bcast).eval();
-
     auto var_grad = (norm_grad * this->input_minus_mean * -0.5 *
-                     this->variance_plus_epsilon.pow(-1.5).eval())
-            .sum(this->collapsed_dims).eval()
+                     this->variance_plus_epsilon.pow(-1.5))
+            .sum(this->collapsed_dims)
             .reshape(this->restore_reshape)
+            .eval()
             .broadcast(this->restore_bcast).eval();
-
     auto mean_grad =
             (norm_grad * -this->variance_plus_epsilon.rsqrt())
                     .sum(this->collapsed_dims)
                     .reshape(this->restore_reshape)
-                    .broadcast(this->restore_bcast) -
-            2.0 * var_grad * (this->input_minus_mean.mean(this->collapsed_dims)
+                    .eval()
+                    .broadcast(this->restore_bcast).eval() -
+            2.0 * var_grad *
+            (this->input_minus_mean.mean(this->collapsed_dims)
                     .reshape(this->restore_reshape)
-                    .broadcast(this->restore_bcast));
+                    .eval()
+                    .broadcast(this->restore_bcast).eval());
 
-    return (norm_grad * this->variance_plus_epsilon.rsqrt() +
+    this->dL_dX.template device(this->device) =
+            norm_grad * this->variance_plus_epsilon.rsqrt() +
             var_grad * static_cast<Scalar>(2.0 / collapsed_dim_size) *
             this->input_minus_mean +
-            mean_grad / collapsed_dim_size);
+            mean_grad / collapsed_dim_size;
 
 }
 
