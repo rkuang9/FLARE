@@ -10,6 +10,7 @@
 //#include "orion/activations/include_activations.hpp"
 #include "orion/weights/include_weights.hpp"
 #include "orion/optimizers/include_optimizers.hpp"
+#include <fstream>
 
 namespace orion
 {
@@ -280,6 +281,14 @@ public:
 
 
     virtual void Training(bool is_training)
+    {}
+
+
+    virtual void Save(const std::string &path)
+    {}
+
+
+    virtual void Load(const std::string &path)
     {}
 
 

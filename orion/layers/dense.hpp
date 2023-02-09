@@ -124,6 +124,12 @@ public:
      */
     int GetOutputRank() const override;
 
+
+    void Save(const std::string &path) override;
+
+
+    void Load(const std::string &path) override;
+
 private:
     // backpropagation is a bit different from most activation functions
     EIGEN_STRONG_INLINE void BackwardSoftmax(const Tensor<2> &gradients);
@@ -142,7 +148,8 @@ private:
     Tensor<2> dL_db; // loss gradients w.r.t. bias
 
     // multithreading
-    Eigen::ThreadPool pool = Eigen::ThreadPool((int) std::thread::hardware_concurrency());
+    Eigen::ThreadPool pool = Eigen::ThreadPool(
+            (int) std::thread::hardware_concurrency());
     Eigen::ThreadPoolDevice device = Eigen::ThreadPoolDevice(&pool, 2);
 
 };

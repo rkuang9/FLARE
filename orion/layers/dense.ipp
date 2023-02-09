@@ -207,12 +207,58 @@ void Dense<Activation>::BackwardSoftmax(const Tensor<2> &gradients)
     Tensor<3> softmax_grad = Softmax::Gradients(this->A);
 
     for (int batch = 0; batch < gradients.dimension(0); batch++) {
-        // TODO: since it is using a threading device, does it need resizing?
         this->dL_dZ.chip(batch, 0).template device(this->device) =
                 gradients.chip(batch, 0)
                         .contract(softmax_grad.chip(batch, 0),
                                   ContractDim {Axes(0, 1)});
     }
+}
+
+
+template<typename Activation>
+void Dense<Activation>::Save(const std::string &path)
+{
+    std::ofstream output_file(path);
+    output_file.precision(15);
+
+    if (!output_file.is_open()) {
+        throw std::invalid_argument(this->name + "::Save INVALID FILE PATH: " + path);
+    }
+
+    // flatten the weights and write it to the file with a white space delimiter
+    Tensor<1> flatten = this->w.reshape(Dims<1>(this->w.size()));
+
+    std::vector<Scalar> as_vector(flatten.data(), flatten.data() + flatten.size());
+    std::copy(as_vector.begin(), as_vector.end(),
+              std::ostream_iterator<Scalar>(output_file, " "));
+    output_file.close();
+}
+
+
+template<typename Activation>
+void Dense<Activation>::Load(const std::string &path)
+{
+    std::ifstream read_weights(path);
+
+    if (!read_weights.is_open()) {
+        throw std::invalid_argument(this->name + "::Load " + path + " NOT FOUND");
+    }
+
+    std::vector<Scalar> as_vector;
+    std::copy(std::istream_iterator<Scalar>(read_weights),
+              std::istream_iterator<Scalar>(), std::back_inserter(as_vector));
+    read_weights.close();
+
+    if (as_vector.size() != this->w.size()) {
+        std::ostringstream error_msg;
+        error_msg << this->name << "::Load " << path << " EXPECTED "
+                  << this->w.dimensions() << "=" << this->w.size() << " VALUES, GOT "
+                  << as_vector.size() << " INSTEAD";
+        throw std::invalid_argument(error_msg.str());
+    }
+
+    // reshape the flattened tensor back to expected weights dimensions
+    this->w = TensorMap<2>(as_vector.data(), this->w.dimensions());
 }
 
 } // namespace orion

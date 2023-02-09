@@ -36,103 +36,35 @@ public:
 
     ~Conv2D() override = default;
 
-
-    /**
-     * Forward propagation, convolve the input tensor
-     * with this layer's filters using the Im2col technique
-     *
-     * While training, all inputs should have the same dimensions
-     * While predicting, inputs may be larger than training inputs
-     *
-     * @param inputs   a rank 4 tensor
-     */
     void Forward(const Tensor<4> &inputs) override;
 
-
-    /**
-     * Forward propagation for hidden layers, passes the previous layer's
-     * output as input for Forward(inputs)
-     *
-     * @param prev   a reference to the previous layer
-     */
     void Forward(const Layer &prev) override;
 
-
-    /**
-     * Backward propagation for output layers, calculates
-     * loss gradients w.r.t. Z
-     *
-     * @param loss_function   a reference to the loss object
-     */
     void Backward(const Tensor<4> &gradients) override;
 
-
-    /**
-     * Backward propagation for hidden layers, calculates
-     * loss gradients w.r.t. Z
-     *
-     * @param next   a reference to the next layer
-     */
     void Backward(Layer &next) override;
 
-
-    /**
-     * Updates the layer's weights and bias with dL/dk, dL/db using
-     * the provided optimizer
-     *
-     * @param optimizer   a reference to the optimizer object
-     */
     void Update(Optimizer &optimizer) override;
 
-
-    // getters and setters
-
-
-    /**
-     * @return   layer's activation values
-     */
     const Tensor<4> &GetOutput4D() const override;
 
-
-    /**
-     * @return   layer's loss gradients w.r.t. pre-activated output (dL / dZ))
-     */
     const Tensor<4> &GetInputGradients4D() override;
 
-
-    /**
-     * @return   layer's kernels
-     */
     const Tensor<4> &GetWeights4D() const override;
 
-
-    /**
-     * @return   loss gradients w.r.t. weights (dL / dk)
-     */
     const Tensor<4> &GetWeightGradients4D() const override;
 
-
-    /**
-     * Set layer's weights
-     *
-     * @param weights   custom weights with dimensions [output units, input units]
-     */
     void SetWeights(const Tensor<4> &weights) override;
-
 
     void SetBias(const Tensor<4> &bias) override;
 
-
-    /**
-     * @return   expected rank of forward propagation's input tensor
-     */
     int GetInputRank() const override;
 
-
-    /**
-     * @return   expected rank of forward propagation's output tensor
-     */
     int GetOutputRank() const override;
+
+    void Save(const std::string &path) override;
+
+    void Load(const std::string &path) override;
 
 
     /**

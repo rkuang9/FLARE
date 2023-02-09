@@ -46,7 +46,7 @@ void BatchNormalization<TensorRank, NormDimCount>::Forward(
     this->input_minus_mean.resize(inputs.dimensions());
     this->variance_plus_epsilon.resize(inputs.dimensions());
 
-    if (!this->weights_are_set) {
+    if (!this->weights_are_set) [[unlikely]] {
         Dims<NormDimCount> weight_dims;
 
         for (auto i = 0; i < this->norm_axes.size(); i++) {
@@ -396,6 +396,20 @@ void BatchNormalization<TensorRank, NormDimCount>::CalculateInputGradients(
             this->input_minus_mean +
             mean_grad / collapsed_dim_size;
 
+}
+
+
+template<int TensorRank, int NormDimCount>
+void BatchNormalization<TensorRank, NormDimCount>::Save(const std::string &path)
+{
+    throw std::logic_error(this->name + "::Save not implemented yet");
+}
+
+
+template<int TensorRank, int NormDimCount>
+void BatchNormalization<TensorRank, NormDimCount>::Load(const std::string &path)
+{
+    throw std::logic_error(this->name + "::Load not implemented yet");
 }
 
 } // namespace orion

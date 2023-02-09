@@ -47,6 +47,10 @@ public:
 
     void Training(bool is_training) override;
 
+    void Save(const std::string &path) override;
+
+    void Load(const std::string &path) override;
+
     Tensor<NormDimCount> moving_mean;
     Tensor<NormDimCount> moving_variance;
     Tensor<NormDimCount> beta;
