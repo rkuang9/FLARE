@@ -181,20 +181,21 @@ public:
 
 
     // calculate the GRU layer's input gradients at this cell's time step
-    void CalcLayerInputGradients(const Tensor<2> &w_zr, const Tensor<2> &w_c,
-                                 Tensor<3> &dL_dx)
+    void CalcLayerInputGradients(
+            const Tensor<2> &w_zr, const Tensor<2> &w_c, Tensor<3> &dL_dx,
+            const Eigen::ThreadPoolDevice &device)
     {
         // dL/dx = dL/dpcand x w_c + dL/dpr x w_r + dL/dpz x w_z
         auto w_z = w_zr.slice(this->w_z_offset(), this->w_extent());
         auto w_r = w_zr.slice(this->w_r_offset(), this->w_extent());
         auto w_cand = w_c.slice(this->w_z_offset(), this->w_extent());
-        auto dL_dz_ = this->dL_dpzr.slice(this->z_offset(), this->z_extent());
-        auto dL_dr_ = this->dL_dpzr.slice(this->r_offset(), this->r_extent());
+        auto dL_dpz = this->dL_dpzr.slice(this->z_offset(), this->z_extent());
+        auto dL_dpr = this->dL_dpzr.slice(this->r_offset(), this->r_extent());
 
         ContractDim matmul {Axes(2, 1)};
 
-        dL_dx.slice(this->x_offset(), this->x_extent()) =
-                dL_dz_.contract(w_z, matmul) + dL_dr_.contract(w_r, matmul) +
+        dL_dx.slice(this->x_offset(), this->x_extent()).device(device) =
+                dL_dpz.contract(w_z, matmul) + dL_dpr.contract(w_r, matmul) +
                 this->dL_dpcand.contract(w_cand, matmul);
     }
 

@@ -151,7 +151,7 @@ GRU<CandidateActivation, GateActivation, ReturnSequences>::GetInputGradients3D()
 
     for (int i = time_steps - 1; i >= 0; --i) {
         this->gru_cells[i].CalcLayerInputGradients(this->w_zr, this->w_c,
-                                                   this->dL_dx);
+                                                   this->dL_dx, this->device);
     }
 
     return this->dL_dx;
