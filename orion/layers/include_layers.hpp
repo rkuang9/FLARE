@@ -18,5 +18,7 @@
 #include "reshape.hpp"
 #include "activation.hpp"
 #include "leaky_relu.hpp"
+#include "gru.hpp"
+#include "rnn/gru_cell.hpp"
 
 #endif //ORION_INCLUDE_LAYERS_HPP

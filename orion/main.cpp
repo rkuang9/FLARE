@@ -9,25 +9,48 @@ orion::Dims<5> NPCHW(0, 1, 4, 2, 3);
 using namespace orion;
 
 
-void serialize()
+void test()
 {
-    Layer *conv = new Conv2D<Linear>(2, 3, Kernel(4, 4), Stride(1, 1),
-                                     Dilation(1, 1), Padding::PADDING_SAME);
-    
-    Tensor<1> flattened_kernels = conv->GetWeights4D()
-            .reshape(Dims<1>(conv->GetWeights4D().size()));
+    Tensor<3> inputs(2, 3, 3);
+    inputs.setValues({{{0.75674543, 0.48890536, 0.3872954},
+                              {0.99806318, 0.25933461, 0.83642692},
+                              {0.83294866, 0.78341476, 0.34627345}},
+                      {{0.12554334, 0.08473995, 0.40768565},
+                              {0.71470978, 0.86196027, 0.09974493},
+                              {0.14966181, 0.92493361, 0.13505977}
+                      }});
 
-    conv->Save(conv->name + ".weights");
-    conv->Load(conv->name + ".weights");
+    Sequential model {
+            new GRU<TanH, Sigmoid>(3, 5),
+    };
 
-    Tensor<1> loaded_flattened_kernels = conv->GetWeights4D()
-            .reshape(Dims<1>(conv->GetWeights4D().size()));
+    MeanSquaredError<3> mse;
+    SGD opt(1.0);
 
-    for (int i = 0; i < flattened_kernels.size(); i++) {
-        orion_assert(
-                std::abs(flattened_kernels(i) - loaded_flattened_kernels(i)) < 1e-7,
-                "SAVED WEIGHTS NOT EQUAL");
-    }
+    model.Forward(inputs);
+    std::cout << "output: " << model.layers.back()->GetOutput3D().dimensions()
+              << "\n" << model.layers.back()->GetOutput3D() << "\n";
+
+    mse(model.layers.back()->GetOutput3D(),
+        model.layers.back()->GetOutput3D().constant(1.0));
+    std::cout << "loss gradients\n" << mse.GetGradients() << "\n";
+    model.Backward(mse.GetGradients());
+    std::cout << "input gradients dL/dx\n"
+              << model.layers.back()->GetInputGradients3D() << "\n";
+    model.Update(opt);
+
+    model.Forward(inputs);
+    std::cout << "output: " << model.layers.back()->GetOutput3D().dimensions()
+              << "\n" << model.layers.back()->GetOutput3D() << "\n";
+
+    mse(model.layers.back()->GetOutput3D(),
+        model.layers.back()->GetOutput3D().constant(1.0));
+    std::cout << "loss gradients\n" << mse.GetGradients() << "\n";
+    model.Backward(mse.GetGradients());
+    std::cout << "input gradients dL/dx\n"
+              << model.layers.back()->GetInputGradients3D() << "\n";
+    model.Update(opt);
+
 }
 
 
@@ -35,7 +58,7 @@ int main()
 {
     auto start = std::chrono::high_resolution_clock::now();
 
-    serialize();
+    test();
 
     auto stop = std::chrono::high_resolution_clock::now();
     auto time = std::chrono::duration_cast<std::chrono::milliseconds>(

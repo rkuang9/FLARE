@@ -56,13 +56,16 @@ Contribution is more than welcome, please email rkuang25@gmail.com.
 
 
 # TODO
-- Softmax activation (done 12/1/2022)
-- Categorical cross entropy loss (done 12/1/2022)
-- Add progress bar to display during training (done 12/6/2022)
-- Multithreading support (partially done 12/12/2022, only 2 threads)
-- Generative Adversarial Networks for generating images (done, added Conv2DTranspose valid padding only 12/26/2022, added BatchNormalization 1/13/2023, added output padding and same padding 1/15/2023)
-- Save and load models from files
-- Add bias support for layers
-- Parse JSON datasets
-- Evaluate a test set per epoch
-- Accuracy metrics
+- [x] Softmax activation (12/1/2022)
+- [x] Categorical cross entropy loss (12/1/2022)
+- [x] Add progress bar to display during training (12/6/2022)
+- [x] Multithreading support (12/12/2022)
+- [x] Generative Adversarial Networks support (Conv2DTranspose valid padding 12/26/2022, BatchNormalization 1/13/2023, Conv2DTranspose output and same padding 1/15/2023)
+- [x] Save and load weights from files
+- [ ] Gated Recurrent Unit
+- [ ] Long Short-Term Memory
+- [ ] Bidirectional RNN
+- [ ] Add bias support for layers
+- [ ] Parse JSON datasets
+- [ ] Evaluate a test set per epoch
+- [ ] Accuracy metrics

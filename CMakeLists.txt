@@ -11,7 +11,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 add_compile_definitions("EIGEN_USE_THREADS")
 add_compile_definitions("EIGEN_DEFAULT_TO_ROW_MAJOR")
 
-add_compile_definitions("USING_OPENCV") # include OpenCV for image-to-tensor
+#add_compile_definitions("USING_OPENCV") # include OpenCV for image-to-tensor
 
 
 # without this, nothing works

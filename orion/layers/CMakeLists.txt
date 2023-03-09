@@ -12,6 +12,7 @@ set(SOURCES
         reshape.ipp
         activation.ipp
         leaky_relu.ipp
+        gru.ipp
         )
 
 set(SOURCE_DIRECTORY)

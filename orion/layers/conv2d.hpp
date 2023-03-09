@@ -139,7 +139,7 @@ public:
             Eigen::Index pad_left, Eigen::Index pad_right);
 
 protected:
-    Tensor<4> X; // layer input image
+    Tensor<4> X; // layer input image, TODO: make this a pointer to avoid copy
     Tensor<4> Z; // layer input convolved with kernels
     Tensor<4> A; // activated output of layer inout convolved with kernels
     Tensor<4> dL_dZ; // gradients of layer output, received from next layer

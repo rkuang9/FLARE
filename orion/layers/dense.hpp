@@ -136,7 +136,7 @@ private:
 
     bool use_bias = true;
 
-    Tensor<2> X; // layer input matrix, stacked column-wise
+    Tensor<2> X; // layer input matrix, TODO: make this a pointer to avoid copy
     Tensor<2> Z; // weighted input matrix, Z = w*X + b
     Tensor<2> A; // activated input matrix after applying g(Z)
     Tensor<2> dL_dZ; // gradients of layer output, received from next layer
