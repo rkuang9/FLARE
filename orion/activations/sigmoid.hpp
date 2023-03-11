@@ -10,25 +10,33 @@
 namespace orion
 {
 
+// Tensorflow automatically swaps sigmoid with softmax if used with
+// categorical cross entropy(except for tf.nn.sigmoid), that is not done here
 class Sigmoid
 {
 public:
-    // tensorflow automatically swaps sigmoid with softmax if categorical cross
-    // entropy is used (tf.nn.sigmoid prevents this), we will not do that here
-    template<int TensorRank>
-    static Tensor<TensorRank> Activate(const Tensor<TensorRank> &features)
+    /**
+     * Compute the activation of a tensor
+     * @param tensor   Eigen::Tensor or Eigen::Tensor Op
+     * @return         Eigen::Tensor or Eigen::Tensor Op
+     */
+    template<typename TensorX>
+    static auto Activate(const TensorX &tensor)
     {
-        return features.sigmoid();
+        return tensor.sigmoid();
     }
 
 
-    template<int TensorRank>
-    static Tensor<TensorRank> Gradients(const Tensor<TensorRank> &features)
+    /**
+     * Compute the activation gradients of a tensor
+     * @param tensor   Eigen::Tensor or Eigen::Tensor Op
+     * @return         Eigen::Tensor or Eigen::Tensor Op
+     */
+    template<typename TensorX>
+    static auto Gradients(const TensorX &tensor)
     {
         auto one = static_cast<Scalar>(1.0);
-
-        Tensor<TensorRank> sigmoid = features.sigmoid();
-        return sigmoid * (one - sigmoid);
+        return tensor.sigmoid() * (one - tensor.sigmoid());
     }
 };
 

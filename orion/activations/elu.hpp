@@ -18,27 +18,37 @@ namespace orion
 class ELU
 {
 public:
-    template<int TensorRank>
-    static Tensor<TensorRank> Activate(const Tensor<TensorRank> &features)
+    /**
+     * Compute the activation of a tensor
+     * @param tensor   Eigen::Tensor or Eigen::Tensor Op
+     * @return         Eigen::Tensor or Eigen::Tensor Op
+     */
+    template<typename TensorX>
+    static auto Activate(const TensorX &tensor)
     {
         auto zero = static_cast<Scalar>(0.0);
         auto one = static_cast<Scalar>(1.0);
 
-        return (features > zero).select(
-                features,
-                features.exp() - one);
+        return (tensor > zero).select(
+                tensor,
+                tensor.exp() - one);
     }
 
 
-    template<int TensorRank>
-    static Tensor<TensorRank> Gradients(const Tensor<TensorRank> &features)
+    /**
+     * Compute the activation gradients of a tensor
+     * @param tensor   Eigen::Tensor or Eigen::Tensor Op
+     * @return         Eigen::Tensor or Eigen::Tensor Op
+     */
+    template<typename TensorX>
+    static auto Gradients(const TensorX &tensor)
     {
         auto zero = static_cast<Scalar>(0.0);
         auto one = static_cast<Scalar>(1.0);
 
-        return (features > zero).select(
-                features.constant(one),
-                ELU::Activate(features) + one);
+        return (tensor > zero).select(
+                tensor.constant(one),
+                ELU::Activate(tensor) + one);
     }
 };
 

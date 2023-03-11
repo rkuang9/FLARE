@@ -23,11 +23,11 @@ void HeartAttackPrediction()
     std::cout << "total samples: " << dataset.training_samples.size() << "\n";
 
     Sequential model {
-            new Dense<ReLU>(13, 256, false),
-            new Dense<Sigmoid>(256, 1, false),
+            new Dense<ReLU>(13, 24, false),
+            new Dense<Sigmoid>(24, 1, false),
     };
 
-    MeanSquaredError<2> loss;
+    BinaryCrossEntropy<2> loss;
     Adam opt;
 
     model.Fit(dataset.training_samples, dataset.training_labels, 14, loss, opt);

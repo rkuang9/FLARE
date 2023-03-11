@@ -17,7 +17,7 @@ public:
      * @param dimension   dimension on which to sum along
      */
     template<int TensorRank>
-    static Tensor<TensorRank> Activate(const Tensor<TensorRank> &features,
+    static auto Activate(const Tensor<TensorRank> &features,
                                        int dimension = TensorRank - 1)
     {
         Dims<TensorRank> predict_sum_dims = features.dimensions();
@@ -49,10 +49,12 @@ public:
         if constexpr (TensorRank == 2) {
             return Softmax::Gradients2D(softmax);
         }
-
-        throw std::invalid_argument(
-                "Softmax backpropagation is currently only supported in Dense layers");
+        else {
+            throw std::invalid_argument(
+                    "Softmax backpropagation currently only supported for rank 2 tensors");
+        }
     }
+
 
 private:
     static Tensor<3> Gradients2D(const Tensor<2> &softmax)

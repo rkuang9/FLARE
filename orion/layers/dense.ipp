@@ -38,6 +38,8 @@ void Dense<Activation>::Forward(const Tensor<2> &input)
 
     // resize output tensor to [batch, output_units]
     this->Z.resize(input.dimension(0), this->w.dimension(1));
+    this->A.resize(this->Z.dimensions());
+
     this->Z.template device(this->device) =
             this->X.contract(this->w, ContractDim {Axes(1, 0)});
 
@@ -47,8 +49,7 @@ void Dense<Activation>::Forward(const Tensor<2> &input)
         //Eigen::array<Eigen::Index, 2>({1, input.dimension(1)}));
     }
 
-    this->A = Activation::Activate(this->Z);
-
+    this->A.template device(this->device) = Activation::Activate(this->Z);
 }
 
 
@@ -204,7 +205,9 @@ void Dense<Activation>::BackwardSoftmax(const Tensor<2> &gradients)
     this->dL_dZ.resize(this->Z.dimensions());
 
     // pass in the layer activations to avoid recalculating the softmax values
-    Tensor<3> softmax_grad = Softmax::Gradients(this->A);
+    Tensor<3> softmax_grad(this->A.dimension(0),
+                           this->A.dimension(1), this->A.dimension(1));
+    softmax_grad.template device(this->device) = Softmax::Gradients(this->A);
 
     for (int batch = 0; batch < gradients.dimension(0); batch++) {
         this->dL_dZ.chip(batch, 0).template device(this->device) =
@@ -222,7 +225,8 @@ void Dense<Activation>::Save(const std::string &path)
     output_file.precision(15);
 
     if (!output_file.is_open()) {
-        throw std::invalid_argument(this->name + "::Save INVALID FILE PATH: " + path);
+        throw std::invalid_argument(
+                this->name + "::Save INVALID FILE PATH: " + path);
     }
 
     // flatten the weights and write it to the file with a white space delimiter

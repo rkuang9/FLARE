@@ -20,7 +20,8 @@ template<typename activation, int TensorRank>
 void Activation<activation, TensorRank>::Forward(const Tensor<TensorRank> &inputs)
 {
     this->X = inputs;
-    this->Z = activation::Activate(inputs);
+    this->Z.resize(inputs.dimensions());
+    this->Z.template device(this->device) = activation::Activate(inputs);
 }
 
 

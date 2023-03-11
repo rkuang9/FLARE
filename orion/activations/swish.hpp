@@ -11,25 +11,36 @@
 namespace orion
 {
 // TODO: prone to exploding gradients, need to find a way to clip in optimizers
+// TODO:
 // https://arxiv.org/pdf/1710.05941.pdf
 class Swish
 {
 public:
-    template <int TensorRank>
-    static Tensor<TensorRank> Activate(const Tensor<TensorRank> &features)
+    /**
+     * Compute the activation of a tensor
+     * @param tensor   Eigen::Tensor or Eigen::Tensor Op
+     * @return         Eigen::Tensor or Eigen::Tensor Op
+     */
+    template<typename TensorX>
+    static auto Activate(const TensorX &tensor)
     {
         // a = z/(1 + e^-z) = z * sigmoid(z)
-        return features * features.sigmoid();
+        return tensor * tensor.sigmoid();
     }
 
 
-    template <int TensorRank>
-    static Tensor<TensorRank> Gradients(const Tensor<TensorRank> &features)
+    /**
+     * Compute the activation gradients of a tensor
+     * @param tensor   Eigen::Tensor or Eigen::Tensor Op
+     * @return         Eigen::Tensor or Eigen::Tensor Op
+     */
+    template<typename TensorX>
+    static auto Gradients(const TensorX &tensor)
     {
         auto one = static_cast<Scalar>(1.0);
-
-        Tensor<TensorRank> swish = features * features.sigmoid();
-        return swish + features.sigmoid() * (one - swish);
+        return tensor.sigmoid() * (tensor * (one - tensor.sigmoid()) + one);
+        /*auto swish = tensor * tensor.sigmoid();
+        return swish + tensor.sigmoid() * (one - swish);*/
     }
 };
 

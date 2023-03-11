@@ -130,12 +130,14 @@ void Conv2DTranspose<Activation, Threads>::Forward(const Tensor<4> &inputs)
 
     this->Z.resize(inputs.dimension(0), output_h, output_w,
                    this->kernels.dimension(0));
+    this->A.resize(this->Z.dimensions());
+
     this->Z.template device(this->device) = this->ConvolutionForward(
             inputs, this->kernels.reverse(Dims<4, bool>(false, true, true, false)),
             Stride(1, 1), this->dilation, this->stride,
             this->Z.dimensions(),
             padding_top, padding_bottom, padding_left, padding_right);
-    this->A = Activation::Activate(this->Z);
+    this->A.template device(this->device) = Activation::Activate(this->Z);
 }
 
 

@@ -13,36 +13,27 @@ namespace orion
 class Linear
 {
 public:
-    template<int TensorRank>
-    static Tensor<TensorRank> Activate(const Tensor<TensorRank> &features)
+    /**
+     * Compute the activation of a tensor
+     * @param tensor   Eigen::Tensor or Eigen::Tensor Op
+     * @return         Eigen::Tensor or Eigen::Tensor Op
+     */
+    template<typename TensorX>
+    static auto Activate(const TensorX &tensor)
     {
-        return features;
+        return tensor;
     }
 
 
-    /*template<int TensorRank>
-    static Tensor<TensorRank> Gradients(const Tensor<TensorRank> &features)
-    {
-        return Tensor<TensorRank>().template device(Eigen::DefaultDevice()) = features.constant(1.0);
-        auto one = static_cast<Scalar>(1.0);
-        return Tensor<TensorRank>(features.dimensions()).setConstant(one);
-    }*/
-
-
     /**
-     * Compute the activation function gradients
+     * Compute the activation gradients of a tensor
      * @param tensor   Eigen::Tensor or Eigen::Tensor Op
-     * @param output   Eigen::Tensor or Eigen::Tensor Op to assign output to
-     * @param device   device such as Eigen::ThreadPoolDevice or Eigen::DefaultDevice
-     * @return         Eigen::TensorO Op
+     * @return         Eigen::Tensor or Eigen::Tensor Op
      */
     template<typename TensorX>
     static auto Gradients(const TensorX &tensor)
     {
         return tensor.constant(1.0);
-        /*
-        auto one = static_cast<Scalar>(1.0);
-        output. template device(device) = tensor.constant(one);*/
     }
 };
 
