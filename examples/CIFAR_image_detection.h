@@ -2,10 +2,10 @@
 // Created by Macross on 12/12/22.
 //
 
-#ifndef ORION_CIFAR_IMAGE_DETECTION_H
-#define ORION_CIFAR_IMAGE_DETECTION_H
+#ifndef FLARE_CIFAR_IMAGE_DETECTION_H
+#define FLARE_CIFAR_IMAGE_DETECTION_H
 
-#include <orion/orion.hpp>
+#include <flare/flare.hpp>
 
 // https://github.com/YoongiKim/CIFAR-10-images
 // if using OpenCV to display images from a Tensor, unexpected results will occur, see
@@ -13,7 +13,7 @@
 // this is just a working example and not tuned for accuracy!!!
 void CIFAR10_CNN()
 {
-    using namespace orion;
+    using namespace fl;
     namespace fs = std::filesystem;
 
     Dataset cifar(Dims<3>(32, 32, 3), Dims<1>(10));
@@ -51,9 +51,9 @@ void CIFAR10_CNN()
     };
 
     CategoricalCrossEntropy<2> loss;
-    SGD opt(0.001, 0.9);
+    Adam opt;
 
     model.Fit(cifar.training_samples, cifar.training_labels, 10, loss, opt);
 }
 
-#endif //ORION_CIFAR_IMAGE_DETECTION_H
+#endif //FLARE_CIFAR_IMAGE_DETECTION_H

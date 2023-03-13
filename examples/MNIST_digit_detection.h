@@ -2,14 +2,14 @@
 // Created by Macross on 12/11/22.
 //
 
-#ifndef ORION_MNIST_DIGIT_DETECTION_H
-#define ORION_MNIST_DIGIT_DETECTION_H
+#ifndef FLARE_MNIST_DIGIT_DETECTION_H
+#define FLARE_MNIST_DIGIT_DETECTION_H
 
-#include <orion/orion.hpp>
+#include <flare/flare.hpp>
 
 void MNIST_CNN()
 {
-    using namespace orion;
+    using namespace fl;
     namespace fs = std::filesystem;
 
     Dataset dataset(Dims<3>(28, 28, 3), Dims<1>(10));
@@ -55,4 +55,4 @@ void MNIST_CNN()
               << dataset.training_labels.back() << "\n\n";
 }
 
-#endif //ORION_MNIST_DIGIT_DETECTION_H
+#endif //FLARE_MNIST_DIGIT_DETECTION_H

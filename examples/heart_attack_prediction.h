@@ -2,10 +2,10 @@
 // Created by Macross on 12/6/22.
 //
 
-#ifndef ORION_HEART_ATTACK_PREDICTION_H
-#define ORION_HEART_ATTACK_PREDICTION_H
+#ifndef FLARE_HEART_ATTACK_PREDICTION_H
+#define FLARE_HEART_ATTACK_PREDICTION_H
 
-#include <orion/orion.hpp>
+#include <flare/flare.hpp>
 
 
 // Working example, requires fine-tuning but passes gradient check (unless gradients vanish)
@@ -14,7 +14,7 @@
 // https://www.kaggle.com/datasets/rashikrahmanpritom/heart-attack-analysis-prediction-dataset
 void HeartAttackPrediction()
 {
-    using namespace orion;
+    using namespace fl;
 
     Dataset dataset(Dims<1>(13), Dims<1>(1));
     dataset.Add("heart.csv", std::vector<int> {13});
@@ -43,4 +43,4 @@ void HeartAttackPrediction()
 }
 
 
-#endif //ORION_HEART_ATTACK_PREDICTION_H
+#endif //FLARE_HEART_ATTACK_PREDICTION_H

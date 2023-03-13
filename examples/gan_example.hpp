@@ -2,12 +2,12 @@
 // Created by Raymond on 2/7/23.
 //
 
-#ifndef ORION_GAN_EXAMPLE_HPP
-#define ORION_GAN_EXAMPLE_HPP
+#ifndef FLARE_GAN_EXAMPLE_HPP
+#define FLARE_GAN_EXAMPLE_HPP
 
-#include <orion/orion.hpp>
+#include <flare/flare.hpp.hpp>
 
-using namespace orion;
+using namespace fl;
 
 BinaryCrossEntropy<2> DiscriminatorLoss(const Tensor<2> &real_output,
                                         const Tensor<2> &fake_output)
@@ -31,7 +31,7 @@ BinaryCrossEntropy<2> DiscriminatorLoss(const Tensor<2> &real_output,
 // - add compile time check to skip activation for linear layers
 void GAN()
 {
-    using namespace orion;
+    using namespace fl;
 
     Sequential generator {
             new Dense<Linear>(100, 7 * 7 * 256, false),
@@ -157,4 +157,4 @@ void GAN()
     }
 }
 
-#endif //ORION_GAN_EXAMPLE_HPP
+#endif //FLARE_GAN_EXAMPLE_HPP

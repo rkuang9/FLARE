@@ -1,12 +1,11 @@
-# OrionNN
-A neural network library in active development written in C++ and based on Eigen Tensor
-with an interface similar to TensorFlow.
+# FLARE
+#### Fast Learning Algorithms Ran Eagerly
 
-I started this project to learn more about artificial intelligence and because there aren't
-many open-source fully featured and easy to understand neural network libraries.
+A neural network library in active development, written in C++, built on Eigen Tensor, and designed
+with an interface similar to TensorFlow. The initial goal is to learn and  implement common neural network
+architectures found in computer vision and natural language processing.
 
-Contribution is more than welcome, please email rkuang25@gmail.com.
-
+Contribute and learn AI together.
 
 # Features
 - Layers 
@@ -18,6 +17,8 @@ Contribution is more than welcome, please email rkuang25@gmail.com.
   - Flatten
   - Convolution 2D Transpose
   - Batch Normalization
+  - Dropout
+  - Gated Recurrent Unit
 - Activation Functions
   - Sigmoid
   - Hyperbolic tangent (TanH)
@@ -47,7 +48,7 @@ Contribution is more than welcome, please email rkuang25@gmail.com.
   - Lecun Uniform
   - Lecun Normal
 - Metrics
-  - Loss (recorded by loss function)
+  - Loss
 - Dataset Class
   - Batching
   - Shuffling
@@ -62,8 +63,8 @@ Contribution is more than welcome, please email rkuang25@gmail.com.
 - [x] Multithreading support (12/12/2022)
 - [x] Generative Adversarial Networks support (Conv2DTranspose valid padding 12/26/2022, BatchNormalization 1/13/2023, Conv2DTranspose output and same padding 1/15/2023)
 - [x] Save and load weights from files
-- [ ] Gated Recurrent Unit
-- [ ] Long Short-Term Memory
+- [x] Gated Recurrent Unit (3/9/2023)
+- [x] Long Short-Term Memory
 - [ ] Bidirectional RNN
 - [ ] Add bias support for layers
 - [ ] Parse JSON datasets
