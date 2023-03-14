@@ -1,12 +1,12 @@
 #include <iostream>
 #include <chrono>
 #include <flare/flare.hpp>
-#include "examples/heart_attack_prediction.h"
+#include "examples/learn_addition.hpp"
 
 
 void test()
 {
-    HeartAttackPrediction();
+    LearnAddition();
 }
 
 
