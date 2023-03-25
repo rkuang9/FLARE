@@ -34,6 +34,7 @@ public:
         this->gates.resize(x.dimension(0), this->output_len * 4);
         this->p_gates.resize(this->gates.dimensions());
         this->x_h_prev.resize(x.dimension(0), this->input_len + this->output_len);
+        this->cs_prev.resize(x.dimension(0), this->output_len);
 
         this->x_h_prev
                 .slice(Dims<2>(0, 0),
@@ -71,10 +72,14 @@ public:
                 GateActivation::Activate(
                         this->p_gates.slice(this->o_offset(), this->gate_extent()));
 
+        this->cs_prev.device(device) = this->time_step == 0
+                                       ? Tensor<2>(x.dimension(0),
+                                                   this->output_len).setZero()
+                                       : cs.chip(this->time_step - 1, 1);
+
         cs.chip(this->time_step, 1).device(device) =
                 this->gates.slice(this->f_offset(), this->gate_extent()) *
-                (this->time_step == 0 ? Tensor<2>(1, 5).setZero() : cs.chip(
-                        this->time_step - 1, 1)) +
+                this->cs_prev +
                 this->gates.slice(this->i_offset(), this->gate_extent()) *
                 this->gates.slice(this->c_offset(), this->gate_extent());
 
@@ -86,24 +91,33 @@ public:
 
     template<typename Device>
     void Backward(const Tensor<3> &gradients,
-                  const Tensor<3> &x,
                   const Tensor<2> &w, Tensor<2> &dL_dw,
                   const Tensor<3> &h, const Tensor<3> &cs,
-                  const Tensor<2> &dL_dh_next, const Tensor<2> &dL_dcs_next,
+                  const Tensor<2> &dh_next, const Tensor<2> &dcs_next,
                   const Device &device = Eigen::DefaultDevice())
     {
-        Tensor<2> dL_dcs(x.dimension(0), this->output_len);
-        dL_dcs.device(device) =
-                (gradients + dL_dh_next) *
-                this->gates.slice(this->o_offset(), this->gate_extent()) *
-                RecurrentActivation::Gradients(cs.chip(this->time_step, 1)) +
-                dL_dcs_next;
+        this->dp_gates.resize(this->gates.dimensions());
 
-        auto d_i = dL_dcs * this->gates.slice(this->c_offset(), this->gate_extent());
-        auto d_f = dL_dcs * this->gates.slice(this->o_offset(), this->gate_extent());
-        auto d_c = dL_dcs * this->gates.slice(this->i_offset(), this->gate_extent());
-        auto d_o = (gradients + dL_dh_next) *
-                   RecurrentActivation::Activate(cs.chip(this->time_step, 1));
+        Tensor<2> dh(h.dimension(0), this->output_len);
+        dh.device(device) = gradients.chip(this->time_step, 1);
+
+        if (this->time_step != h.dimension(1) - 1) {
+            dh += dh_next;
+        }
+
+        Tensor<2> dcs(cs.dimension(0), this->output_len);
+        dcs.device(device) =
+                dh * this->gates.slice(this->o_offset(), this->gate_extent()) *
+                RecurrentActivation::Gradients(cs.chip(this->time_step, 1));
+
+        if (this->time_step != cs.dimension(1) - 1) {
+            dcs += dcs_next;
+        }
+
+        auto d_i = dcs * this->gates.slice(this->c_offset(), this->gate_extent());
+        auto d_f = dcs * this->cs_prev;
+        auto d_c = dcs * this->gates.slice(this->i_offset(), this->gate_extent());
+        auto d_o = dh * RecurrentActivation::Activate(cs.chip(this->time_step, 1));
 
         // calculate loss gradient w.r.t. pre-activation gates
         this->dp_gates.slice(this->i_offset(), this->gate_extent()).device(device) =
@@ -122,29 +136,30 @@ public:
                 d_o * GateActivation::Gradients(
                         this->p_gates.slice(this->o_offset(), this->gate_extent()));
 
+        // calculate loss gradients w.r.t. weights
         ContractDim weight_grad_matmul {Axes(0, 0)};
 
-        dL_dw.slice(this->wu_i_offset(), this->wu_extent()).device(device) =
+        dL_dw.slice(this->wu_i_offset(), this->wu_extent()).device(device) +=
                 this->x_h_prev.contract(
                         this->dp_gates.slice(this->i_offset(), this->gate_extent()),
                         weight_grad_matmul);
-        dL_dw.slice(this->wu_f_offset(), this->wu_extent()).device(device) =
+        dL_dw.slice(this->wu_f_offset(), this->wu_extent()).device(device) +=
                 this->x_h_prev.contract(
                         this->dp_gates.slice(this->f_offset(), this->gate_extent()),
                         weight_grad_matmul);
-        dL_dw.slice(this->wu_c_offset(), this->wu_extent()).device(device) =
+        dL_dw.slice(this->wu_c_offset(), this->wu_extent()).device(device) +=
                 this->x_h_prev.contract(
                         this->dp_gates.slice(this->c_offset(), this->gate_extent()),
                         weight_grad_matmul);
-        dL_dw.slice(this->wu_o_offset(), this->wu_extent()).device(device) =
+        dL_dw.slice(this->wu_o_offset(), this->wu_extent()).device(device) +=
                 this->x_h_prev.contract(
                         this->dp_gates.slice(this->o_offset(), this->gate_extent()),
                         weight_grad_matmul);
 
         if (this->time_step > 0) {
-            // if not the first cell, calculate the input gradients for "h" and "cs"
-            this->dh_prev.resize();
-            this->dc_prev.resize();
+            // calculate loss gradients w.r.t. input "h" and "cs" from previous cell
+            this->dh_prev.resize(dh_next.dimensions());
+            this->dcs_prev.resize(dcs_next.dimensions());
 
             ContractDim h_grad_matmul {Axes(1, 1)};
             this->dh_prev.device(device) =
@@ -161,21 +176,23 @@ public:
                             .contract(w.slice(this->uo_offset(), this->u_extent()),
                                       h_grad_matmul);
 
-            this->dcs_prev.device(device) = dL_dcs * this->gates.slice(
+            this->dcs_prev.device(device) = dcs * this->gates.slice(
                     this->f_offset(), this->gate_extent());
+            std::cout << "dcs_prev: " << dcs_prev << "\n";
+            std::cout << "dh_prev: " << dh_prev << "\n";
         }
     }
 
 
     const Tensor<2> &GetInputGradientsHprev() const
     {
-        return this->dL_dh_prev;
+        return this->dh_prev;
     }
 
 
     const Tensor<2> &GetInputGradientsCprev() const
     {
-        return this->dL_dc_prev;
+        return this->dcs_prev;
     }
 
 
@@ -296,7 +313,8 @@ protected:
     Tensor<2> dp_gates; // loss gradients w.r.t. pre-activation gates
 
     Tensor<2> dh_prev;
-    Tensor<2> dc_prev;
+    Tensor<2> dcs_prev;
+    Tensor<2> cs_prev;
 
 };
 
