@@ -13,6 +13,7 @@ set(SOURCES
         activation.ipp
         leaky_relu.ipp
         gru.ipp
+        lstm.ipp
         )
 
 set(SOURCE_DIRECTORY)

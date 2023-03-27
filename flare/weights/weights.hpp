@@ -22,6 +22,12 @@ public:
 
     virtual Tensor<TensorRank> Initialize(const Dims<TensorRank> &dims,
                                  int fan_in, int fan_out) const = 0;
+
+    virtual Tensor<TensorRank> operator()(const Dims<TensorRank> &dims,
+                                 int fan_in, int fan_out) const
+    {
+        return this->Initialize(dims, fan_in, fan_out);
+    }
 };
 
 

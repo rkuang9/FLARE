@@ -5,66 +5,29 @@
 
 void test()
 {
-    Eigen::ThreadPoolDevice device = Eigen::ThreadPoolDevice(
-            new Eigen::ThreadPool(8), 2);
-
     fl::MeanSquaredError<3> loss;
+    fl::SGD opt(1.0, 0.5);
 
-    Eigen::Index batch_size = 2;
-    Eigen::Index input_len = 3;
-    Eigen::Index output_len = 5;
-    Eigen::Index time_sequence = 3;
-
-    fl::Tensor<2> w(input_len + output_len, output_len * 4);
-    fl::Tensor<2> dL_dw(w.dimensions());
-    w.setConstant(1.0);
-    dL_dw.setZero();
-
-    fl::Tensor<3> x(batch_size, time_sequence, input_len);
+    fl::Tensor<3> x(1, 4, 1);
     x.setConstant(1.0);
-    fl::Tensor<3> h(batch_size, time_sequence, output_len);
-    fl::Tensor<3> cs(batch_size, time_sequence, output_len);
-    fl::Tensor<3> y(batch_size, time_sequence, output_len);
-    y.setConstant(1.0);
 
-    std::vector<fl::LSTMCell<fl::Linear, fl::Linear>> cells;
-    cells.reserve(time_sequence);
+    fl::LSTM<fl::TanH, fl::Sigmoid, true> lstm(1, 1);
 
-    for (int i = 0; i < time_sequence; i++) {
-        cells.emplace_back(i, input_len, output_len);
-    }
+    lstm.Forward(x);
+    std::cout << "output:\n" << lstm.GetOutput3D() << "\n";
 
-    for (int i = 0; i < time_sequence; i++) {
-        cells[i].Forward(x, w, h, cs, device);
-    }
 
-    loss(h, y);
-    std::cout << "loss gradients: " << loss.GetGradients().dimensions() << "\n" << loss.GetGradients() << "\n";
+    loss(lstm.GetOutput3D(), lstm.GetOutput3D().constant(1.0));
+    std::cout << "loss gradients: " << loss.GetGradients() << "\n";
 
-    std::cout << "h output: " << h.dimensions() << "\n" << h << "\n";
+    lstm.Backward(loss.GetGradients());
+    std::cout << "dL/dw: " << lstm.GetWeightGradients().dimensions() << "\n"
+              << lstm.GetWeightGradients() << "\n";
+    std::cout << "dL/dx: " << lstm.GetInputGradients3D().dimensions() << "\n"
+              << lstm.GetInputGradients3D();
 
-    cells.back().Backward(
-            loss.GetGradients(),
-            w, dL_dw,
-            h, cs,
-            fl::Tensor<2>(batch_size, output_len).setZero(),
-            fl::Tensor<2>(batch_size, output_len).setZero(),
-            device
-    );
-
-    for (auto i = time_sequence - 2; i >= 0; i--) {
-        std::cout << "run cell " << i << " backward\n";
-        cells[i].Backward(
-                loss.GetGradients(),
-                w, dL_dw,
-                h, cs,
-                cells[i + 1].GetInputGradientsHprev(),
-                cells[i + 1].GetInputGradientsCprev(),
-                device
-        );
-    }
-
-    std::cout << "dL/dw: " << dL_dw.dimensions() << "\n" << dL_dw << "\n";
+    lstm.Update(opt);
+    std::cout << "updated weights\n" << lstm.GetWeights() << "\n";
 }
 
 

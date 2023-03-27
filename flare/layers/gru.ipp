@@ -26,8 +26,6 @@ GRU<CandidateActivation, GateActivation, ReturnSequences>::GRU(
             Dims<2>(features_len + outputs, outputs), features_len, outputs);
     this->dL_dw_zr.resize(this->w_zr.dimensions());
     this->dL_dw_c.resize(this->w_c.dimensions());
-    w_zr.setConstant(1.0);
-    w_c.setConstant(1.0);
 }
 
 

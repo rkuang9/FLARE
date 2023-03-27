@@ -11,7 +11,7 @@
 namespace fl
 {
 
-template<typename GateActivation = Sigmoid, typename RecurrentActivation = TanH>
+template<typename Activation = TanH, typename GateActivation = Sigmoid>
 class LSTMCell
 {
 public:
@@ -20,8 +20,7 @@ public:
               input_len(input_len),
               output_len(output_len)
     {
-        std::cout << "initialize cell: " << time_step << ", " << input_len << ", "
-                  << output_len << "\n";
+        // nothing to do
     }
 
 
@@ -65,7 +64,7 @@ public:
                         this->p_gates.slice(this->f_offset(), this->gate_extent()));
 
         this->gates.slice(this->c_offset(), this->gate_extent()).device(device) =
-                RecurrentActivation::Activate(
+                Activation::Activate( // TODO: Gate Or Activation?
                         this->p_gates.slice(this->c_offset(), this->gate_extent()));
 
         this->gates.slice(this->o_offset(), this->gate_extent()).device(device) =
@@ -85,39 +84,30 @@ public:
 
         h.chip(this->time_step, 1).device(device) =
                 this->gates.slice(this->o_offset(), this->gate_extent()) *
-                RecurrentActivation::Activate(cs.chip(this->time_step, 1));
+                Activation::Activate(cs.chip(this->time_step, 1));
     }
 
 
     template<typename Device>
-    void Backward(const Tensor<3> &gradients,
+    void Backward(const Tensor<2> &gradients,
                   const Tensor<2> &w, Tensor<2> &dL_dw,
-                  const Tensor<3> &h, const Tensor<3> &cs,
-                  const Tensor<2> &dh_next, const Tensor<2> &dcs_next,
+                  const Tensor<3> &cs, const Tensor<2> &dcs_next,
                   const Device &device = Eigen::DefaultDevice())
     {
         this->dp_gates.resize(this->gates.dimensions());
 
-        Tensor<2> dh(h.dimension(0), this->output_len);
-        dh.device(device) = gradients.chip(this->time_step, 1);
-
-        if (this->time_step != h.dimension(1) - 1) {
-            dh += dh_next;
-        }
-
         Tensor<2> dcs(cs.dimension(0), this->output_len);
         dcs.device(device) =
-                dh * this->gates.slice(this->o_offset(), this->gate_extent()) *
-                RecurrentActivation::Gradients(cs.chip(this->time_step, 1));
-
-        if (this->time_step != cs.dimension(1) - 1) {
-            dcs += dcs_next;
-        }
+                gradients *
+                this->gates.slice(this->o_offset(), this->gate_extent()) *
+                Activation::Gradients(cs.chip(this->time_step, 1)) + // TODO: Gate or Activation?
+                dcs_next;
 
         auto d_i = dcs * this->gates.slice(this->c_offset(), this->gate_extent());
         auto d_f = dcs * this->cs_prev;
         auto d_c = dcs * this->gates.slice(this->i_offset(), this->gate_extent());
-        auto d_o = dh * RecurrentActivation::Activate(cs.chip(this->time_step, 1));
+        auto d_o = gradients *
+                   Activation::Activate(cs.chip(this->time_step, 1));
 
         // calculate loss gradient w.r.t. pre-activation gates
         this->dp_gates.slice(this->i_offset(), this->gate_extent()).device(device) =
@@ -129,7 +119,7 @@ public:
                         this->p_gates.slice(this->f_offset(), this->gate_extent()));
 
         this->dp_gates.slice(this->c_offset(), this->gate_extent()).device(device) =
-                d_c * GateActivation::Gradients(
+                d_c * Activation::Gradients(
                         this->p_gates.slice(this->c_offset(), this->gate_extent()));
 
         this->dp_gates.slice(this->o_offset(), this->gate_extent()).device(device) =
@@ -158,7 +148,7 @@ public:
 
         if (this->time_step > 0) {
             // calculate loss gradients w.r.t. input "h" and "cs" from previous cell
-            this->dh_prev.resize(dh_next.dimensions());
+            this->dh_prev.resize(gradients.dimensions());
             this->dcs_prev.resize(dcs_next.dimensions());
 
             ContractDim h_grad_matmul {Axes(1, 1)};
@@ -178,8 +168,6 @@ public:
 
             this->dcs_prev.device(device) = dcs * this->gates.slice(
                     this->f_offset(), this->gate_extent());
-            std::cout << "dcs_prev: " << dcs_prev << "\n";
-            std::cout << "dh_prev: " << dh_prev << "\n";
         }
     }
 

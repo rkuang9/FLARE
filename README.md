@@ -19,6 +19,7 @@ Contribute and learn AI together.
   - Batch Normalization
   - Dropout
   - Gated Recurrent Unit
+  - Long Short-Term Memory
 - Activation Functions
   - Sigmoid
   - Hyperbolic tangent (TanH)
@@ -64,7 +65,7 @@ Contribute and learn AI together.
 - [x] Generative Adversarial Networks support (Conv2DTranspose valid padding 12/26/2022, BatchNormalization 1/13/2023, Conv2DTranspose output and same padding 1/15/2023)
 - [x] Save and load weights from files
 - [x] Gated Recurrent Unit (3/9/2023)
-- [ ] Long Short-Term Memory
+- [x] Long Short-Term Memory (3/26/2023)
 - [ ] Bidirectional RNN
 - [ ] Add bias support for layers
 - [ ] Parse JSON datasets
