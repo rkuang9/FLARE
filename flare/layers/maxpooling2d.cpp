@@ -79,7 +79,8 @@ void MaxPooling2D::MaxPooling2DForward(
 
 void MaxPooling2D::Forward(const Tensor<4> &inputs)
 {
-    this->X = inputs;
+    this->X.resize(inputs.dimensions());
+    this->X.device(this->device) = inputs;
 
     this->Z.resize(MaxPooling2D::ForwardOutputDims(
             inputs.dimensions(), this->pool,
@@ -98,7 +99,13 @@ void MaxPooling2D::Forward(const Layer &prev)
 
 void MaxPooling2D::Backward(const Tensor<4> &gradients)
 {
-    this->dL_dZ = gradients;
+    fl_assert(this->Z.dimensions() == gradients.dimensions(),
+              this->name << "::Backward expected gradient dimension "
+                         << this->Z.dimensions() << ", instead got "
+                         << gradients.dimensions());
+
+    this->dL_dZ.resize(gradients.dimensions());
+    this->dL_dZ.device(this->device) = gradients;
 }
 
 

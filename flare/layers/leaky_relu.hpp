@@ -27,10 +27,6 @@ public:
 private:
     const Scalar leak = 0.3;
 
-    // multithreading
-    Eigen::ThreadPool pool = Eigen::ThreadPool(
-            (int) std::thread::hardware_concurrency());
-    Eigen::ThreadPoolDevice device = Eigen::ThreadPoolDevice(&pool, 2);
 };
 
 } // namespace fl

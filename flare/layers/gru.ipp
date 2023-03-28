@@ -40,7 +40,8 @@ void GRU<CandidateActivation, GateActivation, ReturnSequences>::Forward(
     // layer output dimensions are [batch, time, output] but
     // are initially sized as [batch, time+1, output]
     // where the extra +1 is the initial h_0 tensor of zeroes
-    this->x = inputs;
+    this->x.resize(inputs.dimensions());
+    this->x.device(this->device) = inputs;
     this->h.resize(inputs.dimension(0), inputs.dimension(1), this->output_len);
 
     // if needed, allocate more cells to match the input's time steps

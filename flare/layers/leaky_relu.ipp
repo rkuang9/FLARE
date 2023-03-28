@@ -9,9 +9,7 @@ namespace fl
 
 template<int TensorRank>
 LeakyReLU<TensorRank>::LeakyReLU(Scalar leak):
-        leak(leak),
-        pool((int) std::thread::hardware_concurrency()),
-        device(&pool, 2)
+        leak(leak)
 {
     this->name = "leakyrelu";
 }
@@ -20,7 +18,8 @@ LeakyReLU<TensorRank>::LeakyReLU(Scalar leak):
 template<int TensorRank>
 void LeakyReLU<TensorRank>::Forward(const Tensor<TensorRank> &inputs)
 {
-    this->X = inputs;
+    this->X.resize(inputs.dimensions());
+    this->X.device(this->device) = inputs;
     auto zero = static_cast<Scalar>(0.0);
     this->Z = (inputs >= zero).select(inputs, inputs * this->leak);
 }

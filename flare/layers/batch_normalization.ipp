@@ -38,7 +38,8 @@ template<int TensorRank, int NormDimCount>
 void BatchNormalization<TensorRank, NormDimCount>::Forward(
         const Tensor<TensorRank> &inputs)
 {
-    this->X = inputs;
+    this->X.resize(inputs.dimensions());
+    this->X.device(this->device) = inputs;
 
     // this resizing is required for multithreading
     this->X_norm.resize(inputs.dimensions());
@@ -192,7 +193,15 @@ template<int TensorRank, int NormDimCount>
 void BatchNormalization<TensorRank, NormDimCount>::Backward(
         const Tensor<TensorRank> &gradients)
 {
-    this->dL_dZ = gradients;
+    fl_assert(this->Z.dimensions() == gradients.dimensions(),
+              this->name << "::Backward expected gradient dimension "
+                         << this->Z.dimensions() << ", instead got "
+                         << gradients.dimensions());
+
+    this->dL_dZ.resize(gradients.dimensions());
+    this->dL_dZ.device(this->device) = gradients;
+
+    // TODO: resize and use device for evaluation
     this->dL_dy = (this->dL_dZ * this->X_norm).sum(this->collapsed_dims);
     this->dL_db = this->dL_dZ.sum(this->collapsed_dims);
 }

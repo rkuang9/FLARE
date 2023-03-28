@@ -55,7 +55,14 @@ Conv2DTranspose<Activation, Threads>::Conv2DTranspose(
 template<typename Activation, int Threads>
 void Conv2DTranspose<Activation, Threads>::Forward(const Tensor<4> &inputs)
 {
-    this->X = inputs;
+    fl_assert(inputs.dimension(3) == this->kernels.dimensions().back(),
+              "Conv2D::Forward EXPECTED A TENSOR WITH "
+                         << this->kernels.dimensions().back() << "CHANNELS" <<
+                         ", INSTEAD GOT " << inputs.dimensions().back());
+
+    this->X.resize(inputs.dimensions());
+    this->X.device(this->device) = inputs;
+
     Eigen::Index input_rows = this->X.dimension(1);
     Eigen::Index input_cols = this->X.dimension(2);
 
@@ -148,6 +155,7 @@ void Conv2DTranspose<Activation, Threads>::Backward(const Tensor<4> &gradients)
               "Conv2DTranspose::Backward EXPECTED GRADIENT DIMS "
                          << this->Z.dimensions() << ", GOT "
                          << gradients.dimensions() << " INSTEAD");
+
     this->dL_dZ.resize(this->Z.dimensions());
     this->dL_dZ.template device(this->device) =
             gradients * Activation::Gradients(this->Z);

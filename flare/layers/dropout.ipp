@@ -54,7 +54,14 @@ void Dropout<InputTensorRank>::Forward(const Layer &prev)
 template<int InputTensorRank>
 void Dropout<InputTensorRank>::Backward(const Tensor<InputTensorRank> &gradients)
 {
-    this->dL_dZ = gradients;
+    fl_assert(this->Z.dimensions() == gradients.dimensions(),
+              this->name << "::Backward expected gradient dimension "
+                         << this->Z.dimensions() << ", instead got "
+                         << gradients.dimensions());
+
+
+    this->dL_dZ.resize(gradients.dimensions());
+    this->dL_dZ.device(this->device) = gradients;
 }
 
 

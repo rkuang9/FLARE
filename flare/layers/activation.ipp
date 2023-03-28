@@ -19,9 +19,10 @@ Activation<activation, TensorRank>::Activation():
 template<typename activation, int TensorRank>
 void Activation<activation, TensorRank>::Forward(const Tensor<TensorRank> &inputs)
 {
-    this->X = inputs;
+    this->X.resize(inputs.dimensions());
+    this->X.device(this->device) = inputs;
     this->Z.resize(inputs.dimensions());
-    this->Z.template device(this->device) = activation::Activate(inputs);
+    this->Z.device(this->device) = activation::Activate(inputs);
 }
 
 
@@ -48,7 +49,12 @@ template<typename activation, int TensorRank>
 void Activation<activation, TensorRank>::Backward(
         const Tensor<TensorRank> &gradients)
 {
-    this->dL_dZ = gradients;
+    fl_assert(this->Z.dimensions() == gradients.dimensions(),
+              this->name << "::Backward expected gradient dimension "
+                         << this->Z.dimensions() << ", instead got "
+                         << gradients.dimensions());
+    this->dL_dZ.resize(gradients.dimensions());
+    this->dL_dZ.device(this->device) = gradients;
 }
 
 

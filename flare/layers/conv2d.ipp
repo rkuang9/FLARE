@@ -66,7 +66,8 @@ void Conv2D<Activation, Threads>::Forward(const Tensor<4> &inputs)
                          << this->kernels.dimensions().back() << "CHANNELS" <<
                          ", INSTEAD GOT " << inputs.dimensions().back());
 
-    this->X = inputs;
+    this->X.resize(inputs.dimensions());
+    this->X.device(this->device) = inputs;
 
     Eigen::Index output_h;
     Eigen::Index output_w;

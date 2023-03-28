@@ -54,8 +54,9 @@ private:
     Tensor<InputTensorRank> dL_dX;
 
     // multithreading
-    Eigen::ThreadPool pool;
-    Eigen::ThreadPoolDevice device;
+    Eigen::ThreadPool pool = Eigen::ThreadPool(
+            (int) std::thread::hardware_concurrency());
+    Eigen::ThreadPoolDevice device = Eigen::ThreadPoolDevice(&pool, 2);
 };
 
 } // namespace fl

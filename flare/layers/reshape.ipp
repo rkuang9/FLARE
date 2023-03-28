@@ -10,7 +10,7 @@ namespace fl
 
 template<int InputTensorRank, int OutputTensorRank>
 Reshape<InputTensorRank, OutputTensorRank>::Reshape(
-        const Dims<OutputTensorRank> &output_dims) :
+        const Dims <OutputTensorRank> &output_dims) :
         output_dims(output_dims),
         pool((int) std::thread::hardware_concurrency()),
         device(&pool, 2)
@@ -63,7 +63,7 @@ Reshape<InputTensorRank, OutputTensorRank>::Reshape(
 
 template<int InputTensorRank, int OutputTensorRank>
 void Reshape<InputTensorRank, OutputTensorRank>::Forward(
-        const Tensor<InputTensorRank> &inputs)
+        const Tensor <InputTensorRank> &inputs)
 {
     Dims<OutputTensorRank> reshape = this->output_dims;
     this->input_dims = inputs.dimensions();
@@ -89,10 +89,10 @@ template<int InputTensorRank, int OutputTensorRank>
 void Reshape<InputTensorRank, OutputTensorRank>::Forward(const Layer &prev)
 {
     fl_assert(InputTensorRank >= 2 && InputTensorRank <= 4 &&
-                 OutputTensorRank >= 2 && OutputTensorRank <= 4,
+              OutputTensorRank >= 2 && OutputTensorRank <= 4,
               "Reshape::Forward invalid input tensor rank "
-                         << InputTensorRank << " or output tensor rank "
-                         << OutputTensorRank);
+                      << InputTensorRank << " or output tensor rank "
+                      << OutputTensorRank);
 
     if constexpr (InputTensorRank == 2) {
         this->Forward(prev.GetOutput2D());
@@ -110,9 +110,16 @@ void Reshape<InputTensorRank, OutputTensorRank>::Forward(const Layer &prev)
 
 
 template<int InputTensorRank, int OutputTensorRank>
-void Reshape<InputTensorRank, OutputTensorRank>::Backward(const Tensor<OutputTensorRank> &gradients)
+void Reshape<InputTensorRank, OutputTensorRank>::Backward(
+        const Tensor <OutputTensorRank> &gradients)
 {
-    this->dL_dZ = gradients;
+    fl_assert(this->Z.dimensions() == gradients.dimensions(),
+              this->name << "::Backward expected gradient dimension "
+                         << this->Z.dimensions() << ", instead got "
+                         << gradients.dimensions());
+
+    this->dL_dZ.resize(gradients.dimensions());
+    this->dL_dZ.device(this->device) = gradients;
 }
 
 

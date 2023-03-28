@@ -1,9 +1,10 @@
 #include <iostream>
 #include <chrono>
 #include <flare/flare.hpp>
+#include "examples/heart_attack_prediction.h"
 
 
-void test()
+/*void test()
 {
     fl::MeanSquaredError<3> loss;
     fl::SGD opt(1.0);
@@ -25,14 +26,15 @@ void test()
         lstm.Update(opt);
         std::cout << "updated weights\n" << lstm.GetWeights() << "\n";
     }
-}
+}*/
 
 
 int main()
 {
     auto start = std::chrono::high_resolution_clock::now();
 
-    test();
+    HeartAttackPrediction();
+    //test();
 
     auto stop = std::chrono::high_resolution_clock::now();
     auto time = std::chrono::duration_cast<std::chrono::milliseconds>(

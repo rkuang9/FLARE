@@ -19,8 +19,9 @@ void Flatten<InputTensorRank>::Forward(const Tensor<InputTensorRank> &input)
 {
     this->input_dims = input.dimensions();
 
-    // reshape input from (N,X,Y,...) where N=batch_size, to (N,X*Y*...)
-    this->Z = input.reshape(
+    this->Z.resize(Dims<2>(this->input_dims.front(),
+                    this->input_dims.TotalSize() / this->input_dims.front()));
+    this->Z.device(this->device) = input.reshape(
             Dims<2>(this->input_dims.front(),
                     this->input_dims.TotalSize() / this->input_dims.front()));
 }
@@ -48,11 +49,18 @@ void Flatten<InputTensorRank>::Forward(const Layer &prev)
 template<int InputTensorRank>
 void Flatten<InputTensorRank>::Backward(const Tensor<InputTensorRank> &gradients)
 {
+    fl_assert(this->Z.dimensions() == gradients.dimensions(),
+              this->name << "::Backward expected gradient dimension "
+                         << this->Z.dimensions() << ", instead got "
+                         << gradients.dimensions());
+
+    this->dL_dZ.resize(gradients.dimensions());
+
     if constexpr (InputTensorRank == 2) {
-        this->dL_dZ = gradients;
+        this->dL_dZ.device(this->device) = gradients;
     }
     else {
-        this->dL_dZ = gradients.reshape(this->input_dims);
+        this->dL_dZ.device(this->device) = gradients.reshape(this->input_dims);
     }
 }
 

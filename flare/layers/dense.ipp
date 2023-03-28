@@ -34,7 +34,8 @@ void Dense<Activation>::Forward(const Tensor<2> &input)
                             << input.dimension(1));
 
     // Z = Xw + b (same as Z = wX + b but with batch dims first in X)
-    this->X = input;
+    this->X.resize(input.dimensions());
+    this->X.device(this->device) = input;
 
     // resize output tensor to [batch, output_units]
     this->Z.resize(input.dimension(0), this->w.dimension(1));
@@ -70,6 +71,11 @@ void Dense<Activation>::Backward(Layer &next) // hidden layer backward
 template<typename Activation>
 void Dense<Activation>::Backward(const Tensor<2> &gradients) // output backward
 {
+    fl_assert(this->Z.dimensions() == gradients.dimensions(),
+              this->name << "::Backward expected gradient dimension "
+                         << this->Z.dimensions() << ", instead got "
+                         << gradients.dimensions());
+
     if constexpr (std::is_same_v<Activation, Softmax>) {
         // softmax requires different calculations
         this->BackwardSoftmax(gradients);

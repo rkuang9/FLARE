@@ -8,7 +8,7 @@
 #include <flare/flare.hpp>
 
 
-// Working example, requires fine-tuning but passes gradient check (unless gradients vanish)
+// Working example, requires fine-tuning but passes gradient check (unless gradients vanishes)
 // At only 303 samples and labels, it's possible that this dataset is too small
 // heart attack dataset from:
 // https://www.kaggle.com/datasets/rashikrahmanpritom/heart-attack-analysis-prediction-dataset
@@ -23,14 +23,14 @@ void HeartAttackPrediction()
     std::cout << "total samples: " << dataset.training_samples.size() << "\n";
 
     Sequential model {
-            new Dense<ReLU>(13, 24, false),
-            new Dense<Sigmoid>(24, 1, false),
+            new Dense<ReLU>(13, 26, false),
+            new Dense<Sigmoid>(26, 1, false),
     };
 
     BinaryCrossEntropy<2> loss;
     Adam opt;
 
-    model.Fit(dataset.training_samples, dataset.training_labels, 14, loss, opt);
+    model.Fit(dataset.training_samples, dataset.training_labels, 7, loss, opt);
 
     for (int i = 0; i < dataset.training_samples.size(); i++) {
         std::cout << "predict " << model.Predict<2>(dataset.training_samples[i])

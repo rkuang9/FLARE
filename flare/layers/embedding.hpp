@@ -18,9 +18,9 @@ public:
 
     void Forward(const Tensor<2> &input) override;
 
-    void Backward(Layer &next) override;
+    void Backward(const Tensor<3> &gradients) override;
 
-    void Backward(const LossFunction &loss_function) override;
+    void Backward(Layer &next) override;
 
     void Update(Optimizer &optimizer) override;
 
@@ -36,6 +36,10 @@ public:
 
     int GetOutputRank() const override;
 
+    void Save(const std::string &path) override;
+
+    void Load(const std::string &path) override;
+
 public:
     void Backward();
 
@@ -48,6 +52,11 @@ public:
 
     Eigen::Index embed_dims;
     Eigen::Index input_len;
+
+    // multithreading
+    Eigen::ThreadPool pool = Eigen::ThreadPool(
+            (int) std::thread::hardware_concurrency());
+    Eigen::ThreadPoolDevice device = Eigen::ThreadPoolDevice(&pool, 2);
 };
 
 } // namespace fl
