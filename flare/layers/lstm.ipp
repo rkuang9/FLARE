@@ -16,13 +16,22 @@ LSTM<Activation, GateActivation, ReturnSequences>::LSTM(
           output_len(output_len)
 {
     this->name = "lstm";
-    this->w = initializer(Dims<2>(input_len + output_len, output_len * 4),
-                          static_cast<int>(input_len),
-                          static_cast<int>(output_len));
-    this->dL_dw.resize(this->w.dimensions());
+    this->w.resize(input_len + output_len, output_len * 4);
 
-    // for testing purposes, set weights to one
-    this->w.setConstant(1.0);
+    // set W weights (top portion)
+    this->w.slice(Dims<2>(0, 0), Dims<2>(input_len, output_len * 4))
+            .device(this->device) = initializer(Dims<2>(input_len, output_len * 4),
+                                                static_cast<int>(input_len),
+                                                static_cast<int>(output_len));
+
+    // set U weights (bottom portion)
+    this->w.slice(Dims<2>(input_len, 0), Dims<2>(output_len, output_len * 4))
+            .device(this->device) = initializer(Dims<2>(output_len, output_len * 4),
+                                                static_cast<int>(output_len),
+                                                static_cast<int>(output_len));
+
+    this->dL_dw.resize(this->w.dimensions());
+    this->dL_dw.setZero();
 }
 
 

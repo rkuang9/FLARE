@@ -6,28 +6,25 @@
 void test()
 {
     fl::MeanSquaredError<3> loss;
-    fl::SGD opt(1.0, 0.5);
+    fl::SGD opt(1.0);
 
     fl::Tensor<3> x(1, 4, 1);
     x.setConstant(1.0);
 
     fl::LSTM<fl::TanH, fl::Sigmoid, true> lstm(1, 1);
 
-    lstm.Forward(x);
-    std::cout << "output:\n" << lstm.GetOutput3D() << "\n";
+    for (int i = 0; i < 2; i++) {
+        lstm.Forward(x);
+        std::cout << "output:\n" << lstm.GetOutput3D() << "\n";
 
 
-    loss(lstm.GetOutput3D(), lstm.GetOutput3D().constant(1.0));
-    std::cout << "loss gradients: " << loss.GetGradients() << "\n";
+        loss(lstm.GetOutput3D(), lstm.GetOutput3D().constant(1.0));
+        std::cout << "loss gradients: " << loss.GetGradients() << "\n";
 
-    lstm.Backward(loss.GetGradients());
-    std::cout << "dL/dw: " << lstm.GetWeightGradients().dimensions() << "\n"
-              << lstm.GetWeightGradients() << "\n";
-    std::cout << "dL/dx: " << lstm.GetInputGradients3D().dimensions() << "\n"
-              << lstm.GetInputGradients3D();
-
-    lstm.Update(opt);
-    std::cout << "updated weights\n" << lstm.GetWeights() << "\n";
+        lstm.Backward(loss.GetGradients());
+        lstm.Update(opt);
+        std::cout << "updated weights\n" << lstm.GetWeights() << "\n";
+    }
 }
 
 
