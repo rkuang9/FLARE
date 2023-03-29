@@ -1,7 +1,7 @@
 set(SOURCES
         layer.hpp
         dense.ipp
-        #embedding.cpp
+        embedding.cpp
         #globalaveragepooling1d.cpp
         conv2d.ipp
         maxpooling2d.cpp

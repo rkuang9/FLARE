@@ -3,7 +3,7 @@
 //
 
 #include "adam.hpp"
-#include <iostream>
+
 namespace fl
 {
 
@@ -14,6 +14,7 @@ Adam::Adam(Scalar learning_rate, Scalar beta1, Scalar beta2)
           lr_t(this->learning_rate * std::sqrt(1 - this->beta2_t) /
                (1 - this->beta1_t))
 {
+    // innitialized with time t=1
 }
 
 

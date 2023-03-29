@@ -41,11 +41,12 @@ public:
     void Load(const std::string &path) override;
 
 public:
-    void Backward();
+    const Tensor<2> &GetInputGradients2D() override;
 
     Tensor<2> X;
     Tensor<3> Z; // output (batch, row, col), not related to the Russian military symbol
     Tensor<3> dL_dZ;
+    Tensor<2> dL_dX; // dummy input gradients, Embedding does not propagate backwards
 
     Tensor<2> w; // weights
     Tensor<2> dL_dw; // loss gradients w.r.t. weights

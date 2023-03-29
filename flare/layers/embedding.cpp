@@ -14,6 +14,7 @@ Embedding::Embedding(int vocab_size, int embedding_dim, int input_length,
 {
     this->name = "embedding";
     this->dL_dw.setZero();
+    this->dL_dX.resize(0, 0);
 
     this->w.resize(vocab_size, embedding_dim);
     this->w.device(this->device) = initializer.Initialize(
@@ -23,38 +24,37 @@ Embedding::Embedding(int vocab_size, int embedding_dim, int input_length,
 }
 
 
-void Embedding::Forward(const Tensor<2> &input)
+void Embedding::Forward(const Tensor<2> &inputs)
 {
-    fl_assert(input.dimension(1) == this->input_len,
+    fl_assert(inputs.dimension(1) == this->input_len,
               this->name << " Embedding::Forward expected " << this->input_len
-                         << " input features, got " << input.dimension(0));
+                         << " input features, got " << inputs.dimension(0));
 
     // store the input so backpropagation knows which weight rows to update
-    this->X.resize(input.dimensions());
-    this->X.device(this->device) = input;
+    this->X.resize(inputs.dimensions());
+    this->X.device(this->device) = inputs;
 
     // layer output shape is (batch=input.cols, row=input.rows, embed_dim)
-    this->Z.resize(Tensor<3>::Dimensions(
-            input.dimension(1), input.dimension(0), this->embed_dims));
+    this->Z.resize(Dims<3>(
+            inputs.dimension(0), inputs.dimension(1), this->embed_dims));
 
-    // TODO: see if chip() can make this code less verbose
-    // from the input tensor values construct output tensor Z
-    for (Eigen::Index col = 0; col < input.dimension(1); col++) {
-        // col also denotes the batch dimension of the output tensor Z
-        for (Eigen::Index row = 0; row < input.dimension(0); row++) {
-            // target a weight-row slice to be placed into output Z
-            Eigen::array<Eigen::Index, 2> w_offset {Eigen::Index(input(row, col)),
-                                                    0};
-            Eigen::array<Eigen::Index, 2> w_extent {1, this->embed_dims};
+    Dims<3> z_extent(1, 1, this->embed_dims);
 
-            // identify the output slice to set with the weight slice with
-            Eigen::array<Eigen::Index, 2> z_offset {row, 0};
-            Eigen::array<Eigen::Index, 2> z_extent {1, this->embed_dims};
+    for (Eigen::Index batch = 0; batch < inputs.dimension(0); batch++) {
+        for (Eigen::Index i = 0; i < inputs.dimension(1); i++) {
+            Dims<3> z_offset(batch, i, 0);
 
-            this->Z.chip(col, 0).slice(z_offset, z_extent) =
-                    this->w.slice(w_offset, w_extent);
+            this->Z.slice(z_offset, z_extent).device(this->device) =
+                    this->w.chip(static_cast<Eigen::Index>(inputs(batch, i)), 0)
+                            .reshape(z_extent);
         }
     }
+}
+
+
+const Tensor<2> &Embedding::GetInputGradients2D()
+{
+    return this->dL_dX; // return dummy gradients
 }
 
 
@@ -64,43 +64,35 @@ void Embedding::Backward(Layer &next)
 }
 
 
-// TODO: not tested yet
 void Embedding::Backward(const Tensor<3> &gradients)
 {
-    throw std::logic_error("Embedding as output layer not supported");
-    // TODO: implement loss_function.GetGradients3D()
-    // TODO: division is moved to loss function
-    this->dL_dZ.device(this->device) = gradients;
+    fl_assert(this->Z.dimensions() == gradients.dimensions(),
+              this->name << "::Backward expected gradient dimension "
+                         << this->Z.dimensions() << ", instead got "
+                         << gradients.dimensions());
 
-    fl_assert(this->dL_dZ.dimensions() == this->Z.dimensions(),
-              this->name << " Embedding::Backward expected gradient dimensions "
-                         << this->Z.dimensions() <<
-                         ", instead got " << this->dL_dZ.dimensions());
-
+    // each vector from the gradients' 3rd dimension corresponds to a
+    // value from the input tensor which indicates the dL_dw row that vector
+    // gets added to
     this->dL_dw.setZero();
+    Dims<3> z_extent(1, 1, this->embed_dims);
 
-    // dimension(0), dimension(1) of dL_dZ denote the batch size, input length
-    // dimension(0) is also tied to the input tensor X's dimension(1) (aka batch size)
-    for (Eigen::Index batch = 0; batch < this->dL_dZ.dimension(0); batch++) {
-        for (Eigen::Index row = 0; row < this->dL_dZ.dimension(1); row++) {
-            // each row of dL_dZ is added to dL_dw w.r.t. the input tensor's
-            // and divided by batch size
-            this->dL_dw.chip((Eigen::Index) this->X(row, batch), 0) +=
-                    this->dL_dZ.chip(batch, 0).chip(row, 0) /
-                    (Scalar) this->X.dimension(0);
+    for (Eigen::Index batch = 0; batch < gradients.dimension(0); batch++) {
+        for (Eigen::Index i = 0; i < gradients.dimension(1); i++) {
+            Dims<3> z_offset(batch, i, 0);
+
+            this->dL_dw.chip(static_cast<Eigen::Index>(this->X(batch, i)), 0)
+                    .device(device) += gradients.slice(z_offset, z_extent)
+                    .reshape(Dims<1>(this->embed_dims));
         }
     }
 }
 
 
-void Embedding::Backward()
-{
-
-}
-
-
 void Embedding::Update(Optimizer &optimizer)
 {
+    // with Embedding(10000, 64, 16), input(64, 16) x1000, SGD,
+    // it was ~37.5% faster updating weights directly than using dL_dw
     optimizer.Minimize(this->w, this->dL_dw);
 }
 
@@ -193,5 +185,6 @@ void Embedding::Load(const std::string &path)
     // reshape the flattened tensor back to expected weights dimensions
     this->w = TensorMap<2>(as_vector.data(), this->w.dimensions());
 }
+
 
 } // namespace fl

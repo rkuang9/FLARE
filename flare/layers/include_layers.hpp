@@ -7,7 +7,7 @@
 
 #include "layer.hpp"
 #include "dense.hpp"
-//#include "embedding.hpp"
+#include "embedding.hpp"
 //#include "globalaveragepooling1d.hpp"
 #include "conv2d.hpp"
 #include "maxpooling2d.hpp"

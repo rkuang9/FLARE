@@ -1,40 +1,41 @@
 #include <iostream>
 #include <chrono>
 #include <flare/flare.hpp>
-#include "examples/heart_attack_prediction.h"
 
 
-/*void test()
+void test()
 {
     fl::MeanSquaredError<3> loss;
-    fl::SGD opt(1.0);
+    fl::RMSprop opt(1.0);
 
-    fl::Tensor<3> x(1, 4, 1);
-    x.setConstant(1.0);
+    fl::Sequential model {
+            new fl::Embedding(10, 4, 3),
+    };
 
-    fl::LSTM<fl::TanH, fl::Sigmoid, true> lstm(1, 1);
+    fl::Tensor<2> input(2, 3);
+    input.setValues({{7, 8, 9},
+                     {0, 1, 2}});
 
-    for (int i = 0; i < 2; i++) {
-        lstm.Forward(x);
-        std::cout << "output:\n" << lstm.GetOutput3D() << "\n";
+    for (int epoch = 0; epoch < 1; epoch++) {
+        model.Forward(input);
+    std::cout << model.layers.back()->GetOutput3D() << "\n";
+        loss(model.layers.back()->GetOutput3D(),
+             model.layers.back()->GetOutput3D().constant(1.0));
 
-
-        loss(lstm.GetOutput3D(), lstm.GetOutput3D().constant(1.0));
-        std::cout << "loss gradients: " << loss.GetGradients() << "\n";
-
-        lstm.Backward(loss.GetGradients());
-        lstm.Update(opt);
-        std::cout << "updated weights\n" << lstm.GetWeights() << "\n";
+        model.Backward(loss.GetGradients());
+        model.Update(opt);
     }
-}*/
+
+    std::cout << model.layers.back()->GetWeightGradients() << "\n\n";
+    std::cout << "embed weight \n" << model.layers.back()->GetWeights() << "\n";
+}
 
 
 int main()
 {
     auto start = std::chrono::high_resolution_clock::now();
 
-    HeartAttackPrediction();
-    //test();
+    test();
 
     auto stop = std::chrono::high_resolution_clock::now();
     auto time = std::chrono::duration_cast<std::chrono::milliseconds>(

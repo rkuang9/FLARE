@@ -10,7 +10,7 @@ Contribute and learn AI together.
 # Features
 - Layers 
   - Dense
-  - Embedding (temporarily not working)
+  - Embedding
   - Global Average Pooling 1D (temporarily not working)
   - Convolution 2D
   - Max Pooling 2D
