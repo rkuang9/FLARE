@@ -21,6 +21,7 @@
 
 #include "flare/sequential.hpp"
 #include "flare/dataset.hpp"
+#include "flare/tokenizer.hpp"
 
 
 #endif //FLARE_FLARE_HPP
