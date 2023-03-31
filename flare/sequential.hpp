@@ -150,12 +150,12 @@ void Sequential::Fit(const std::vector<Tensor<TensorSampleRank>> &inputs,
     this->ValidateLayers();
 
     // to display progress bar
-    int num_batches = inputs.size();
-    int num_bars = 25;
+    const int num_batches = inputs.size();
+    const int num_bars = 25;
     int batch_per_bar = num_batches / num_bars;
     int progress = 0;
-    int num_inputs = inputs.size();
-    int epoch_count_length = std::to_string(epochs).length();
+    const int num_inputs = inputs.size();
+    const int epoch_count_length = std::to_string(epochs).length();
 
     for (auto layer: this->layers) {
         layer->Training(true);
@@ -171,20 +171,19 @@ void Sequential::Fit(const std::vector<Tensor<TensorSampleRank>> &inputs,
 
             // progress bar
             if (m % batch_per_bar == 0 && m != 0) {
-
                 auto elapsed_time = std::chrono::duration_cast<std::chrono::seconds>(
                         std::chrono::high_resolution_clock::now() - start_time);
 
-                // progress bar, if ran in CLion, it will print
-                // new lines per iteration due to the PuTTY terminal
-                std::cout << "\rEpoch "
+                // print behavior depends on terminal
+                std::cout << "Epoch "
                           << std::setw(epoch_count_length) << std::setfill(' ')
                           << e + 1 << " ["
-                          << std::setw(progress + 1) << std::setfill('=') << '>'
+                          << std::setw(progress) << std::setfill('=') << ""
                           << std::setw(num_bars - progress)
-                          << std::setfill('.') << "] "
+                          << std::setfill('.') << "" << "] "
                           << elapsed_time.count() << "s loss: "
-                          << std::setprecision(5) << loss_function.GetLoss();
+                          << loss_function.GetLoss() << "\r";
+                std::cout.flush();
                 progress++;
             }
         }

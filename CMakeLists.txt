@@ -16,6 +16,8 @@ add_compile_definitions("EIGEN_DEFAULT_TO_ROW_MAJOR")
 
 # without this, nothing works
 include_directories(lib/Eigen)
+add_subdirectory(lib/json-develop)
+
 
 get_directory_property(DEFINITIONS COMPILE_DEFINITIONS)
 if (DEFINITIONS MATCHES "USING_OPENCV")

@@ -7,19 +7,20 @@
 namespace fl
 {
 
-Embedding::Embedding(int vocab_size, int embedding_dim, int input_length,
+Embedding::Embedding(Eigen::Index vocab_size, Eigen::Index embedding_dim,
+              Eigen::Index input_len,
                      const Initializer<2> &initializer)
         : embed_dims(embedding_dim),
-          input_len(input_length)
+          input_len(input_len)
 {
     this->name = "embedding";
     this->dL_dw.setZero();
     this->dL_dX.resize(0, 0);
-
+    Dims<2>(vocab_size, embedding_dim);
     this->w.resize(vocab_size, embedding_dim);
     this->w.device(this->device) = initializer.Initialize(
             Tensor<2>::Dimensions(vocab_size, embedding_dim),
-            input_length, embedding_dim);
+            input_len, embedding_dim);
     this->dL_dw.resize(w.dimensions());
 }
 

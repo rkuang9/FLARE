@@ -235,10 +235,10 @@ template<typename Activation, typename GateActivation, bool ReturnSequences>
 int LSTM<Activation, GateActivation, ReturnSequences>::GetOutputRank() const
 {
     if constexpr(ReturnSequences) {
-        return 2;
+        return 3;
     }
     else {
-        return 3;
+        return 2;
     }
 }
 

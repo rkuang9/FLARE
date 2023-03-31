@@ -13,7 +13,8 @@ namespace fl
 class Embedding : public Layer
 {
 public:
-    Embedding(int vocab_size, int embedding_dim, int input_len,
+    Embedding(Eigen::Index vocab_size, Eigen::Index embedding_dim,
+              Eigen::Index input_len,
               const Initializer<2> &initializer = GlorotUniform<2>());
 
     void Forward(const Tensor<2> &input) override;
