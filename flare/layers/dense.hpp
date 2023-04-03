@@ -96,7 +96,7 @@ public:
      *
      * @param weights   custom weights with dimensions [output units, input units]
      */
-    void SetWeights(const Tensor<2> &weights) override;
+    void SetWeights(const std::vector<Tensor<2>> &weights) override;
 
 
     /**

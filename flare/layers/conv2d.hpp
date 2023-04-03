@@ -54,7 +54,7 @@ public:
 
     const Tensor<4> &GetWeightGradients4D() const override;
 
-    void SetWeights(const Tensor<4> &weights) override;
+    void SetWeights(const std::vector<Tensor<4>> &weights) override;
 
     void SetBias(const Tensor<4> &bias) override;
 

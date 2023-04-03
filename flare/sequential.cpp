@@ -113,14 +113,14 @@ Scalar Sequential::GradientCheck(const Tensor<2> &input, const Tensor<2> &label,
             for (Eigen::Index row = 0; row < theta.dimension(0); row++) {
                 // J(0...0+E...0) term
                 theta(row, col) += epsilon;
-                this->layers[i]->SetWeights(theta);
+                this->layers[i]->SetWeights(std::vector<Tensor<2>> {theta});
                 this->Forward(input);
                 loss_function(this->layers.back()->GetOutput2D(), label);
                 Scalar J_plus = loss_function.GetLoss();
 
                 // J(0...0-E...0) term, 2* to undo J_plus too
                 theta(row, col) -= 2 * epsilon;
-                this->layers[i]->SetWeights(theta);
+                this->layers[i]->SetWeights(std::vector<Tensor<2>> {theta});
                 this->Forward(input);
                 loss_function(this->layers.back()->GetOutput2D(), label);
                 Scalar J_minus = loss_function.GetLoss();
@@ -128,7 +128,8 @@ Scalar Sequential::GradientCheck(const Tensor<2> &input, const Tensor<2> &label,
                 dtheta_approx(row, col) = (J_plus - J_minus) / (2 * epsilon);
 
                 // restore original layer weights and theta
-                this->layers[i]->SetWeights(original_weights);
+                this->layers[i]->SetWeights(
+                        std::vector<Tensor<2>> {original_weights});
                 theta(row, col) += epsilon; // undo epsilon used for J+ & J-
             }
         }

@@ -35,8 +35,8 @@ void GRU<CandidateActivation, GateActivation, ReturnSequences>::Forward(
 {
     fl_assert(inputs.dimension(2) == this->input_len,
               this->name << " expected an input of "
-                            << Dims<3>(-1, -1, this->input_len) << " got "
-                            << inputs.dimensions() << " instead");
+                         << Dims<3>(-1, -1, this->input_len) << " got "
+                         << inputs.dimensions() << " instead");
     // layer output dimensions are [batch, time, output] but
     // are initially sized as [batch, time+1, output]
     // where the extra +1 is the initial h_0 tensor of zeroes
@@ -159,43 +159,51 @@ GRU<CandidateActivation, GateActivation, ReturnSequences>::GetInputGradients3D()
 
 template<typename CandidateActivation, typename GateActivation, bool ReturnSequences>
 void GRU<CandidateActivation, GateActivation, ReturnSequences>::SetWeights(
-        const Tensor<2> &weights)
+        const std::vector<Tensor < 2>>
+
+&weights)
 {
-    if (weights.dimension(0) != (this->input_len + this->output_len) ||
-        weights.dimension(1) != this->output_len * 3) {
-        throw std::invalid_argument(
-                this->name + " expects the tensor shape [" +
-                std::to_string(this->input_len + this->output_len) + ", " +
-                std::to_string(this->output_len * 3) + "]");
-    }
+if (weights.
 
-    Dims<2> w_zr_offset(0, 0);
-    Dims<2> w_c_offset(0, this->output_len * 2);
+front()
 
-    Dims<2> w_zr_extent(this->input_len + this->output_len, this->output_len * 2);
-    Dims<2> w_c_extent(this->input_len + this->output_len, this->output_len);
+.dimension(0) != (this->input_len + this->output_len) ||
+weights.
 
-    this->w_zr = weights.slice(w_zr_offset, w_zr_extent);
-    this->w_c = weights.slice(w_c_offset, w_c_extent);
+front()
+
+.dimension(1) != this->output_len * 3)
+{
+throw std::invalid_argument(
+this->name + " expects the tensor shape [" +
+std::to_string(this->input_len + this->output_len) + ", " +
+std::to_string(this->output_len * 3) + "]");
+}
+
+Dims<2> w_zr_offset(0, 0);
+Dims<2> w_c_offset(0, this->output_len * 2);
+
+Dims<2> w_zr_extent(this->input_len + this->output_len, this->output_len * 2);
+Dims<2> w_c_extent(this->input_len + this->output_len, this->output_len);
+
+this->
+w_zr = weights.front().slice(w_zr_offset, w_zr_extent);
+this->
+w_c = weights.front().slice(w_c_offset, w_c_extent);
 }
 
 
 template<typename CandidateActivation, typename GateActivation, bool ReturnSequences>
 int GRU<CandidateActivation, GateActivation, ReturnSequences>::GetInputRank() const
 {
-    return 3;
+    return 0;
 }
 
 
 template<typename CandidateActivation, typename GateActivation, bool ReturnSequences>
 int GRU<CandidateActivation, GateActivation, ReturnSequences>::GetOutputRank() const
 {
-    if constexpr (ReturnSequences) {
-        return 3;
-    }
-    else {
-        return 2;
-    }
+    return 0;
 }
 
 

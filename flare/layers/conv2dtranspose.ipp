@@ -172,20 +172,6 @@ void Conv2DTranspose<Activation, Threads>::Backward(const Tensor<4> &gradients)
 
 
 template<typename Activation, int Threads>
-void Conv2DTranspose<Activation, Threads>::SetWeights(const Tensor<4> &weights)
-{
-    if (weights.dimensions() != this->kernels.dimensions()) {
-        std::ostringstream error_msg;
-        error_msg << this->name << " Conv2D::SetWeights EXPECTED DIMENSIONS "
-                  << this->kernels.dimensions() << ", GOT " << weights.dimensions();
-        throw std::invalid_argument(error_msg.str());
-    }
-
-    this->kernels = weights/*.reverse(Dims<4, bool>(false, true, true, false))*/;
-}
-
-
-template<typename Activation, int Threads>
 const Tensor<4> &Conv2DTranspose<Activation, Threads>::GetInputGradients4D()
 {
     Eigen::Index pad_h = 0;

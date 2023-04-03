@@ -196,6 +196,12 @@ public:
     }
 
 
+     virtual std::vector<Tensor<2>> GetWeights2D() const
+     {
+        return {};
+     }
+
+
     /**
      * @return   layer's loss gradients w.r.t weights (dL / dw)
      */
@@ -220,18 +226,18 @@ public:
      *
      * @param weights   a rank 2 tensor
      */
-    virtual void SetWeights(const Tensor<2> &weights)
+    virtual void SetWeights(const std::vector<Tensor<2>> &weights)
     {
         throw std::logic_error(
-                "An error occurred, base class Layer SetWeights was called on " +
+                "An error occurred, base class Layer SetWeights(<2>) was called on " +
                 this->name);
     }
 
 
-    virtual void SetWeights(const Tensor<4> &weights)
+    virtual void SetWeights(const std::vector<Tensor<4>> &weights)
     {
         throw std::logic_error(
-                "An error occurred, base class Layer SetWeights was called on " +
+                "An error occurred, base class Layer SetWeights(<4>) was called on " +
                 this->name);
     }
 
@@ -290,6 +296,9 @@ public:
 
     virtual void Load(const std::string &path)
     {}
+
+
+
 
 
     std::string name = "layer"; // name of layer, to be set by inherited classes

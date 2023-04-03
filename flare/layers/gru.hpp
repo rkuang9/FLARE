@@ -46,7 +46,7 @@ public:
 
     // single matrix, horizontal order is update, reset, candidate,
     // with W on top, U on bottom
-    void SetWeights(const Tensor<2> &weights) override;
+    void SetWeights(const std::vector<Tensor<2>> &weights) override;
 
     int GetInputRank() const override;
 

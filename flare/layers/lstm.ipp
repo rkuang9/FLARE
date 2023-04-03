@@ -46,9 +46,6 @@ void LSTM<Activation, GateActivation, ReturnSequences>::Forward(
                          << Dims<3>(-1, -1, this->input_len) << " got "
                          << inputs.dimensions() << " instead");
 
-    this->x.resize(inputs.dimensions());
-    this->x.device(device) = inputs;
-
     this->h.resize(inputs.dimension(0), inputs.dimension(1), this->output_len);
     this->cs.resize(this->h.dimensions());
 
@@ -81,11 +78,17 @@ void LSTM<Activation, GateActivation, ReturnSequences>::Forward(const Layer &pre
 }
 
 
-template<typename Activation, typename GateActivation, bool ReturnSequences>
+/*template<typename Activation, typename GateActivation, bool ReturnSequences>
 void LSTM<Activation, GateActivation, ReturnSequences>::Backward(
         const Tensor<2> &gradients)
 {
-    Eigen::Index time_steps = this->x.dimension(1);
+    if constexpr(ReturnSequences) {
+        throw std::logic_error(
+                this->name +
+                " Backward(Tensor<2>) called with ReturnSequences=true");
+    }
+
+    Eigen::Index time_steps = gradients.dimension(1);
 
     this->dL_dw.setZero();
     this->lstm_cells.back().Backward(
@@ -101,37 +104,51 @@ void LSTM<Activation, GateActivation, ReturnSequences>::Backward(
                 device
         );
     }
-}
+}*/
 
 
 template<typename Activation, typename GateActivation, bool ReturnSequences>
 void LSTM<Activation, GateActivation, ReturnSequences>::Backward(
-        const Tensor<3> &gradients)
+        const Tensor<ReturnSequences ? 3 : 2> &gradients)
 {
-    if constexpr(!ReturnSequences) {
-        throw std::logic_error(
-                this->name +
-                " Backward(Tensor<3>) called with ReturnSequences=false");
-    }
+    if constexpr(ReturnSequences) {
+        this->dL_dw.setZero();
+        Eigen::Index time_steps = this->h.dimension(1);
 
-    this->dL_dw.setZero();
-    Eigen::Index time_steps = this->x.dimension(1);
-
-    this->lstm_cells.back().Backward(
-            gradients.chip(time_steps - 1, 1),
-            w, dL_dw,
-            cs, fl::Tensor<2>(gradients.dimension(0), output_len).constant(0),
-            device
-    );
-
-    for (auto i = time_steps - 2; i >= 0; i--) {
-        lstm_cells[i].Backward(
-                gradients.chip(i, 1) +
-                this->lstm_cells[i + 1].GetInputGradientsHprev(),
+        this->lstm_cells.back().Backward(
+                gradients.chip(time_steps - 1, 1),
                 w, dL_dw,
-                cs, lstm_cells[i + 1].GetInputGradientsCprev(),
+                cs, fl::Tensor<2>(gradients.dimension(0), output_len).constant(0),
                 device
         );
+
+        for (auto i = time_steps - 2; i >= 0; i--) {
+            lstm_cells[i].Backward(
+                    gradients.chip(i, 1) +
+                    this->lstm_cells[i + 1].GetInputGradientsHprev(),
+                    w, dL_dw,
+                    cs, lstm_cells[i + 1].GetInputGradientsCprev(),
+                    device
+            );
+        }
+    }
+    else {
+        Eigen::Index time_steps = this->h.dimension(1);
+
+        this->dL_dw.setZero();
+        this->lstm_cells.back().Backward(
+                gradients, w, dL_dw,
+                cs, fl::Tensor<2>(gradients.dimension(0), output_len).constant(0),
+                device
+        );
+
+        for (auto i = time_steps - 2; i >= 0; i--) {
+            lstm_cells[i].Backward(
+                    lstm_cells[i + 1].GetInputGradientsHprev(), w, dL_dw,
+                    cs, lstm_cells[i + 1].GetInputGradientsCprev(),
+                    device
+            );
+        }
     }
 }
 
@@ -185,11 +202,19 @@ LSTM<Activation, GateActivation, ReturnSequences>::GetOutput3D() const
 
 
 template<typename Activation, typename GateActivation, bool ReturnSequences>
+std::vector<fl::Tensor<2>>
+LSTM<Activation, GateActivation, ReturnSequences>::GetWeights2D() const
+{
+    return {this->w};
+}
+
+
+template<typename Activation, typename GateActivation, bool ReturnSequences>
 const Tensor<3> &
 LSTM<Activation, GateActivation, ReturnSequences>::GetInputGradients3D()
 {
-    this->dL_dx.resize(this->x.dimensions());
-    int time_steps = static_cast<int>(this->x.dimension(1));
+    this->dL_dx.resize(this->h.dimension(0), this->h.dimension(1), this->input_len);
+    int time_steps = static_cast<int>(this->h.dimension(1));
 
     for (int i = time_steps - 1; i >= 0; --i) {
         this->lstm_cells[i].CalcInputGradients(
@@ -197,14 +222,6 @@ LSTM<Activation, GateActivation, ReturnSequences>::GetInputGradients3D()
     }
 
     return this->dL_dx;
-}
-
-
-template<typename Activation, typename GateActivation, bool ReturnSequences>
-const Tensor<2> &
-LSTM<Activation, GateActivation, ReturnSequences>::GetWeights() const
-{
-    return this->w;
 }
 
 
@@ -218,9 +235,25 @@ LSTM<Activation, GateActivation, ReturnSequences>::GetWeightGradients() const
 
 template<typename Activation, typename GateActivation, bool ReturnSequences>
 void LSTM<Activation, GateActivation, ReturnSequences>::SetWeights(
-        const Tensor<2> &weights)
+        const std::vector<fl::Tensor<2>> &weights)
 {
-    this->w = weights;
+    if (weights.size() != 2) {
+        throw std::invalid_argument(
+                this->name + " SetWeights() expects 2 tensors: weights and bias");
+    }
+
+    if (weights.front().size() != 0 &&
+        weights.front().dimensions() !=
+        this->w.dimensions()) {
+        std::ostringstream error_msg;
+        error_msg << this->name << " SetWeights() expects weight dimensions "
+                  << this->w.dimensions() << ", got " << weights.front().dimensions()
+                  << " instead";
+        throw std::invalid_argument(error_msg.str());
+    }
+    else {
+        this->w = weights.front();
+    }
 }
 
 
@@ -256,5 +289,6 @@ void LSTM<Activation, GateActivation, ReturnSequences>::Load(
 {
     Layer::Load(path);
 }
+
 
 } // namespace fl

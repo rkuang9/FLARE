@@ -156,16 +156,16 @@ const Tensor<2> &Dense<Activation>::GetWeightGradients() const
 
 
 template<typename Activation>
-void Dense<Activation>::SetWeights(const Tensor<2> &weights)
+void Dense<Activation>::SetWeights(const std::vector<Tensor<2>> &weights)
 {
-    if (weights.dimensions() != this->w.dimensions()) {
+    if (weights.front().dimensions() != this->w.dimensions()) {
         std::ostringstream error_msg;
         error_msg << this->name << " Dense::SetWeights EXPECTED DIMENSIONS " <<
-                  this->w.dimensions() << ", GOT " << weights.dimensions();
+                  this->w.dimensions() << ", GOT " << weights.front().dimensions();
         throw std::invalid_argument(error_msg.str());
     }
 
-    this->w = weights;
+    this->w = weights.front();
 }
 
 

@@ -116,17 +116,17 @@ const Tensor<2> &Embedding::GetWeightGradients() const
 }
 
 
-void Embedding::SetWeights(const Tensor<2> &weights)
+void Embedding::SetWeights(const std::vector<Tensor<2>> &weights)
 {
-    if (weights.dimensions() != this->w.dimensions()) {
+    if (weights.front().dimensions() != this->w.dimensions()) {
         std::ostringstream error_msg;
         error_msg << this->name << " expected weights dimensions " <<
-                  this->w.dimensions() << ", got " << weights.dimensions()
+                  this->w.dimensions() << ", got " << weights.front().dimensions()
                   << "\n";
         throw std::invalid_argument(error_msg.str());
     }
 
-    this->w.device(this->device) = weights;
+    this->w.device(this->device) = weights.front();
 }
 
 

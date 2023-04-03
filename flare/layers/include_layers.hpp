@@ -22,5 +22,6 @@
 #include "rnn/gru_cell.hpp"
 #include "rnn/lstm_cell.hpp"
 #include "lstm.hpp"
+#include "bidirectional.hpp"
 
 #endif //FLARE_INCLUDE_LAYERS_HPP

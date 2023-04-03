@@ -14,6 +14,7 @@ set(SOURCES
         leaky_relu.ipp
         gru.ipp
         lstm.ipp
+        bidirectional.ipp
         )
 
 set(SOURCE_DIRECTORY)

@@ -31,7 +31,7 @@ public:
 
     const Tensor<2> &GetWeightGradients() const override;
 
-    void SetWeights(const Tensor<2> &weights) override;
+    void SetWeights(const std::vector<Tensor<2>> &weights) override;
 
     int GetInputRank() const override;
 

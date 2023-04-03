@@ -29,8 +29,6 @@ public:
 
     const Tensor<4> &GetInputGradients4D() override;
 
-    void SetWeights(const Tensor<4> &weights) override;
-
 private:
     Dims<4> fwd_pad; // save forward top/bottom/left/right padding, reuse in backward
 

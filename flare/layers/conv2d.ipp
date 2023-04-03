@@ -225,16 +225,16 @@ const Tensor<4> &Conv2D<Activation, Threads>::GetWeights4D() const
 
 
 template<typename Activation, int Threads>
-void Conv2D<Activation, Threads>::SetWeights(const Tensor<4> &weights)
+void Conv2D<Activation, Threads>::SetWeights(const std::vector<Tensor<4>> &weights)
 {
-    if (weights.dimensions() != this->kernels.dimensions()) {
+    if (weights.front().dimensions() != this->kernels.dimensions()) {
         std::ostringstream error_msg;
         error_msg << this->name << " Conv2D::SetWeights EXPECTED DIMENSIONS "
-                  << this->kernels.dimensions() << ", GOT " << weights.dimensions();
+                  << this->kernels.dimensions() << ", GOT " << weights.front().dimensions();
         throw std::invalid_argument(error_msg.str());
     }
 
-    this->kernels = weights;
+    this->kernels = weights.front();
 }
 
 

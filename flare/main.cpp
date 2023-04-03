@@ -1,65 +1,76 @@
 #include <iostream>
 #include <chrono>
 #include <flare/flare.hpp>
-#include "lib/json-develop/single_include/nlohmann/json.hpp"
+//#include "lib/json-develop/single_include/nlohmann/json.hpp"
 
 
 void test()
 {
-    using json = nlohmann::json;
-    std::ifstream f("sarcasm.json");
-    json data = json::parse(f);
-    f.close();
+    using namespace fl;
 
-    int sentence_len = 30;
-    int dictionary_size = 15000;
+    MeanSquaredError<2> loss;
+    SGD opt(1.0);
 
-    fl::Tokenizer dict(dictionary_size, sentence_len);
+    Tensor<3> inputs(1, 2, 3);
+    inputs.setConstant(1.0);
+    inputs.setValues({{{0.0492, 0.423, 0.0654}, {0.312, 0.0534, 0.143}}});
 
-    for (auto &headline: data) {
-        dict.Add(headline["headline"].dump());
-    }
+    Tensor<2> weights(8, 20);
+    weights.setValues({
+                              {0.576965, 0.659116, 0.702884, 0.192492, 0.783214,
+                                      0.92249,  0.337962, 0.194888, 0.298119, 0.238666,
+                                      0.272034, 0.358062, 0.019324, 0.213479, 0.590977,
+                                      0.988413, 0.609288, 0.084484, 0.810871,
+                                      0.04412},
+                              {0.53865,  0.951132, 0.430423, 0.663795, 0.346688,
+                                      0.433916, 0.298551, 0.112593, 0.396427, 0.022314,
+                                      0.699614, 0.981615, 0.723073, 0.091883, 0.719622,
+                                      0.122104, 0.493797, 0.257438, 0.799938,
+                                      0.88981},
+                              {0.633806, 0.98536,  0.091141, 0.950038, 0.247677,
+                                      0.349895, 0.789082, 0.997984, 0.162204, 0.039145,
+                                      0.613252, 0.344108, 0.400575, 0.89086,  0.456554,
+                                      0.49994,  0.340965, 0.695167, 0.358084,
+                                      0.26813},
+                              {0.074563, 0.218356, 0.937712, 0.950692, 0.527635,
+                                      0.330107, 0.6655,   0.79536,  0.894386, 0.487504,
+                                      0.461727, 0.220733, 0.396802, 0.365143, 0.930384,
+                                      0.750919, 0.139293, 0.979788, 0.152928,
+                                      0.41032},
+                              {0.183174, 0.96891,  0.663228, 0.972345, 0.235832,
+                                      0.451922, 0.283095, 0.797042, 0.445114, 0.526298,
+                                      0.689257, 0.658285, 0.478264, 0.274353, 0.911132,
+                                      0.35455,  0.354401, 0.454006, 0.464945,
+                                      0.48999},
+                              {0.860942, 0.081264, 0.582303, 0.377804, 0.795148,
+                                      0.103755, 0.752929, 0.425141, 0.467988, 0.436143,
+                                      0.402033, 0.536081, 0.141227, 0.869395, 0.55777,
+                                      0.069341, 0.377727, 0.081909, 0.369297,
+                                      0.29204},
+                              {0.351103, 0.330927, 0.363646, 0.045541, 0.739394,
+                                      0.976308, 0.607712, 0.58135,  0.381556, 0.109799,
+                                      0.819477, 0.859921, 0.667143, 0.893585, 0.435746,
+                                      0.44293,  0.44404,  0.873219, 0.5029,
+                                      0.57263},
+                              {0.54924,  0.767787, 0.888377, 0.288708, 0.832866,
+                                      0.028553, 0.284296, 0.497932, 0.273681, 0.66692,
+                                      0.400512, 0.886717, 0.360105, 0.312042, 0.230181,
+                                      0.315914, 0.371168, 0.460909, 0.358639,
+                                      0.386638}
+                      });
 
+    Layer *bi_lstm = new Bidirectional<CONCAT, Linear, Linear, false>(
+            new LSTM<Linear, Linear, false>(3, 5));
+    bi_lstm->SetWeights(std::vector<Tensor<2>> {weights, {}, 2 * weights, {}});
+    bi_lstm->Forward(inputs);
 
-    dict.Compile();
+    fl::Tensor<2> label(bi_lstm->GetOutput2D().dimensions());
+    label.setConstant(1.0);
 
-    fl::Dataset dataset(fl::Dims<1>(sentence_len), fl::Dims<1>(1));
+    loss(bi_lstm->GetOutput2D(), label);
+    std::cout << "loss gradients: " << loss.GetGradients().dimensions() << "\n" << loss.GetGradients() << "\n";
 
-
-    // add to dataset all headlines excluding the last 10
-    for (int i = 0; i < data.size() - 10; i++) {
-        dataset.Add(dict.Sequence({data[i]["headline"].dump()})
-                            .reshape(fl::Dims<1>(sentence_len)),
-                    fl::Tensor<1>(1).setValues({{data[i]["is_sarcastic"]}}));
-    }
-
-
-    dataset.Batch(64, false);
-    std::cout << "samples: " << dataset.training_samples.size() << "\n";
-
-    fl::Sequential model {
-            new fl::Embedding(dict.Size(), 64, sentence_len),
-            new fl::LSTM(64, 32),
-            new fl::Dropout<2>(0.2),
-            new fl::Dense<fl::ReLU>(32, 32, false),
-            new fl::Dense<fl::Sigmoid>(32, 1, false),
-    };
-
-    fl::BinaryCrossEntropy<2> loss;
-    fl::Adam opt;
-
-    model.Fit(dataset.training_samples, dataset.training_labels, 20, loss, opt);
-
-    for (auto i = data.size() - 20; i < data.size(); i++) {
-        const std::string headline = data[i]["headline"].dump();
-
-        fl::Tensor<2> sample = dict.Sequence({headline})
-                .reshape(fl::Dims<2>(1, sentence_len));
-
-        std::cout << "headline: " << headline << "\n";
-        std::cout << "prediction: " << model.Predict<2>(sample) << "\n";
-        std::cout << "label: " << data[i]["is_sarcastic"] << "\n\n";
-    }
+    bi_lstm->Backward(loss.GetGradients());
 }
 
 

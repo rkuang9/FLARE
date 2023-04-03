@@ -24,9 +24,11 @@ public:
 
     void Forward(const Layer &prev) override;
 
-    void Backward(const Tensor<2> &gradients) override;
+    //void Backward(const Tensor<2> &gradients) override;
 
-    void Backward(const Tensor<3> &gradients) override;
+    //void Backward(const Tensor<3> &gradients) override;
+
+    void Backward(const Tensor<ReturnSequences ? 3 : 2> &gradients) override;
 
     void Backward(Layer &next) override;
 
@@ -38,25 +40,25 @@ public:
 
     const Tensor<3> &GetInputGradients3D() override;
 
-    const Tensor<2> &GetWeights() const override;
-
     const Tensor<2> &GetWeightGradients() const override;
 
-    void SetWeights(const Tensor<2> &weights) override;
+    std::vector<Tensor<2>> GetWeights2D() const override;
 
-    int GetInputRank() const override;
-
-    int GetOutputRank() const override;
+    void SetWeights(const std::vector<Tensor<2>> &weights) override;
 
     void Save(const std::string &path) override;
 
     void Load(const std::string &path) override;
 
+    int GetInputRank() const override;
+
+    int GetOutputRank() const override;
+
 private:
     Eigen::Index input_len;
     Eigen::Index output_len;
 
-    Tensor<3> x;
+    //Tensor<3> x; // held in LSTMCells instead
     Tensor<3> dL_dx;
 
     Tensor<3> h;
@@ -70,10 +72,8 @@ private:
     std::vector<LSTMCell<Activation, GateActivation>> lstm_cells;
 
     // multithreading
-    Eigen::ThreadPool pool = Eigen::ThreadPool(
-            (int) std::thread::hardware_concurrency());
-    Eigen::ThreadPoolDevice device = Eigen::ThreadPoolDevice(&pool, 2);
-
+    Eigen::ThreadPoolDevice device = Eigen::ThreadPoolDevice(new Eigen::ThreadPool(
+            (int) std::thread::hardware_concurrency()), 2);
 };
 
 } // namespace fl
