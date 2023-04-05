@@ -32,10 +32,11 @@ template<int Merge, typename Activation, typename GateActivation, bool ReturnSeq
 void Bidirectional<Merge, Activation, GateActivation, ReturnSequences>::Forward(
         const Tensor<3> &inputs)
 {
+    this->input_dims = inputs.dimensions();
     this->forward_rnn->Forward(inputs);
-    this->reverse_rnn->Forward(Tensor<3>(inputs.reverse(
-            Dims<3, bool>(false, true, false))));
+    this->reverse_rnn->Forward(Tensor<3>(inputs.reverse(this->rev_time_dim)));
 
+    // resize for multi-threading
     if constexpr(ReturnSequences) {
         if constexpr(Merge == CONCAT) {
             this->h.resize(this->forward_rnn->GetOutput3D().dimension(0),
@@ -72,8 +73,6 @@ void Bidirectional<Merge, Activation, GateActivation, ReturnSequences>::Forward(
         throw std::invalid_argument(
                 this->name + " Forward() invalid merge template parameter");
     }
-
-    std::cout << "output: " << this->h.dimensions() << "\n" << h << "\n";
 }
 
 
@@ -92,14 +91,8 @@ void Bidirectional<Merge, Activation, GateActivation, ReturnSequences>::Forward(
 
 template<int Merge, typename Activation, typename GateActivation, bool ReturnSequences>
 void Bidirectional<Merge, Activation, GateActivation, ReturnSequences>::Backward(
-        const Tensor<2> &gradients)
+        const Tensor<ReturnSequences ? 3 : 2> &gradients)
 {
-    if constexpr(ReturnSequences) {
-        throw std::logic_error(
-                this->name +
-                " Backward(Tensor<2>) called with ReturnSequences=true");
-    }
-
     if constexpr(Merge == SUM) {
         this->BackwardSum(gradients);
     }
@@ -120,25 +113,16 @@ void Bidirectional<Merge, Activation, GateActivation, ReturnSequences>::Backward
 
 
 template<int Merge, typename Activation, typename GateActivation, bool ReturnSequences>
-void Bidirectional<Merge, Activation, GateActivation, ReturnSequences>::Backward(
-        const Tensor<3> &gradients)
-{
-    if constexpr(!ReturnSequences) {
-        throw std::logic_error(
-                this->name +
-                " Backward(Tensor<3>) called with ReturnSequences=false");
-    }
-
-    std::cout << this->name << " Backward(<3>)\n";
-}
-
-
-template<int Merge, typename Activation, typename GateActivation, bool ReturnSequences>
 void
 Bidirectional<Merge, Activation, GateActivation, ReturnSequences>::Backward(
         Layer &next)
 {
-    Layer::Backward(next);
+    if constexpr(ReturnSequences) {
+        this->Backward(next.GetInputGradients3D());
+    }
+    else {
+        this->Backward(next.GetInputGradients2D());
+    }
 }
 
 
@@ -146,7 +130,8 @@ template<int Merge, typename Activation, typename GateActivation, bool ReturnSeq
 void Bidirectional<Merge, Activation, GateActivation, ReturnSequences>::Update(
         Optimizer &optimizer)
 {
-
+    this->forward_rnn->Update(optimizer);
+    this->reverse_rnn->Update(optimizer);
 }
 
 
@@ -175,6 +160,20 @@ Bidirectional<Merge, Activation, GateActivation, ReturnSequences>::GetOutput3D()
     }
 
     return this->h;
+}
+
+
+template<int Merge, typename Activation, typename GateActivation, bool ReturnSequences>
+const Tensor<3> &
+Bidirectional<Merge, Activation, GateActivation, ReturnSequences>::GetInputGradients3D()
+{
+    this->dL_dx.resize(this->input_dims);
+
+    this->dL_dx.device(this->device) =
+            this->forward_rnn->GetInputGradients3D() +
+            this->reverse_rnn->GetInputGradients3D().reverse(this->rev_time_dim);
+
+    return this->dL_dx;
 }
 
 
@@ -216,6 +215,21 @@ void Bidirectional<Merge, Activation, GateActivation, ReturnSequences>::SetWeigh
 
 
 template<int Merge, typename Activation, typename GateActivation, bool ReturnSequences>
+std::vector<Tensor < 2>>
+
+
+Bidirectional<Merge, Activation, GateActivation, ReturnSequences>::GetWeightGradients2D() const
+{
+    auto fwd_dw = this->forward_rnn->GetWeightGradients2D();
+    auto rev_dw = this->reverse_rnn->GetWeightGradients2D();
+
+    fwd_dw.insert(fwd_dw.end(), rev_dw.begin(), rev_dw.end());
+
+    return fwd_dw;
+}
+
+
+template<int Merge, typename Activation, typename GateActivation, bool ReturnSequences>
 int
 Bidirectional<Merge, Activation, GateActivation, ReturnSequences>::GetInputRank() const
 {
@@ -251,7 +265,8 @@ void Bidirectional<Merge, Activation, GateActivation, ReturnSequences>::ForwardS
 {
     if constexpr(ReturnSequences) {
         this->h.device(this->device) = this->forward_rnn->GetOutput3D() +
-                                       this->reverse_rnn->GetOutput3D();
+                                       this->reverse_rnn->GetOutput3D()
+                                               .reverse(this->rev_time_dim);
     }
     else {
         this->h.device(this->device) = this->forward_rnn->GetOutput2D() +
@@ -265,12 +280,13 @@ void
 Bidirectional<Merge, Activation, GateActivation, ReturnSequences>::ForwardMean()
 {
     if constexpr(ReturnSequences) {
-        this->h.device(this->device) = 0.5 * (this->forward_rnn->GetOutput3D() +
-                                              this->reverse_rnn->GetOutput3D());
+        this->h.device(this->device) = (this->forward_rnn->GetOutput3D() +
+                                        this->reverse_rnn->GetOutput3D()
+                                                .reverse(this->rev_time_dim)) * 0.5;
     }
     else {
-        this->h.device(this->device) = 0.5 * (this->forward_rnn->GetOutput2D() +
-                                              this->reverse_rnn->GetOutput2D());
+        this->h.device(this->device) = (this->forward_rnn->GetOutput2D() +
+                                        this->reverse_rnn->GetOutput2D()) * 0.5;
     }
 }
 
@@ -281,8 +297,8 @@ Bidirectional<Merge, Activation, GateActivation, ReturnSequences>::ForwardHadama
 {
     if constexpr(ReturnSequences) {
         this->h.device(this->device) = this->forward_rnn->GetOutput3D() *
-                                       this->reverse_rnn->GetOutput3D().reverse(
-                                               Dims<3, bool>(false, true, false));
+                                       this->reverse_rnn->GetOutput3D()
+                                               .reverse(this->rev_time_dim);
     }
     else {
         this->h.device(this->device) = this->forward_rnn->GetOutput2D() *
@@ -297,8 +313,8 @@ Bidirectional<Merge, Activation, GateActivation, ReturnSequences>::ForwardConcat
 {
     if constexpr(ReturnSequences) {
         this->h.device(this->device) = this->forward_rnn->GetOutput3D()
-                .concatenate(this->reverse_rnn->GetOutput3D().reverse(
-                        Dims<3, bool>(false, true, false)), 2);
+                .concatenate(this->reverse_rnn->GetOutput3D()
+                                     .reverse(this->rev_time_dim), 2);
     }
     else {
         this->h.device(this->device) = this->forward_rnn->GetOutput2D()
@@ -311,7 +327,15 @@ template<int Merge, typename Activation, typename GateActivation, bool ReturnSeq
 void Bidirectional<Merge, Activation, GateActivation, ReturnSequences>::BackwardSum(
         const Tensor<ReturnSequences ? 3 : 2> &gradients)
 {
-
+    if constexpr(ReturnSequences) {
+        this->forward_rnn->Backward(gradients);
+        this->reverse_rnn->Backward(
+                Tensor<3>(gradients.reverse(this->rev_time_dim)));
+    }
+    else {
+        this->forward_rnn->Backward(gradients);
+        this->reverse_rnn->Backward(gradients);
+    }
 }
 
 
@@ -320,7 +344,15 @@ void
 Bidirectional<Merge, Activation, GateActivation, ReturnSequences>::BackwardMean(
         const Tensor<ReturnSequences ? 3 : 2> &gradients)
 {
-
+    if constexpr(ReturnSequences) {
+        this->forward_rnn->Backward(Tensor<3>(0.5 * gradients));
+        this->reverse_rnn->Backward(
+                Tensor<3>(0.5 * gradients.reverse(this->rev_time_dim)));
+    }
+    else {
+        this->forward_rnn->Backward(Tensor<2>(0.5 * gradients));
+        this->reverse_rnn->Backward(Tensor<2>(0.5 * gradients));
+    }
 }
 
 
@@ -329,7 +361,21 @@ void
 Bidirectional<Merge, Activation, GateActivation, ReturnSequences>::BackwardHadamard(
         const Tensor<ReturnSequences ? 3 : 2> &gradients)
 {
+    if constexpr(ReturnSequences) {
+        this->forward_rnn->Backward(Tensor<3>(
+                gradients *
+                this->reverse_rnn->GetOutput3D().reverse(this->rev_time_dim)));
 
+        // TODO: TensorFlow has a different output for reverse_rnn weight grads, not sure which is wrong
+        this->reverse_rnn->Backward(
+                Tensor<3>(gradients * this->forward_rnn->GetOutput3D()));
+    }
+    else {
+        this->forward_rnn->Backward(
+                Tensor<2>(gradients * this->reverse_rnn->GetOutput2D()));
+        this->reverse_rnn->Backward(
+                Tensor<2>(gradients * this->forward_rnn->GetOutput2D()));
+    }
 }
 
 
@@ -345,10 +391,8 @@ Bidirectional<Merge, Activation, GateActivation, ReturnSequences>::BackwardConca
                        this->h.dimension(2) / 2);
 
         this->forward_rnn->Backward(Tensor<3>(gradients.slice(fwd_offset, extent)));
-        this->reverse_rnn->Backward(Tensor<3>(gradients.slice(rev_offset, extent)));
-
-        std::cout << this->forward_rnn->GetWeightGradients() << "\n";
-        std::cout << this->reverse_rnn->GetWeightGradients() << "\n";
+        this->reverse_rnn->Backward(Tensor<3>(
+                gradients.slice(rev_offset, extent).reverse(this->rev_time_dim)));
     }
     else {
         Dims<2> fwd_offset(0, 0);
@@ -357,11 +401,6 @@ Bidirectional<Merge, Activation, GateActivation, ReturnSequences>::BackwardConca
 
         this->forward_rnn->Backward(Tensor<2>(gradients.slice(fwd_offset, extent)));
         this->reverse_rnn->Backward(Tensor<2>(gradients.slice(rev_offset, extent)));
-
-        std::cout << "forward_rnn dL/dw\n" << this->forward_rnn->GetWeightGradients() << "\n\n";
-        std::cout << "reverse_rnn dL/dw\n" << this->reverse_rnn->GetWeightGradients() << "\n\n";
-        std::cout << "forward_rnn dL/dx\n" << this->forward_rnn->GetInputGradients3D() << "\n\n";
-        std::cout << "reverse_rnn dL/dx\n" << this->reverse_rnn->GetInputGradients3D() << "\n\n";
     }
 }
 

@@ -30,9 +30,7 @@ public:
 
     void Forward(const Layer &prev) override;
 
-    void Backward(const Tensor<2> &gradients) override;
-
-    void Backward(const Tensor<3> &gradients) override;
+    void Backward(const Tensor<ReturnSequences ? 3 : 2> &gradients) override;
 
     void Backward(Layer &next) override;
 
@@ -42,7 +40,11 @@ public:
 
     const Tensor<3> &GetOutput3D() const override;
 
+    const Tensor<3> &GetInputGradients3D() override;
+
     std::vector<Tensor<2>> GetWeights2D() const override;
+
+    std::vector<Tensor<2>> GetWeightGradients2D() const override;
 
     void SetWeights(const std::vector<Tensor<2>> &weights) override;
 
@@ -73,7 +75,11 @@ private:
     Layer *forward_rnn;
     Layer *reverse_rnn;
 
+    Dims<3, bool> rev_time_dim {false, true, false};
+    Dims<3> input_dims;
+
     Tensor<ReturnSequences ? 3 : 2> h;
+    Tensor<3> dL_dx;
 
     // multithreading
     Eigen::ThreadPool pool = Eigen::ThreadPool(

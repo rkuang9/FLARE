@@ -110,9 +110,9 @@ const Tensor<2> &Embedding::GetWeights() const
 }
 
 
-const Tensor<2> &Embedding::GetWeightGradients() const
+std::vector<Tensor<2>> Embedding::GetWeightGradients2D() const
 {
-    return this->dL_dw;
+    return {this->dL_dw};
 }
 
 

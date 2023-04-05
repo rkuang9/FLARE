@@ -95,7 +95,7 @@ Scalar Sequential::GradientCheck(const Tensor<2> &input, const Tensor<2> &label,
             continue; // skip layers that don't have weights
         }
 
-        actual_gradients.push_back(this->layers[i]->GetWeightGradients());
+        actual_gradients.push_back(this->layers[i]->GetWeightGradients2D().front());
 
         // to restore layer weights
         Tensor<2> original_weights = this->layers[i]->GetWeights();

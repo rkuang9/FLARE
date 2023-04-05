@@ -211,9 +211,9 @@ const Tensor<4> &Conv2D<Activation, Threads>::GetInputGradients4D()
 
 
 template<typename Activation, int Threads>
-const Tensor<4> &Conv2D<Activation, Threads>::GetWeightGradients4D() const
+std::vector<Tensor<4>> Conv2D<Activation, Threads>::GetWeightGradients4D() const
 {
-    return this->dL_dk;
+    return {this->dL_dk};
 }
 
 

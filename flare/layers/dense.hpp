@@ -88,7 +88,7 @@ public:
     /**
      * @return   loss gradients w.r.t. weights (dL / dw)
      */
-    const Tensor<2> &GetWeightGradients() const override;
+    std::vector<Tensor<2>> GetWeightGradients2D() const override;
 
 
     /**

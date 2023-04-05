@@ -29,7 +29,7 @@ public:
 
     const Tensor<2> &GetWeights() const override;
 
-    const Tensor<2> &GetWeightGradients() const override;
+    std::vector<Tensor<2>> GetWeightGradients2D() const override;
 
     void SetWeights(const std::vector<Tensor<2>> &weights) override;
 

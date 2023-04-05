@@ -205,7 +205,7 @@ public:
     /**
      * @return   layer's loss gradients w.r.t weights (dL / dw)
      */
-    virtual const Tensor<2> &GetWeightGradients() const
+    virtual std::vector<Tensor<2>> GetWeightGradients2D() const
     {
         throw std::logic_error(
                 "An error occurred, base class Layer GetWeightGradients was called  on " +
@@ -213,7 +213,7 @@ public:
     }
 
 
-    virtual const Tensor<4> &GetWeightGradients4D() const
+    virtual std::vector<Tensor<4>> GetWeightGradients4D() const
     {
         throw std::logic_error(
                 "An error occurred, base class Layer GetWeightGradients4D was call on " +

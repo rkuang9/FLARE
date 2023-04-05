@@ -52,7 +52,7 @@ public:
 
     const Tensor<4> &GetWeights4D() const override;
 
-    const Tensor<4> &GetWeightGradients4D() const override;
+    std::vector<Tensor<4>> GetWeightGradients4D() const override;
 
     void SetWeights(const std::vector<Tensor<4>> &weights) override;
 

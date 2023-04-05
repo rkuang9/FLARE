@@ -78,35 +78,6 @@ void LSTM<Activation, GateActivation, ReturnSequences>::Forward(const Layer &pre
 }
 
 
-/*template<typename Activation, typename GateActivation, bool ReturnSequences>
-void LSTM<Activation, GateActivation, ReturnSequences>::Backward(
-        const Tensor<2> &gradients)
-{
-    if constexpr(ReturnSequences) {
-        throw std::logic_error(
-                this->name +
-                " Backward(Tensor<2>) called with ReturnSequences=true");
-    }
-
-    Eigen::Index time_steps = gradients.dimension(1);
-
-    this->dL_dw.setZero();
-    this->lstm_cells.back().Backward(
-            gradients, w, dL_dw,
-            cs, fl::Tensor<2>(gradients.dimension(0), output_len).constant(0),
-            device
-    );
-
-    for (auto i = time_steps - 2; i >= 0; i--) {
-        lstm_cells[i].Backward(
-                lstm_cells[i + 1].GetInputGradientsHprev(), w, dL_dw,
-                cs, lstm_cells[i + 1].GetInputGradientsCprev(),
-                device
-        );
-    }
-}*/
-
-
 template<typename Activation, typename GateActivation, bool ReturnSequences>
 void LSTM<Activation, GateActivation, ReturnSequences>::Backward(
         const Tensor<ReturnSequences ? 3 : 2> &gradients)
@@ -226,10 +197,10 @@ LSTM<Activation, GateActivation, ReturnSequences>::GetInputGradients3D()
 
 
 template<typename Activation, typename GateActivation, bool ReturnSequences>
-const Tensor<2> &
-LSTM<Activation, GateActivation, ReturnSequences>::GetWeightGradients() const
+std::vector<Tensor<2>>
+LSTM<Activation, GateActivation, ReturnSequences>::GetWeightGradients2D() const
 {
-    return this->dL_dw;
+    return {this->dL_dw};
 }
 
 

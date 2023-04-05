@@ -24,10 +24,6 @@ public:
 
     void Forward(const Layer &prev) override;
 
-    //void Backward(const Tensor<2> &gradients) override;
-
-    //void Backward(const Tensor<3> &gradients) override;
-
     void Backward(const Tensor<ReturnSequences ? 3 : 2> &gradients) override;
 
     void Backward(Layer &next) override;
@@ -40,7 +36,7 @@ public:
 
     const Tensor<3> &GetInputGradients3D() override;
 
-    const Tensor<2> &GetWeightGradients() const override;
+    std::vector<Tensor<2>> GetWeightGradients2D() const override;
 
     std::vector<Tensor<2>> GetWeights2D() const override;
 
