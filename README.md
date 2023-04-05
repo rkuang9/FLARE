@@ -20,6 +20,7 @@ Contribute and learn AI together.
   - Dropout
   - Gated Recurrent Unit
   - Long Short-Term Memory
+  - Bidirectional RNN
 - Activation Functions
   - Sigmoid
   - Hyperbolic tangent (TanH)
@@ -66,7 +67,7 @@ Contribute and learn AI together.
 - [x] Save and load weights from files
 - [x] Gated Recurrent Unit (3/9/2023)
 - [x] Long Short-Term Memory (3/26/2023)
-- [ ] Bidirectional RNN
+- [x] Bidirectional RNN (4/5/2023)
 - [ ] Add bias support for layers
 - [ ] Parse JSON datasets
 - [ ] Evaluate a test set per epoch
