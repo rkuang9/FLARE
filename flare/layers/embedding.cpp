@@ -8,7 +8,7 @@ namespace fl
 {
 
 Embedding::Embedding(Eigen::Index vocab_size, Eigen::Index embedding_dim,
-              Eigen::Index input_len,
+                     Eigen::Index input_len,
                      const Initializer<2> &initializer)
         : embed_dims(embedding_dim),
           input_len(input_len)
@@ -44,6 +44,11 @@ void Embedding::Forward(const Tensor<2> &inputs)
     for (Eigen::Index batch = 0; batch < inputs.dimension(0); batch++) {
         for (Eigen::Index i = 0; i < inputs.dimension(1); i++) {
             Dims<3> z_offset(batch, i, 0);
+
+            fl_assert(this->X(batch, i) >= 0 &&
+                      this->X(batch, i) < this->w.dimension(0),
+                      this->name + " Forward() input value " +
+                      std::to_string(this->X(batch, i)) + " is out embedding range");
 
             this->Z.slice(z_offset, z_extent).device(this->device) =
                     this->w.chip(static_cast<Eigen::Index>(inputs(batch, i)), 0)

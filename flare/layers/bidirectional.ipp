@@ -80,12 +80,7 @@ template<int Merge, typename Activation, typename GateActivation, bool ReturnSeq
 void Bidirectional<Merge, Activation, GateActivation, ReturnSequences>::Forward(
         const Layer &prev)
 {
-    if constexpr(ReturnSequences) {
-        this->Forward(prev.GetOutput3D());
-    }
-    else {
-        this->Forward(prev.GetOutput2D());
-    }
+    this->Forward(prev.GetOutput3D());
 }
 
 
