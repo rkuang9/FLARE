@@ -142,9 +142,9 @@ const Tensor<2> &Dense<Activation>::GetInputGradients2D()
 
 
 template<typename Activation>
-const Tensor<2> &Dense<Activation>::GetWeights() const
+std::vector<fl::Tensor<2>> Dense<Activation>::GetWeights2D() const
 {
-    return this->w;
+    return {this->w};
 }
 
 

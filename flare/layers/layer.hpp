@@ -177,29 +177,17 @@ public:
     }
 
 
-    /**
-     * @return   layer's weights
-     */
-    virtual const Tensor<2> &GetWeights() const
+    virtual std::vector<Tensor<2>> GetWeights2D() const
     {
-        throw std::logic_error(
-                "An error occurred, base class Layer GetWeights was called  on " +
-                this->name);
-    }
-
-
-    virtual const Tensor<4> &GetWeights4D() const
-    {
-        throw std::logic_error(
-                "An error occurred, base class Layer GetWeights4D was called on " +
-                this->name);
-    }
-
-
-     virtual std::vector<Tensor<2>> GetWeights2D() const
-     {
         return {};
-     }
+    }
+
+
+    virtual std::vector<Tensor<4>> GetWeights4D() const
+    {
+        return {};
+    }
+
 
 
     /**
@@ -296,9 +284,6 @@ public:
 
     virtual void Load(const std::string &path)
     {}
-
-
-
 
 
     std::string name = "layer"; // name of layer, to be set by inherited classes

@@ -250,7 +250,21 @@ int LSTM<Activation, GateActivation, ReturnSequences>::GetOutputRank() const
 template<typename Activation, typename GateActivation, bool ReturnSequences>
 void LSTM<Activation, GateActivation, ReturnSequences>::Save(const std::string &path)
 {
-    Layer::Save(path);
+    std::ofstream output_file(path);
+    output_file.precision(15);
+
+    if (!output_file.is_open()) {
+        throw std::invalid_argument(
+                this->name + "::Save INVALID FILE PATH: " + path);
+    }
+
+    // flatten the weights and write it to the file with a white space delimiter
+    Tensor<1> flatten = this->w.reshape(Dims<1>(this->w.size()));
+
+    std::vector<Scalar> as_vector(flatten.data(), flatten.data() + flatten.size());
+    std::copy(as_vector.begin(), as_vector.end(),
+              std::ostream_iterator<Scalar>(output_file, " "));
+    output_file.close();
 }
 
 
@@ -258,7 +272,27 @@ template<typename Activation, typename GateActivation, bool ReturnSequences>
 void LSTM<Activation, GateActivation, ReturnSequences>::Load(
         const std::string &path)
 {
-    Layer::Load(path);
+    std::ifstream read_weights(path);
+
+    if (!read_weights.is_open()) {
+        throw std::invalid_argument(this->name + "::Load " + path + " NOT FOUND");
+    }
+
+    std::vector<Scalar> as_vector;
+    std::copy(std::istream_iterator<Scalar>(read_weights),
+              std::istream_iterator<Scalar>(), std::back_inserter(as_vector));
+    read_weights.close();
+
+    if (as_vector.size() != this->w.size()) {
+        std::ostringstream error_msg;
+        error_msg << this->name << "::Load " << path << " EXPECTED "
+                  << this->w.dimensions() << "=" << this->w.size() << " VALUES, GOT "
+                  << as_vector.size() << " INSTEAD";
+        throw std::invalid_argument(error_msg.str());
+    }
+
+    // reshape the flattened tensor back to expected weights dimensions
+    this->w = TensorMap<2>(as_vector.data(), this->w.dimensions());
 }
 
 

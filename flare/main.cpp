@@ -41,8 +41,8 @@ void test()
 
     Layer *bi_lstm = new Bidirectional<CONCAT, Sigmoid, TanH, true>(
             new LSTM<Sigmoid, TanH, true>(3, 5));
-    bi_lstm->SetWeights(std::vector<Tensor<2>> {weights, {}, 2 * weights, {}});
-
+    //bi_lstm->SetWeights(std::vector<Tensor<2>> {weights, {}, 2 * weights, {}});
+    bi_lstm->Load("bi_rnn_saved_weights.bi_lstm");
     // forward propagation
     bi_lstm->Forward(inputs);
     std::cout << "output: " << bi_lstm->GetOutput3D().dimensions()
@@ -63,6 +63,8 @@ void test()
 
     // backpropagation inputs
     std::cout << "input gradients\n" << bi_lstm->GetInputGradients3D() << "\n";
+
+    bi_lstm->Save("bi_rnn_saved_weights.bi_lstm");
 }
 
 

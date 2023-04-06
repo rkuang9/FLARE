@@ -50,7 +50,7 @@ public:
 
     const Tensor<4> &GetInputGradients4D() override;
 
-    const Tensor<4> &GetWeights4D() const override;
+    std::vector<Tensor<4>> GetWeights4D() const override;
 
     std::vector<Tensor<4>> GetWeightGradients4D() const override;
 

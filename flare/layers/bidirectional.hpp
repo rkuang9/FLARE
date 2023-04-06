@@ -52,6 +52,9 @@ public:
 
     int GetOutputRank() const override;
 
+    void Save(const std::string &path) override;
+
+    void Load(const std::string &path) override;
 
 private:
     void SetSubLayerNames();

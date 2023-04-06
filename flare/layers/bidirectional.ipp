@@ -181,20 +181,12 @@ template<int Merge, typename Activation, typename GateActivation, bool ReturnSeq
 std::vector<fl::Tensor<2>>
 Bidirectional<Merge, Activation, GateActivation, ReturnSequences>::GetWeights2D() const
 {
-    std::vector<Tensor<2>> birnn_weights;
+    auto fwd_dw = this->forward_rnn->GetWeights2D();
+    auto rev_dw = this->reverse_rnn->GetWeights2D();
 
-    auto left_right_weights = this->forward_rnn->GetWeights2D();
-    auto right_left_weights = this->reverse_rnn->GetWeights2D();
+    fwd_dw.insert(fwd_dw.end(), rev_dw.begin(), rev_dw.end());
 
-    for (auto &w: left_right_weights) {
-        birnn_weights.push_back(w);
-    }
-
-    for (auto &w: right_left_weights) {
-        birnn_weights.push_back(w);
-    }
-
-    return birnn_weights;
+    return fwd_dw;
 }
 
 
@@ -215,9 +207,7 @@ void Bidirectional<Merge, Activation, GateActivation, ReturnSequences>::SetWeigh
 
 
 template<int Merge, typename Activation, typename GateActivation, bool ReturnSequences>
-std::vector<Tensor < 2>>
-
-
+std::vector<fl::Tensor<2>>
 Bidirectional<Merge, Activation, GateActivation, ReturnSequences>::GetWeightGradients2D() const
 {
     auto fwd_dw = this->forward_rnn->GetWeightGradients2D();
@@ -402,6 +392,24 @@ Bidirectional<Merge, Activation, GateActivation, ReturnSequences>::BackwardConca
         this->forward_rnn->Backward(Tensor<2>(gradients.slice(fwd_offset, extent)));
         this->reverse_rnn->Backward(Tensor<2>(gradients.slice(rev_offset, extent)));
     }
+}
+
+
+template<int Merge, typename Activation, typename GateActivation, bool ReturnSequences>
+void Bidirectional<Merge, Activation, GateActivation, ReturnSequences>::Save(
+        const std::string &path)
+{
+    this->forward_rnn->Save(path + ".bi_rnn_fwd");
+    this->reverse_rnn->Save(path + ".bi_rnn_rev");
+}
+
+
+template<int Merge, typename Activation, typename GateActivation, bool ReturnSequences>
+void Bidirectional<Merge, Activation, GateActivation, ReturnSequences>::Load(
+        const std::string &path)
+{
+    this->forward_rnn->Load(path + ".bi_rnn_fwd");
+    this->reverse_rnn->Load(path + ".bi_rnn_rev");
 }
 
 

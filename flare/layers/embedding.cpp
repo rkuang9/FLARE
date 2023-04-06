@@ -104,9 +104,9 @@ const Tensor<3> &Embedding::GetOutput3D() const
 }
 
 
-const Tensor<2> &Embedding::GetWeights() const
+std::vector<fl::Tensor<2>> Embedding::GetWeights2D() const
 {
-    return this->w;
+    return {this->w};
 }
 
 

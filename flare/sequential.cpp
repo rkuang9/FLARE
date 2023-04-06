@@ -91,17 +91,17 @@ Scalar Sequential::GradientCheck(const Tensor<2> &input, const Tensor<2> &label,
 
     // perform gradient check one layer at a time
     for (int i = 0; i < this->layers.size(); i++) {
-        if (this->layers[i]->GetWeights().size() == 0) {
+        if (this->layers[i]->GetWeights2D().size() == 0) {
             continue; // skip layers that don't have weights
         }
 
         actual_gradients.push_back(this->layers[i]->GetWeightGradients2D().front());
 
         // to restore layer weights
-        Tensor<2> original_weights = this->layers[i]->GetWeights();
+        Tensor<2> original_weights = this->layers[i]->GetWeights2D().front();
 
         // temporary weights modified with epsilon
-        Tensor<2> theta = this->layers[i]->GetWeights();
+        Tensor<2> theta = this->layers[i]->GetWeights2D().front();
 
         // built using limit definition double-sided difference of derivatives
         Tensor<2> dtheta_approx(original_weights.dimensions());

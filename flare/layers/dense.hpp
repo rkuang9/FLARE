@@ -82,7 +82,7 @@ public:
     /**
      * @return   layer's weights
      */
-    const Tensor<2> &GetWeights() const override;
+    std::vector<Tensor<2>> GetWeights2D() const override;
 
 
     /**

@@ -63,8 +63,8 @@ void Conv2D<Activation, Threads>::Forward(const Tensor<4> &inputs)
 {
     fl_assert(inputs.dimension(3) == this->kernels.dimensions().back(),
               "Conv2D::Forward EXPECTED A TENSOR WITH "
-                         << this->kernels.dimensions().back() << "CHANNELS" <<
-                         ", INSTEAD GOT " << inputs.dimensions().back());
+                      << this->kernels.dimensions().back() << "CHANNELS" <<
+                      ", INSTEAD GOT " << inputs.dimensions().back());
 
     this->X.resize(inputs.dimensions());
     this->X.device(this->device) = inputs;
@@ -148,8 +148,8 @@ void Conv2D<Activation, Threads>::Backward(const Tensor<4> &gradients)
 
     fl_assert(this->dL_dk.dimensions() == this->kernels.dimensions(),
               "Conv2D::Backward EXPECTED KERNEL GRADIENTS DIMENSIONS "
-                         << this->kernels.dimensions() << ", GOT "
-                         << this->dL_dk.dimensions());
+                      << this->kernels.dimensions() << ", GOT "
+                      << this->dL_dk.dimensions());
 }
 
 
@@ -210,27 +210,29 @@ const Tensor<4> &Conv2D<Activation, Threads>::GetInputGradients4D()
 }
 
 
+template<typename Activation, int threads>
+std::vector<fl::Tensor<4>> Conv2D<Activation, threads>::GetWeights4D() const
+{
+    return {this->kernels};
+}
+
+
 template<typename Activation, int Threads>
-std::vector<Tensor<4>> Conv2D<Activation, Threads>::GetWeightGradients4D() const
+std::vector<fl::Tensor<4>> Conv2D<Activation, Threads>::GetWeightGradients4D() const
 {
     return {this->dL_dk};
 }
 
 
 template<typename Activation, int Threads>
-const Tensor<4> &Conv2D<Activation, Threads>::GetWeights4D() const
-{
-    return this->kernels;
-}
-
-
-template<typename Activation, int Threads>
-void Conv2D<Activation, Threads>::SetWeights(const std::vector<Tensor<4>> &weights)
+void Conv2D<Activation, Threads>::SetWeights(
+        const std::vector<fl::Tensor<4>> &weights)
 {
     if (weights.front().dimensions() != this->kernels.dimensions()) {
         std::ostringstream error_msg;
         error_msg << this->name << " Conv2D::SetWeights EXPECTED DIMENSIONS "
-                  << this->kernels.dimensions() << ", GOT " << weights.front().dimensions();
+                  << this->kernels.dimensions() << ", GOT "
+                  << weights.front().dimensions();
         throw std::invalid_argument(error_msg.str());
     }
 
@@ -418,7 +420,8 @@ void Conv2D<Activation, threads>::Save(const std::string &path)
     output_file.precision(15);
 
     if (!output_file.is_open()) {
-        throw std::invalid_argument(this->name + "::Save INVALID FILE PATH: " + path);
+        throw std::invalid_argument(
+                this->name + "::Save INVALID FILE PATH: " + path);
     }
 
     // flatten the weights and write it to the file with a white space delimiter
@@ -448,7 +451,8 @@ void Conv2D<Activation, threads>::Load(const std::string &path)
     if (as_vector.size() != this->kernels.size()) {
         std::ostringstream error_msg;
         error_msg << this->name << "::Load " << path << " EXPECTED "
-                  << this->kernels.dimensions() << "=" << this->kernels.size() << " VALUES, GOT "
+                  << this->kernels.dimensions() << "=" << this->kernels.size()
+                  << " VALUES, GOT "
                   << as_vector.size() << " INSTEAD";
         throw std::invalid_argument(error_msg.str());
     }
