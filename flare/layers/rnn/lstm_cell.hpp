@@ -53,7 +53,8 @@ public:
                     .setZero();
         }
 
-        this->p_gates = this->x_h_prev.contract(w, ContractDim {Axes(1, 0)});
+        this->p_gates.device(device) =
+                this->x_h_prev.contract(w, ContractDim {Axes(1, 0)});
 
         this->gates.slice(this->i_offset(), this->gate_extent()).device(device) =
                 GateActivation::Activate(

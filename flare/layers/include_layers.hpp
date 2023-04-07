@@ -19,8 +19,9 @@
 #include "activation.hpp"
 #include "leaky_relu.hpp"
 #include "gru.hpp"
-#include "rnn/gru_cell.hpp"
-#include "rnn/lstm_cell.hpp"
+//#include "rnn/gru_cell.hpp"
+//#include "rnn/gru_cell_remake.hpp"
+//#include "rnn/lstm_cell.hpp"
 #include "lstm.hpp"
 #include "bidirectional.hpp"
 

@@ -7,19 +7,20 @@
 
 #include "layer.hpp"
 #include "rnn/gru_cell.hpp"
+//#include "rnn/gru_cell_remake.hpp"
 
 namespace fl
 {
 
 /**
  *
- * @tparam CandidateActivation       Output candidate activation function
+ * @tparam Activation       Output candidate activation function
  * @tparam GateActivation   Update and reset gates activation function
  * @tparam ReturnSequences  Return the entire time sequence or just the last one
  */
-template<typename CandidateActivation = TanH,
+template<typename Activation = TanH,
         typename GateActivation = Sigmoid,
-        bool ReturnSequences = true>
+        bool ReturnSequences = false>
 class GRU : public Layer
 {
 public:
@@ -30,7 +31,7 @@ public:
 
     void Forward(const Layer &prev) override;
 
-    void Backward(const Tensor<3> &gradients) override;
+    void Backward(const Tensor<ReturnSequences ? 3 : 2> &gradients) override;
 
     void Backward(Layer &next) override;
 
@@ -40,9 +41,11 @@ public:
 
     const Tensor<3> &GetOutput3D() const override;
 
-    const Tensor<2> &GetInputGradients2D() override;
-
     const Tensor<3> &GetInputGradients3D() override;
+
+    std::vector<Tensor<2>> GetWeights2D() const override;
+
+    std::vector<Tensor<2>> GetWeightGradients2D() const override;
 
     // single matrix, horizontal order is update, reset, candidate,
     // with W on top, U on bottom
@@ -67,18 +70,19 @@ private:
     Tensor<3> h_candidate;
     Tensor<3> h;
 
+    Tensor<2> h_no_seq; // holds the last cell's output for ReturnSequences == false
+
     Eigen::Index input_len;
     Eigen::Index output_len;
 
 
     // each GRU cell perform their own forward,
     // backward weights, and backward input for their time step
-    std::vector<GRUCell<CandidateActivation, GateActivation>> gru_cells;
+    std::vector<GRUCell<Activation, GateActivation>> gru_cells;
 
     // multithreading
-    Eigen::ThreadPool pool = Eigen::ThreadPool(
-            (int) std::thread::hardware_concurrency());
-    Eigen::ThreadPoolDevice device = Eigen::ThreadPoolDevice(&pool, 2);
+    Eigen::ThreadPoolDevice device = Eigen::ThreadPoolDevice(new Eigen::ThreadPool(
+            (int) std::thread::hardware_concurrency()), 2);
 };
 
 } // namespace fl

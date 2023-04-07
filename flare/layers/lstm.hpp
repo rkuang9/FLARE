@@ -60,7 +60,7 @@ private:
     Tensor<3> h;
     Tensor<3> cs;
 
-    Tensor<2> h_no_seq; // holds the last cell's output for ReturnSequences == true
+    Tensor<2> h_no_seq; // holds the last cell's output for ReturnSequences == false
 
     Tensor<2> w;
     Tensor<2> dL_dw;

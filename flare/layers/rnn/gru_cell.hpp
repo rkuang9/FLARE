@@ -11,14 +11,13 @@
 namespace fl
 {
 
-template<typename CandidateActivation = TanH, typename GateActivation = Sigmoid>
+template<typename Activation = TanH, typename GateActivation = Sigmoid>
 class GRUCell
 {
 public:
-    explicit GRUCell(Eigen::Index time_step, Eigen::Index batch_size,
-                     Eigen::Index input_length, Eigen::Index output_length)
+    explicit GRUCell(Eigen::Index time_step, Eigen::Index input_length,
+                     Eigen::Index output_length)
             : time_step(time_step),
-              //batch_size(batch_size),
               input_feature_len(input_length),
               output_len(output_length)
     {
@@ -37,9 +36,9 @@ public:
                           << inputs.dimension(2) + h.dimension(2));
 
         fl_assert(w_zr.dimension(1) == 2.0 * this->output_len &&
-                     w_h.dimension(1) == this->output_len,
+                  w_h.dimension(1) == this->output_len,
                   "GRUCell" << this->time_step
-                               << "::Forward received incorrect weights");
+                            << "::Forward received incorrect weights");
         this->batch_size = inputs.dimension(0);
 
         // resize tensors to enable multi-threading
@@ -79,7 +78,7 @@ public:
                         .concatenate(reset_gate * this->h_prev, 2)
                         .contract(w_h, contract_axes);
         this->candidate.template device(device) =
-                CandidateActivation::Activate(this->pcandidate);
+                Activation::Activate(this->pcandidate);
 
         // output: h_t = z * h_prev + (1 - z) * candidate
         // optimized equivalent: h_t = z * (h_prev - candidate) + candidate
@@ -121,7 +120,7 @@ public:
         // dL/dpc = dL/dc * dc/dpc = dL/dh * dh/dc * dc/dpc = dL/dc * g'(pc)
         this->dL_dpcand.device(device) =
                 gradients * (1 - update_gate) *
-                CandidateActivation::Gradients(this->pcandidate);
+                Activation::Gradients(this->pcandidate);
 
         // update gradients dL/dz = dL/dh * dh/dz = dL/dh * (h_prev - candidate)
         auto dL_dz = gradients * (this->h_prev - this->candidate);
@@ -271,14 +270,13 @@ private:
     Tensor<3> pcandidate; // pre-activation candidate output
 
     Tensor<3> h_prev;
-    //Tensor<3> h; // declared in GRU layer instead of GRUCell
 
     // loss gradients w.r.t. update and reset gate, candidate, and prev cell output
     Tensor<3> dL_dpzr;
     Tensor<3> dL_dpcand;
     Tensor<3> dL_dh_prev;
 
-    Eigen::Index batch_size;
+    Eigen::Index batch_size = -1;
     const Eigen::Index input_feature_len;
     const Eigen::Index output_len;
     const Eigen::Index time_step;

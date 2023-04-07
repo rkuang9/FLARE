@@ -3,7 +3,6 @@
 #include <flare/flare.hpp>
 #include "examples/sarcasm_detection_nlp.hpp"
 
-
 void Run()
 {
     SarcasmDetection();
