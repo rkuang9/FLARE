@@ -37,6 +37,9 @@ public:
 
 protected:
     Scalar learning_rate;
+
+    Eigen::ThreadPoolDevice device = Eigen::ThreadPoolDevice(new Eigen::ThreadPool(
+            (int) std::thread::hardware_concurrency()), 2);
 };
 
 } // namespace fl

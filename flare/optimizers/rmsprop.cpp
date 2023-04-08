@@ -46,18 +46,19 @@ void RMSprop::Step()
 
 template<int TensorRank>
 void RMSprop::Update(Tensor<TensorRank> &weights,
-                               const Tensor<TensorRank> &gradients,
-                               Tensor<TensorRank> &velocity)
+                     const Tensor<TensorRank> &gradients,
+                     Tensor<TensorRank> &velocity)
 {
     if (velocity.size() == 0) {
         velocity.resize(weights.dimensions());
         velocity.setZero();
     }
 
-    velocity = this->momentum * velocity +
-               (1 - this->momentum) * gradients * gradients;
+    velocity.device(this->device) =
+            this->momentum * velocity + (1 - this->momentum) * gradients * gradients;
 
-    weights -= this->learning_rate * gradients / (velocity.sqrt() + this->epsilon);
+    weights.device(this->device) -=
+            this->learning_rate * gradients / (velocity.sqrt() + this->epsilon);
 }
 
 } // namespace fl

@@ -80,11 +80,15 @@ void Adam::Update(
         rmsprop.setZero();
     }
 
-    momentum = this->beta1 * momentum + (1 - this->beta1) * gradients; // momentum
-    rmsprop = this->beta2 * rmsprop +
-              (1 - this->beta2) * gradients.square(); // RMSprop
+    momentum.device(this->device) =
+            this->beta1 * momentum + (1 - this->beta1) * gradients; // * (1 - momentum)
 
-    weights -= this->lr_t * momentum / (rmsprop.sqrt() + this->epsilon);
+    rmsprop.device(this->device) =
+            this->beta2 * rmsprop +
+            (1 - this->beta2) * gradients.square();
+
+    weights.device(this->device) -=
+            this->lr_t * momentum / (rmsprop.sqrt() + this->epsilon);
 }
 
 } // namespace fl

@@ -59,9 +59,10 @@ void SGD::Update(Tensor<TensorRank> &weights,
         velocity.setZero();
     }
 
-    velocity = this->momentum * velocity + gradients; // * (1 - this->momentum)
+     // * (1 - this->momentum)
+    velocity.device(this->device) = this->momentum * velocity + gradients;
 
-    weights -= this->learning_rate * velocity;
+    weights.device(this->device) -= this->learning_rate * velocity;
 }
 
 } // namespace fl
