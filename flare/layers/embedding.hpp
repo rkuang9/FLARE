@@ -63,4 +63,6 @@ public:
 
 } // namespace fl
 
+#include "embedding.ipp"
+
 #endif //FLARE_EMBEDDING_HPP

@@ -153,4 +153,6 @@ private:
 
 } // namespace fl
 
+#include "maxpooling2d.ipp"
+
 #endif //FLARE_MAXPOOLING2D_HPP

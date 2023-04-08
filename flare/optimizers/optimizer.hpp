@@ -20,7 +20,8 @@ public:
     {}
 
 
-    virtual void Step() = 0;
+    virtual void Step()
+    {};
 
 
     virtual void Minimize(Tensor<1> &W, const Tensor<1> &dL_dW) = 0;

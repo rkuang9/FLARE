@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.21)
 project(FLARE)
 
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_FLAGS "-O2 -openmp")
+set(CMAKE_CXX_FLAGS "-O2")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 
 #add_compile_definitions("FLARE_FLOAT") # use float instead of double for tensor calculations
@@ -32,11 +32,8 @@ endif ()
 message("BUILD TYPE: " ${CMAKE_BUILD_TYPE})
 
 
-add_subdirectory(flare)
-add_subdirectory(examples)
-
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
-add_executable(${PROJECT_NAME} ${SRC_FILES})
+add_executable(${PROJECT_NAME} ${SRC_FILES} main.cpp)
 
 target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBS})
