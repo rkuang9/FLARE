@@ -22,7 +22,7 @@ include_directories(Eigen)
 
 ## Example
 Train a model to add three numbers
-```
+```cpp
 #include <iostream>
 #include <flare/flare.hpp>
 
