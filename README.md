@@ -13,6 +13,8 @@ tasks and image recognition.
 
 Place FLARE and Eigen into your project folder and add the following to your CMakeLists.txt file
 ```
+add_compile_definitions("EIGEN_USE_THREADS")
+add_compile_definitions("EIGEN_DEFAULT_TO_ROW_MAJOR")
 include_directories(FLARE)
 include_directories(Eigen)
 ```
