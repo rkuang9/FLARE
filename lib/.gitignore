@@ -1,5 +1,0 @@
-*
-Eigen/
-opencv/
-simdjson/
-!.gitignore

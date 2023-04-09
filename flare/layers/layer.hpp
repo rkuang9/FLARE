@@ -7,9 +7,9 @@
 
 #include "flare/fl_types.hpp"
 #include "flare/fl_assert.hpp"
-//#include "flare/activations/include_activations.hpp"
-#include "flare/weights/include_weights.hpp"
-#include "flare/optimizers/include_optimizers.hpp"
+#include "flare/weights/weights.hpp"
+#include "flare/weights/glorot.hpp"
+#include "flare/optimizers/optimizer.hpp"
 #include <fstream>
 
 namespace fl
