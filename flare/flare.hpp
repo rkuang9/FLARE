@@ -1,12 +1,9 @@
 //
-// Created by macross on 8/7/22.
+// Created by R on 8/7/22.
 //
 
 #ifndef FLARE_FLARE_HPP
 #define FLARE_FLARE_HPP
-
-#include <unsupported/Eigen/CXX11/Tensor>
-
 
 #include "fl_types.hpp"
 #include "fl_assert.hpp"

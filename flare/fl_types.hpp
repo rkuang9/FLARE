@@ -1,10 +1,13 @@
 //
-// Created by macross on 8/7/22.
+// Created by R on 8/7/22.
 //
 
 #ifndef FLARE_FLARE_TYPES_HPP
 #define FLARE_FLARE_TYPES_HPP
 
+#ifndef FLARE_DO_NOT_USE_THREADS
+#define EIGEN_USE_THREADS
+#endif
 
 #include <unsupported/Eigen/CXX11/Tensor>
 
@@ -29,17 +32,17 @@ using Scalar = float ;
 using Scalar = double;
 #endif
 
-#ifdef FLARE_COLMAJOR
-template<int InputTensorRank, typename DataType = Scalar, int StorageType = Eigen::ColMajor>
-#else
+#ifndef FLARE_COLMAJOR
 template<int TensorRank, typename DataType = Scalar, int StorageType = Eigen::RowMajor>
+#else
+template<int TensorRank, typename DataType = Scalar, int StorageType = Eigen::ColMajor>
 #endif
 using Tensor = Eigen::Tensor<DataType, TensorRank, StorageType>;
 
-#ifdef FLARE_COLMAJOR
-template<int InputTensorRank, typename DataType = Eigen::Index, int StorageType = Eigen::ColMajor>
-#else
+#ifndef FLARE_COLMAJOR
 template<int TensorRank, typename DataType = Eigen::Index, int StorageType = Eigen::RowMajor>
+#else
+template<int TensorRank, typename DataType = Eigen::Index, int StorageType = Eigen::ColMajor>
 #endif
 using Dims = typename Eigen::DSizes<DataType, TensorRank>;
 
