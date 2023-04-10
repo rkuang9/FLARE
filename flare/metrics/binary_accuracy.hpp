@@ -52,6 +52,13 @@ public:
         return static_cast<double>(this->correct / this->total);
     }
 
+
+    void Reset() override
+    {
+        this->total = 0;
+        this->correct = 0;
+    }
+
 private:
     Scalar threshold;
 

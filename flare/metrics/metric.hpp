@@ -20,6 +20,8 @@ public:
 
     virtual double GetMetric() const = 0;
 
+    virtual void Reset() = 0;
+
 
     friend std::ostream &operator<<(std::ostream &out,
                                     const Metric<TensorRank> &metric)

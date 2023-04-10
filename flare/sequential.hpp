@@ -140,6 +140,10 @@ public:
         for (auto layer: this->layers) {
             layer->Training(false);
         }
+
+        for (auto metric: metrics) {
+            metric->Reset();
+        }
     }
 
 
