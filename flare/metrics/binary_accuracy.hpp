@@ -2,8 +2,8 @@
 // Created by macross on 4/9/23.
 //
 
-#ifndef FLARE_DEVELOPMENT_BINARY_ACCURACY_HPP
-#define FLARE_DEVELOPMENT_BINARY_ACCURACY_HPP
+#ifndef FLARE_BINARY_ACCURACY_HPP
+#define FLARE_BINARY_ACCURACY_HPP
 
 #include "metric.hpp"
 
@@ -61,4 +61,4 @@ private:
 
 }
 
-#endif //FLARE_DEVELOPMENT_BINARY_ACCURACY_HPP
+#endif //FLARE_BINARY_ACCURACY_HPP

@@ -2,8 +2,8 @@
 // Created by R on 4/9/23.
 //
 
-#ifndef FLARE_DEVELOPMENT_METRIC_HPP
-#define FLARE_DEVELOPMENT_METRIC_HPP
+#ifndef FLARE_METRIC_HPP
+#define FLARE_METRIC_HPP
 
 #include "flare/fl_types.hpp"
 #include "flare/fl_assert.hpp"
@@ -36,4 +36,4 @@ protected:
 
 } // namespace fl
 
-#endif //FLARE_DEVELOPMENT_METRIC_HPP
+#endif //FLARE_METRIC_HPP
