@@ -67,7 +67,8 @@ public:
     template<int TensorSampleRank, int TensorLabelRank>
     void Fit(const std::vector<fl::Tensor<TensorSampleRank>> &inputs,
              const std::vector<fl::Tensor<TensorLabelRank>> &labels, int epochs,
-             LossFunction <TensorLabelRank> &loss_function, Optimizer &opt)
+             LossFunction <TensorLabelRank> &loss_function, Optimizer &opt,
+             const std::vector<fl::Metric<TensorLabelRank> *> &metrics = {})
     {
         if (inputs.size() != labels.size() || inputs.empty() || labels.empty()) {
             throw std::invalid_argument("inputs should match labels 1:1");
@@ -95,6 +96,18 @@ public:
                 this->Backward(labels[m], loss_function);
                 this->Update(opt);
 
+                for (auto metric: metrics) {
+                    if constexpr(TensorLabelRank == 2) {
+                        (*metric)(labels[m], this->layers.back()->GetOutput2D());
+                    }
+                    else if constexpr(TensorLabelRank == 3) {
+                        (*metric)(labels[m], this->layers.back()->GetOutput3D());
+                    }
+                    else {
+                        (*metric)(labels[m], this->layers.back()->GetOutput4D());
+                    }
+                }
+
                 // progress bar
                 if (m % batch_per_bar == 0 && m != 0) {
                     auto elapsed_time = std::chrono::duration_cast<std::chrono::seconds>(
@@ -108,7 +121,14 @@ public:
                               << std::setw(num_bars - progress)
                               << std::setfill('.') << "" << "] "
                               << elapsed_time.count() << "s loss: "
-                              << loss_function.GetLoss() << std::flush;
+                              << std::setprecision(4) << std::fixed
+                              << loss_function.GetLoss();
+
+                    for (auto metric: metrics) {
+                        std::cout << ", " << *metric;
+                    }
+
+                    std::cout << std::flush;
                     progress++;
                 }
             }
@@ -233,7 +253,7 @@ public:
      * @param epsilon accuracy to which gradients and limit approximation agree to
      * @return
      */
-    Scalar GradientCheck(const Tensor<2> &input, const Tensor<2> &label,
+    /*Scalar GradientCheck(const Tensor<2> &input, const Tensor<2> &label,
                          LossFunction<2> &loss_function, Scalar epsilon = 1e-7)
     {
         // perform the first training pass to compute dL/dw (without updating)
@@ -308,7 +328,7 @@ public:
         Tensor<0> result = nominator.sqrt() /
                            (denominator_left.sqrt() + denominator_right.sqrt());
         return result(0);
-    }
+    }*/
 
 
     std::vector<Layer *> layers;

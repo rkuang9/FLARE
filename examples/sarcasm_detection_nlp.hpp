@@ -55,7 +55,8 @@ void SarcasmDetection()
     fl::Adam opt;
 
     std::cout << "begin training\n";
-    model.Fit(dataset.training_samples, dataset.training_labels, 7, loss, opt);
+    model.Fit(dataset.training_samples, dataset.training_labels, 15, loss, opt,
+              {new fl::BinaryAccuracy<2>});
 
     for (auto i = data.size() - 40; i < data.size(); i++) {
         const std::string headline = data[i]["headline"].dump();

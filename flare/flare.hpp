@@ -14,6 +14,7 @@
 #include "weights/include_weights.hpp"
 #include "optimizers/include_optimizers.hpp"
 #include "loss/include_loss.hpp"
+#include "metrics/include_metrics.hpp"
 
 
 #include "sequential.hpp"
