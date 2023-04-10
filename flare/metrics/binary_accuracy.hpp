@@ -1,5 +1,5 @@
 //
-// Created by macross on 4/9/23.
+// Created by R on 4/9/23.
 //
 
 #ifndef FLARE_BINARY_ACCURACY_HPP
