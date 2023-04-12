@@ -98,13 +98,13 @@ public:
 
                 for (auto metric: metrics) {
                     if constexpr(TensorLabelRank == 2) {
-                        (*metric)(labels[m], this->layers.back()->GetOutput2D());
+                        (*metric)(this->layers.back()->GetOutput2D(), labels[m]);
                     }
                     else if constexpr(TensorLabelRank == 3) {
-                        (*metric)(labels[m], this->layers.back()->GetOutput3D());
+                        (*metric)(this->layers.back()->GetOutput3D(), labels[m]);
                     }
                     else {
-                        (*metric)(labels[m], this->layers.back()->GetOutput4D());
+                        (*metric)(this->layers.back()->GetOutput4D(), labels[m]);
                     }
                 }
 

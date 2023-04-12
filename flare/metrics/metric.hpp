@@ -15,8 +15,8 @@ template<int TensorRank>
 class Metric
 {
 public:
-    virtual void operator()(const Tensor <TensorRank> &label,
-                            const Tensor <TensorRank> &pred) = 0;
+    virtual void operator()(const Tensor <TensorRank> &pred,
+                            const Tensor <TensorRank> &label) = 0;
 
     virtual double GetMetric() const = 0;
 

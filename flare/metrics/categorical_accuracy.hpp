@@ -10,6 +10,7 @@
 namespace fl
 {
 
+// Computes the frequency in which one-hot vector predictions match the labels
 template<int TensorRank>
 class CategoricalAccuracy : public Metric<TensorRank>
 {
@@ -20,8 +21,8 @@ public:
     }
 
 
-    void operator()(const Tensor<TensorRank> &label,
-                    const Tensor<TensorRank> &pred) override
+    void operator()(const Tensor<TensorRank> &pred,
+                    const Tensor<TensorRank> &label) override
     {
         FL_REQUIRES(
                 pred.dimensions() == label.dimensions(),
