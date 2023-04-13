@@ -9,5 +9,6 @@
 #include "binary_accuracy.hpp"
 #include "categorical_accuracy.hpp"
 #include "precision.hpp"
+#include "recall.hpp"
 
 #endif //FLARE_INCLUDE_METRICS_HPP

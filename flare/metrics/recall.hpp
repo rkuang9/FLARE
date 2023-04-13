@@ -1,23 +1,24 @@
 //
-// Created by R on 4/11/23.
+// Created by R on 4/12/23.
 //
 
-#ifndef FLARE_PRECISION_HPP
-#define FLARE_PRECISION_HPP
+#ifndef FLARE_RECALL_HPP
+#define FLARE_RECALL_HPP
 
 #include "metric.hpp"
 
 namespace fl
 {
 
-// Computes the precision formula tp / (tp + fp)
+// Computes the precision formula tp / (tp + fn)
 template<int TensorRank>
-class Precision : public Metric<TensorRank>
+class Recall: public Metric<TensorRank>
 {
 public:
-    explicit Precision(Scalar threshold = 0.5) : threshold(threshold)
+    public:
+    explicit Recall(Scalar threshold = 0.5) : threshold(threshold)
     {
-        this->name = "precision";
+        this->name = "recall";
     }
 
 
@@ -37,36 +38,36 @@ public:
         Tensor<TensorRank> label_rounded(label.dimensions());
         label_rounded.device(this->device) = label.round();
 
-        // precision =  tp / (tp + fp)
+        // recall =  tp / (tp + fn)
         Tensor<0> tp;
         tp.device(this->device) = (pred_rounded && label_rounded)
                 .template cast<Scalar>().sum();
 
-        Tensor<0> fp; // predicted true, but was false
-        fp.device(this->device) = (pred_rounded && label_rounded == false)
+        Tensor<0> fn; // predicted false, but was true
+        fn.device(this->device) = (pred_rounded == false && label_rounded)
                 .template cast<Scalar>().sum();
 
         this->true_positives = tp.coeff();
-        this->false_positives = fp.coeff();
+        this->false_negatives = fn.coeff();
     }
 
 
     double GetMetric() const override
     {
-        return true_positives / (true_positives + false_positives);
+        return true_positives / (true_positives + false_negatives);
     }
 
 
     void Reset() override
     {
         this->true_positives = 0;
-        this->false_positives = 0;
+        this->false_negatives = 0;
     }
 
 
 private:
     Scalar true_positives = 0;
-    Scalar false_positives = 0;
+    Scalar false_negatives = 0;
 
     Scalar threshold;
 
@@ -74,4 +75,4 @@ private:
 
 } // namespace fl
 
-#endif //FLARE_PRECISION_HPP
+#endif //FLARE_RECALL_HPP
