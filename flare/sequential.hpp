@@ -109,12 +109,14 @@ public:
                 }
 
                 // progress bar
+                // on Mac terminal, \r carriage return may be ignored if the line
+                // exceeds the default terminal width
                 if (m % batch_per_bar == 0 && m != 0) {
                     auto elapsed_time = std::chrono::duration_cast<std::chrono::seconds>(
                             std::chrono::high_resolution_clock::now() - start_time);
 
-                    // print behavior depends on terminal
-                    std::cout << "\rEpoch "
+                    // some terminals, like putty, will print each as a new line
+                    std::cout << "Epoch "
                               << std::setw(epoch_count_length) << std::setfill(' ')
                               << e + 1 << " ["
                               << std::setw(progress) << std::setfill('=') << ""
@@ -128,21 +130,21 @@ public:
                         std::cout << ", " << *metric;
                     }
 
-                    std::cout << std::flush;
+                    std::cout << std::flush << '\r';
                     progress++;
                 }
             }
 
             progress = 0; // progress bar reset for next epoch
             std::cout << '\n';
+
+            for (auto metric: metrics) {
+                metric->Reset();
+            }
         }
 
         for (auto layer: this->layers) {
             layer->Training(false);
-        }
-
-        for (auto metric: metrics) {
-            metric->Reset();
         }
     }
 

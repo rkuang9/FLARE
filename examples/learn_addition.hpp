@@ -29,12 +29,12 @@ void LearnAddition()
     fl::MeanSquaredError<2> loss;
     fl::SGD opt;
 
-    std::cout << "initial weights\n" << model.layers[0]->GetWeights() << "\n";
+    std::cout << "initial weights\n" << model.layers[0]->GetWeights2D().front() << "\n";
     std::cout << "sum: " << test << ": " << model.Predict<2>(test) << "\n\n";
 
     model.Fit(dataset.training_samples, dataset.training_labels, 2, loss, opt);
 
-    std::cout << "trained weights\n" << model.layers[0]->GetWeights() << "\n";
+    std::cout << "trained weights\n" << model.layers[0]->GetWeights2D().front() << "\n";
     std::cout << "sum: " << test << ": " << model.Predict<2>(test) << "\n\n";
 }
 
