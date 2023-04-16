@@ -21,29 +21,24 @@ public:
     }
 
 
-    void operator()(const Tensor<TensorRank> &pred,
-                    const Tensor<TensorRank> &label) override
+    void operator()(const Tensor <TensorRank> &pred,
+                    const Tensor <TensorRank> &label) override
     {
         FL_REQUIRES(
                 pred.dimensions() == label.dimensions(),
                 this->name << " pred dimensions " << pred.dimensions()
                            << " != label dimensions " << label.dimensions());
 
-        this->total = label.size() / label.dimension(TensorRank - 1);
+        this->total += label.size() / label.dimension(TensorRank - 1);
 
-        Tensor<TensorRank> pred_rounded(pred.dimensions());
-        pred_rounded.device(this->device) = (pred <= this->threshold).select(
-                pred.constant(0), pred.constant(1));
-
-        Tensor<TensorRank> label_rounded(label.dimensions());
-        label_rounded.device(this->device) = label.round();
-
-
-        this->correct += Tensor<0, Scalar>(
-                (pred_rounded == label_rounded) // compare tensors
-                        .all(Dims<1>(TensorRank - 1)) // on the last dim
-                        .template cast<Scalar>() // cast from bool back to Scalar
-                        .sum())(0); // resultant tensor indicates pred matching label
+        // use argmax to find index (first, if multiple) of the largest value on
+        // the last dimension which is assumed to contain the softmax prediction,
+        Tensor<0> equals;
+        equals.device(this->device) =
+                (pred.argmax(TensorRank - 1) == label.argmax(TensorRank - 1))
+                        .template cast<Scalar>() // equality tensor rank is 1 less
+                        .sum(); // cast from bool back to Scalar, sum for # correct
+        this->correct += equals.coeff();
     }
 
 

@@ -31,7 +31,7 @@ void SarcasmDetection()
     fl::Dataset dataset(fl::Dims<1>(sentence_len), fl::Dims<1>(1));
 
 
-    // add to dataset all headlines excluding the last 10
+    // add to dataset all headlines //excluding the last 10
     for (int i = 0; i < data.size() - 10; i++) {
         dataset.Add(dict.Sequence({data[i]["headline"].dump()})
                             .reshape(fl::Dims<1>(sentence_len)),
@@ -57,7 +57,8 @@ void SarcasmDetection()
     std::cout << "begin training\n";
     model.Fit(dataset.training_samples, dataset.training_labels, 15, loss, opt,
               {new fl::BinaryAccuracy<2>,
-               new fl::Precision<2>});
+               new fl::Precision<2>,
+               new fl::Recall<2>});
 
     for (auto i = data.size() - 40; i < data.size(); i++) {
         const std::string headline = data[i]["headline"].dump();
@@ -69,6 +70,11 @@ void SarcasmDetection()
         std::cout << "prediction: " << model.Predict<2>(sample) << "\n";
         std::cout << "label: " << data[i]["is_sarcastic"] << "\n\n";
     }
+
+    std::cout << model.Predict<2>(dict.Sequence({"wealthy teen nearly experiences consequence"})) << "\n";
+    std::cout << model.Predict<2>(dict.Sequence({"gallup poll rural whites prefer ahmadinejad to obama"})) << "\n";
+    std::cout << model.Predict<2>(dict.Sequence({"kim jong un named the onions sexiest man alive for 2012"})) << "\n";
+    std::cout << model.Predict<2>(dict.Sequence({"bush our long national nightmare of peace and prosperity is finally over"})) << "\n";
 }
 
 
