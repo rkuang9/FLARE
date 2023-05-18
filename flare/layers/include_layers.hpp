@@ -21,5 +21,6 @@
 #include "gru.hpp"
 #include "lstm.hpp"
 #include "bidirectional.hpp"
+#include "multihead_attention.hpp"
 
 #endif //FLARE_INCLUDE_LAYERS_HPP

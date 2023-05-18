@@ -189,7 +189,6 @@ public:
     }
 
 
-
     /**
      * @return   layer's loss gradients w.r.t weights (dL / dw)
      */
@@ -218,6 +217,14 @@ public:
     {
         throw std::logic_error(
                 "An error occurred, base class Layer SetWeights(<2>) was called on " +
+                this->name);
+    }
+
+
+    virtual void SetWeights(const std::vector<Tensor<3>> &weights)
+    {
+        throw std::logic_error(
+                "An error occurred, base class Layer SetWeights(<3>) was called on " +
                 this->name);
     }
 
