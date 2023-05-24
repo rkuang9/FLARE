@@ -18,6 +18,15 @@ namespace fl
 class Layer
 {
 public:
+    Layer() = default;
+
+    Layer(int input_rank, int output_rank) :
+            input_rank(input_rank),
+            output_rank(output_rank)
+    {
+    }
+
+
     virtual ~Layer() = default;
 
 
@@ -183,6 +192,12 @@ public:
     }
 
 
+    virtual std::vector<Tensor<3>> GetWeights3D() const
+    {
+        return {};
+    }
+
+
     virtual std::vector<Tensor<4>> GetWeights4D() const
     {
         return {};
@@ -196,6 +211,14 @@ public:
     {
         throw std::logic_error(
                 "An error occurred, base class Layer GetWeightGradients was called  on " +
+                this->name);
+    }
+
+
+    virtual std::vector<Tensor<3>> GetWeightGradients3D() const
+    {
+        throw std::logic_error(
+                "An error occurred, base class Layer GetWeightGradients3D was called  on " +
                 this->name);
     }
 
@@ -272,13 +295,19 @@ public:
     /**
      * @return   expected rank of forward propagation's input tensor
      */
-    virtual int GetInputRank() const = 0;
+    virtual int GetInputRank() const
+    {
+        return this->input_rank;
+    };
 
 
     /**
      * @return   expected rank of forward propagation's output tensor
      */
-    virtual int GetOutputRank() const = 0;
+    virtual int GetOutputRank() const
+    {
+        return this->output_rank;
+    }
 
 
     virtual void Training(bool is_training)
@@ -294,6 +323,8 @@ public:
 
 
     std::string name = "layer"; // name of layer, to be set by inherited classes
+    const int input_rank = -1;
+    const int output_rank = -1;
 };
 
 }

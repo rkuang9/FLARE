@@ -12,7 +12,8 @@ template<typename Activation>
 Dense<Activation>::Dense(int inputs, int outputs, bool use_bias,
                          const Initializer<2> &initializer) :
         use_bias(use_bias),
-        w(initializer.Initialize(Dims<2>(inputs, outputs), inputs, outputs))
+        w(initializer.Initialize(Dims<2>(inputs, outputs), inputs, outputs)),
+        Layer(2, 2)
 {
     this->name = "dense";
     this->dL_dw.resize(this->w.dimensions());
@@ -30,8 +31,8 @@ void Dense<Activation>::Forward(const Tensor<2> &input)
 {
     fl_assert(this->w.dimension(0) == input.dimension(1),
               this->name << " Dense::Forward EXPECTED " << this->w.dimension(0)
-                            << " INPUT FEATURES, INSTEAD GOT "
-                            << input.dimension(1));
+                         << " INPUT FEATURES, INSTEAD GOT "
+                         << input.dimension(1));
 
     // Z = Xw + b (same as Z = wX + b but with batch dims first in X)
     this->X.resize(input.dimensions());
@@ -44,11 +45,11 @@ void Dense<Activation>::Forward(const Tensor<2> &input)
     this->Z.template device(this->device) =
             this->X.contract(this->w, ContractDim {Axes(1, 0)});
 
-    if (this->use_bias) {
-        // broadcast bias into the shape of Z
-        //this->Z += this->b.broadcast(
-        //Eigen::array<Eigen::Index, 2>({1, input.dimension(1)}));
-    }
+    //if (this->use_bias) {
+    // broadcast bias into the shape of Z
+    //this->Z += this->b.broadcast(
+    //Eigen::array<Eigen::Index, 2>({1, input.dimension(1)}));
+    //}
 
     this->A.template device(this->device) = Activation::Activate(this->Z);
 }
@@ -93,9 +94,9 @@ void Dense<Activation>::Backward(const Tensor<2> &gradients) // output backward
 
     fl_assert(this->w.dimensions() == this->dL_dw.dimensions(),
               this->name << " Dense::Backward weights dimensions "
-                            << this->w.dimensions()
-                            << " do not match weights gradient dimensions "
-                            << this->dL_dw.dimensions());
+                         << this->w.dimensions()
+                         << " do not match weights gradient dimensions "
+                         << this->dL_dw.dimensions());
 
     if (this->use_bias) {
         throw std::invalid_argument("bias not available yet");
@@ -106,9 +107,9 @@ void Dense<Activation>::Backward(const Tensor<2> &gradients) // output backward
 
         fl_assert(this->b.dimensions() == this->dL_db.dimensions(),
                   this->name << " Dense::Backward BIAS DIMENSIONS "
-                                << this->b.dimensions()
-                                << " DO NOT MATCH BIAS GRADIENT DIMENSIONS "
-                                << this->dL_db.dimensions());
+                             << this->b.dimensions()
+                             << " DO NOT MATCH BIAS GRADIENT DIMENSIONS "
+                             << this->dL_db.dimensions());
     }
 }
 
@@ -149,14 +150,14 @@ std::vector<fl::Tensor<2>> Dense<Activation>::GetWeights2D() const
 
 
 template<typename Activation>
-std::vector<Tensor<2>> Dense<Activation>::GetWeightGradients2D() const
+std::vector<fl::Tensor<2>> Dense<Activation>::GetWeightGradients2D() const
 {
     return {this->dL_dw};
 }
 
 
 template<typename Activation>
-void Dense<Activation>::SetWeights(const std::vector<Tensor<2>> &weights)
+void Dense<Activation>::SetWeights(const std::vector<fl::Tensor<2>> &weights)
 {
     if (weights.front().dimensions() != this->w.dimensions()) {
         std::ostringstream error_msg;
@@ -187,20 +188,6 @@ void Dense<Activation>::SetBias(const Tensor<2> &bias)
     }
 
     this->b = bias;
-}
-
-
-template<typename Activation>
-int Dense<Activation>::GetInputRank() const
-{
-    return 2;
-}
-
-
-template<typename Activation>
-int Dense<Activation>::GetOutputRank() const
-{
-    return 2;
 }
 
 

@@ -113,18 +113,6 @@ public:
     void SetBias(const Tensor<2> &bias) override;
 
 
-    /**
-     * @return   expected rank of forward propagation's input tensor
-     */
-    int GetInputRank() const override;
-
-
-    /**
-     * @return   expected rank of forward propagation's output tensor
-     */
-    int GetOutputRank() const override;
-
-
     void Save(const std::string &path) override;
 
 

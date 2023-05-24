@@ -38,19 +38,15 @@ public:
 
     void Update(Optimizer &optimizer) override;
 
-    const Tensor<2> &GetOutput2D() const override;
+    const Tensor<3> &GetOutput3D() const override;
 
-    const Tensor<2> &GetInputGradients2D() override;
+    const Tensor<3> &GetInputGradients3D() override;
 
-    std::vector<fl::Tensor<2>> GetWeights2D() const override;
+    std::vector<fl::Tensor<3>> GetWeights3D() const override;
 
-    std::vector<fl::Tensor<2>> GetWeightGradients2D() const override;
+    std::vector<fl::Tensor<3>> GetWeightGradients3D() const override;
 
     void SetWeights(const std::vector<fl::Tensor<3>> &weights) override;
-
-    int GetInputRank() const override;
-
-    int GetOutputRank() const override;
 
 private:
     // weight dims [heads, input_dim, dim]
@@ -58,11 +54,24 @@ private:
     Tensor<3> w_q;
     Tensor<3> w_k;
     Tensor<3> w_v;
+    Tensor<3> w_o;
 
-    Tensor<3> w_0;
+    Tensor<3> dL_w_q;
+    Tensor<3> dL_w_k;
+    Tensor<3> dL_w_v;
+    Tensor<3> dL_w_o;
 
     Eigen::Index heads = 1;
+    Eigen::Index input_dim = -1;
+    Eigen::Index query_dim = -1;
+
     Tensor<4> QK_T;
+    Tensor<4> sm_QK_T;
+    Tensor<4> sm_QK_T_V;
+    Tensor<3> A; // softmax(Q x K_T / sqrt(dk)) x V
+
+    Eigen::ThreadPoolDevice device = Eigen::ThreadPoolDevice(new Eigen::ThreadPool(
+            (int) std::thread::hardware_concurrency()), 2);
 };
 
 } // namespace fl

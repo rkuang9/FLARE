@@ -9,7 +9,11 @@ namespace fl
 
 MultiHeadAttention::MultiHeadAttention(
         Eigen::Index heads, Eigen::Index input_dim, Eigen::Index query_dim,
-        Eigen::Index value_dim, const Initializer<3> &initializer)
+        Eigen::Index value_dim, const Initializer<3> &initializer) :
+        Layer(3, 3),
+        heads(heads),
+        input_dim(input_dim),
+        query_dim(query_dim)
 {
     this->name = "multi_head_attention";
 
@@ -22,50 +26,53 @@ MultiHeadAttention::MultiHeadAttention(
     this->w_v = initializer(Dims<3>(heads, input_dim, value_dim),
                             input_dim, value_dim);
 
-    this->w_0 = initializer(Dims<3>(heads, query_dim, input_dim),
+    this->w_o = initializer(Dims<3>(heads, query_dim, input_dim),
                             query_dim, input_dim);
-    this->w_0.setConstant(1.0); // set 1 for dev purposes
+    this->w_o.setConstant(1.0); // set 1 for dev purposes
 }
 
 
 // Apply the formula Attention(Q,K,V) = softmax(QK_T/sqrt(d_k))V
-// For now sqrt(d_k) is ignored until we figure out what it is
+// Dimension notation:
+// N-batch, T-sequence/time, F-features, H-heads, D-dimensions(of query/key)
 void MultiHeadAttention::Forward(const std::vector<fl::Tensor<3>> &inputs)
 {
     FL_REQUIRES(inputs.size() == 3 &&
-                inputs[0].dimension(0) == inputs[1].dimension(1) &&
+                inputs[0].dimension(0) == inputs[1].dimension(0) &&
                 inputs[1].dimension(0) == inputs[2].dimension(0),
                 this->name << " expected 3 inputs, all with the same batch size");
 
     ContractDim matmul {Axes(2, 1)};
-    std::cout << this->name << "::Forward\n";
-    const Tensor<4> query = inputs[0].contract(this->w_q, matmul);
+
+    // [N,T,F] x [H,F,D] = [N,T,H,D]
+    const Tensor<4> query = inputs[0].contract(this->w_q, matmul) /
+                            std::sqrt(static_cast<Scalar>(this->query_dim));
     const Tensor<4> key = inputs[1].contract(this->w_k, matmul);
     const Tensor<4> value = inputs[2].contract(this->w_v, matmul);
 
-    std::cout << "query: " << query.dimensions() << "\n" << query << "\n";
-    std::cout << "key: " << key.dimensions() << "\n" << key << "\n";
+    const Eigen::Index batches = query.dimension(0);
+    const Eigen::Index sequence = query.dimension(1);
+    const Eigen::Index dims = this->query_dim;
 
-
-    // resize to [batch, sequence, heads, sequence]
-    this->QK_T.resize(Dims<4>(query.dimension(0),
-                              query.dimension(1),
-                              this->heads,
-                              query.dimension(1)));
+    // resize to [N,T,H,T]
+    this->QK_T.resize(Dims<4>(batches, sequence, this->heads, sequence));
     this->QK_T.setZero();
 
 
-    // since Eigen Tensor doesn't have an equivalent of np.einsum/tf.einsum,
-    // a for-loop is faster than slice and contracting over batch and heads
-    // the einsum notation would be "abhc,adhc->abhd" (a=batch,h=head)
+    // Calculate query x key_transposed, [N,T,H,D] x [N,T,H,D] = [N,T,H,T]
+    // contract along last dim while holding the batch,head dim constant
+    // Since Eigen Tensor doesn't support Einstein summation notation, a vectorized
+    // for-loop is (slightly) faster than slice and contracting
+    // The einsum notation would be "abhc,adhc->abhd" (a=batch,h=head)
 #ifdef _OPENMP
-    //#pragma omp parallel for num_threads(2) default(none) shared(heads, qk_t, device, query1, key1, matmul)
+#pragma omp parallel for num_threads(2) default(none) shared(batches, sequence, key, query, dims)
 #endif
-    for (Eigen::Index batch = 0; batch < query.dimension(0); batch++) {
-        for (Eigen::Index row_l = 0; row_l < query.dimension(1); row_l++) {
-            for (Eigen::Index row_r = 0; row_r < query.dimension(1); row_r++) {
-                for (Eigen::Index head = 0; head < query.dimension(2); head++) {
-                    for (Eigen::Index col = 0; col < query.dimension(3); col++) {
+    for (Eigen::Index batch = 0; batch < batches; batch++) {
+        for (Eigen::Index row_l = 0; row_l < sequence; row_l++) {
+            for (Eigen::Index row_r = 0; row_r < sequence; row_r++) {
+                for (Eigen::Index head = 0; head < this->heads; head++) {
+                    for (Eigen::Index col = 0; col < dims; col++) {
+                        // dot product along the last dim (col)
                         QK_T(batch, row_l, head, row_r) +=
                                 query(batch, row_l, head, col) *
                                 key(batch, row_r, head, col);
@@ -75,7 +82,60 @@ void MultiHeadAttention::Forward(const std::vector<fl::Tensor<3>> &inputs)
         }
     }
 
-    std::cout << "QK_T\n" << QK_T << "\n";
+    // apply softmax activation
+    this->sm_QK_T.resize(this->QK_T.dimensions());
+    this->sm_QK_T.device(this->device) = Softmax::Activate(this->QK_T);
+
+
+    this->sm_QK_T_V.resize(value.dimensions());
+    this->sm_QK_T_V.setZero();
+
+    // Finish the attention calculation by multiplying with value
+    // contracting [N,T,H,T] x [N,T,H,D] = [N,T,H,D]
+#ifdef _OPENMP
+#pragma omp parallel for num_threads(2) default(none) shared(batches, sequence, dims, value)
+#endif
+    for (Eigen::Index batch = 0; batch < batches; batch++) {
+        for (Eigen::Index row_l = 0; row_l < sequence; row_l++) {
+            for (Eigen::Index row_r = 0; row_r < sequence; row_r++) {
+                for (Eigen::Index head = 0; head < this->heads; head++) {
+                    for (Eigen::Index col = 0; col < dims; col++) {
+                        // Dot product along the sm_QK_T's 3rd and value's 2nd dim
+                        this->sm_QK_T_V(batch, row_l, head, col) +=
+                                this->sm_QK_T(batch, row_l, head, row_r) *
+                                value(batch, row_r, head, col);
+                    }
+                }
+            }
+        }
+    }
+
+    // concat all heads and multiply by output weights, this is equivalent to
+    // the double contraction [N,T,H,D] x [H,D,F] = [N,T,F]
+    Eigen::array<Eigen::IndexPair<int>, 2> double_contract = {
+            Eigen::IndexPair<int>(2, 0), Eigen::IndexPair<int>(3, 1)};
+
+    this->A.resize(inputs[0].dimensions());
+    this->A.device(this->device) = sm_QK_T_V.contract(w_o, double_contract);
+
+    /*
+     // For-loop version of Forward() output before summing along heads dimension
+#ifdef _OPENMP
+#pragma omp parallel for num_threads(2) default(none) shared(batches, sequence, dims, pre_output, increment)
+#endif
+    for (Eigen::Index batch = 0; batch < batches; batch++) {
+        for (Eigen::Index row = 0; row < sequence; row++) {
+            for (Eigen::Index head = 0; head < this->heads; head++) {
+                for (Eigen::Index col = 0; col < dims; col++) {
+                    for (Eigen::Index f = 0; f < this->input_dim; f++) {
+                        pre_output(batch, row, head, f) +=
+                                this->sm_QK_T_V(batch, row, head, col) * w_o(head, col, f);
+                    }
+                }
+            }
+        }
+    }
+     */
 }
 
 
@@ -87,19 +147,19 @@ void MultiHeadAttention::Forward(const Tensor<3> &inputs)
 
 void MultiHeadAttention::Forward(const Layer &prev)
 {
-    Layer::Forward(prev);
+
 }
 
 
 void MultiHeadAttention::Backward(const Tensor<2> &gradients)
 {
-    Layer::Backward(gradients);
+
 }
 
 
 void MultiHeadAttention::Backward(Layer &next)
 {
-    Layer::Backward(next);
+
 }
 
 
@@ -109,33 +169,33 @@ void MultiHeadAttention::Update(Optimizer &optimizer)
 }
 
 
-const Tensor<2> &MultiHeadAttention::GetOutput2D() const
+const Tensor<3> &MultiHeadAttention::GetOutput3D() const
 {
-    return Layer::GetOutput2D();
+    return this->A;
 }
 
 
-const Tensor<2> &MultiHeadAttention::GetInputGradients2D()
+const Tensor<3> &MultiHeadAttention::GetInputGradients3D()
 {
-    return Layer::GetInputGradients2D();
+
 }
 
 
-std::vector<fl::Tensor<2>> MultiHeadAttention::GetWeights2D() const
+std::vector<fl::Tensor<3>> MultiHeadAttention::GetWeights3D() const
 {
-    return Layer::GetWeights2D();
+    return {w_k, w_q, w_v, w_o};
 }
 
 
-std::vector<fl::Tensor<2>> MultiHeadAttention::GetWeightGradients2D() const
+std::vector<fl::Tensor<3>> MultiHeadAttention::GetWeightGradients3D() const
 {
-    return Layer::GetWeightGradients2D();
+    return {dL_w_k, dL_w_q, dL_w_v, dL_w_o};
 }
 
 
 void MultiHeadAttention::SetWeights(const std::vector<fl::Tensor<3>> &weights)
 {
-    // expects weights in the order: query, key, value,
+    // Expects the order {w_query, w_key, w_value, w_output}
     if (weights.size() != 4) {
         throw std::invalid_argument(
                 this->name +
@@ -162,29 +222,17 @@ void MultiHeadAttention::SetWeights(const std::vector<fl::Tensor<3>> &weights)
         throw std::invalid_argument(error_msg.str());
     }
 
-    if (weights[3].dimensions() != this->w_0.dimensions()) {
+    if (weights[3].dimensions() != this->w_o.dimensions()) {
         error_msg << this->name
                   << " SetWeights() expected output weights dimensions "
-                  << this->w_0.dimensions();
+                  << this->w_o.dimensions();
         throw std::invalid_argument(error_msg.str());
     }
 
-    this->w_q = weights[0];
-    this->w_k = weights[1];
-    this->w_v = weights[2];
-    this->w_0 = weights[3];
-}
-
-
-int MultiHeadAttention::GetInputRank() const
-{
-    return 3;
-}
-
-
-int MultiHeadAttention::GetOutputRank() const
-{
-    return 3;
+    this->w_q.device(this->device) = weights[0];
+    this->w_k.device(this->device) = weights[1];
+    this->w_v.device(this->device) = weights[2];
+    this->w_o.device(this->device) = weights[3];
 }
 
 } // namespace fl
