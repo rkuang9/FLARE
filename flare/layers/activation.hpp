@@ -38,10 +38,6 @@ public:
 
     const Tensor<4> &GetInputGradients4D() override;
 
-    int GetInputRank() const override;
-
-    int GetOutputRank() const override;
-
 protected:
     Tensor<TensorRank> X;
     Tensor<TensorRank> Z;

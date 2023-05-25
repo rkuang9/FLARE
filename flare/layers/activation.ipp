@@ -13,11 +13,13 @@ Activation<activation, TensorRank>::Activation():
         device(&pool, 2)
 {
     this->name = "activation";
+    this->input_rank = TensorRank;
+    this->output_rank = TensorRank;
 }
 
 
 template<typename activation, int TensorRank>
-void Activation<activation, TensorRank>::Forward(const Tensor<TensorRank> &inputs)
+void Activation<activation, TensorRank>::Forward(const Tensor <TensorRank> &inputs)
 {
     this->X.resize(inputs.dimensions());
     this->X.device(this->device) = inputs;
@@ -47,7 +49,7 @@ void Activation<activation, TensorRank>::Forward(const Layer &prev)
 
 template<typename activation, int TensorRank>
 void Activation<activation, TensorRank>::Backward(
-        const Tensor<TensorRank> &gradients)
+        const Tensor <TensorRank> &gradients)
 {
     fl_assert(this->Z.dimensions() == gradients.dimensions(),
               this->name << "::Backward expected gradient dimension "
@@ -133,12 +135,31 @@ const Tensor<2> &Activation<activation, TensorRank>::GetInputGradients2D()
                 "Activation::GetInputGradients2D CALLED ON A RANK " +
                 std::to_string(TensorRank) + " TENSOR");
     }
+    else if constexpr(std::is_same_v<activation, Softmax>) {
+        Tensor<3> softmax_grad(this->Z.dimension(0), this->Z.dimension(1),
+                               this->Z.dimension(1));
+        softmax_grad = Softmax::Gradients(this->Z);
 
-    // forward pass: z = g(x)
-    // backward pass (input): dL/dX = dL/dZ * dZ/dX = dL/dZ * g'(x)
-    this->dL_dX.resize(this->X.dimensions());
-    this->dL_dX.template device(this->device) =
-            this->dL_dZ * activation::Gradients(this->X);
+        this->dL_dX.resize(this->X.dimensions());
+
+        ContractDim matmul {Axes(0, 1)};
+
+#ifdef _OPENMP
+#pragma omp parallel for num_threads(2) default(none) shared(softmax_grad, matmul)
+#endif
+        for (int a = 0; a < this->dL_dZ.dimension(0); a++) {
+            this->dL_dX.chip(a, 0) = this->dL_dZ.chip(a, 0)
+                    .contract(softmax_grad.chip(a, 0), matmul);
+        }
+    }
+    else {
+        // forward pass: z = g(x)
+        // backward pass (input): dL/dX = dL/dZ * dZ/dX = dL/dZ * g'(x)
+        this->dL_dX.resize(this->X.dimensions());
+        this->dL_dX.template device(this->device) =
+                this->dL_dZ * activation::Gradients(this->X);
+    }
+
     return this->dL_dX;
 }
 
@@ -151,10 +172,34 @@ const Tensor<3> &Activation<activation, TensorRank>::GetInputGradients3D()
                 "Activation::GetInputGradients3D CALLED ON A RANK " +
                 std::to_string(TensorRank) + " TENSOR");
     }
+    else if constexpr(std::is_same_v<activation, Softmax>) {
+        Tensor<4> softmax_grad(this->Z.dimension(0), this->Z.dimension(1),
+                               this->Z.dimension(2), this->Z.dimension(2));
+        softmax_grad = Softmax::Gradients(this->Z);
 
-    this->dL_dX.resize(this->X.dimensions());
-    this->dL_dX.template device(this->device) =
-            this->dL_dZ * activation::Gradients(this->X);
+        this->dL_dX.resize(this->X.dimensions());
+
+        ContractDim matmul {Axes(0, 1)};
+
+#ifdef _OPENMP
+#pragma omp parallel for num_threads(2) default(none) shared(softmax_grad, matmul)
+#endif
+        for (int a = 0; a < this->dL_dZ.dimension(0); a++) {
+            for (int b = 0; b < this->dL_dZ.dimension(1); b++) {
+                this->dL_dX.chip(a, 0).chip(b, 0) =
+                        this->dL_dZ.chip(a, 0).chip(b, 0)
+                                .contract(softmax_grad.chip(a, 0).chip(b, 0),
+                                          matmul);
+
+            }
+        }
+    }
+    else {
+        this->dL_dX.resize(this->X.dimensions());
+        this->dL_dX.template device(this->device) =
+                this->dL_dZ * activation::Gradients(this->X);
+    }
+
     return this->dL_dX;
 }
 
@@ -167,25 +212,41 @@ const Tensor<4> &Activation<activation, TensorRank>::GetInputGradients4D()
                 "Activation::GetInputGradients4D CALLED ON A RANK " +
                 std::to_string(TensorRank) + " TENSOR");
     }
+    else if constexpr(std::is_same_v<activation, Softmax>) {
+        Tensor<5> softmax_grad(this->Z.dimension(0), this->Z.dimension(1),
+                               this->Z.dimension(2), this->Z.dimension(3),
+                               this->Z.dimension(3));
+        softmax_grad = Softmax::Gradients(this->Z);
 
-    this->dL_dX.resize(this->X.dimensions());
-    this->dL_dX.template device(this->device) =
-            this->dL_dZ * activation::Gradients(this->X);
+        this->dL_dX.resize(this->X.dimensions());
+
+        ContractDim matmul {Axes(0, 1)};
+
+#ifdef _OPENMP
+#pragma omp parallel for num_threads(2) default(none) shared(softmax_grad, matmul)
+#endif
+        for (int a = 0; a < this->dL_dZ.dimension(0); a++) {
+            for (int b = 0; b < this->dL_dZ.dimension(1); b++) {
+                for (int c = 0; c < this->dL_dZ.dimension(2); c++) {
+                    this->dL_dX.chip(a, 0).chip(b, 0).chip(c, 0) =
+                            this->dL_dZ.chip(a, 0)
+                                    .chip(b, 0)
+                                    .chip(c, 0)
+                                    .contract(softmax_grad
+                                                      .chip(a, 0)
+                                                      .chip(b, 0)
+                                                      .chip(c, 0), matmul);
+                }
+            }
+        }
+    }
+    else {
+        this->dL_dX.resize(this->X.dimensions());
+        this->dL_dX.template device(this->device) =
+                this->dL_dZ * activation::Gradients(this->X);
+    }
+
     return this->dL_dX;
-}
-
-
-template<typename activation, int TensorRank>
-int Activation<activation, TensorRank>::GetInputRank() const
-{
-    return TensorRank;
-}
-
-
-template<typename activation, int TensorRank>
-int Activation<activation, TensorRank>::GetOutputRank() const
-{
-    return TensorRank;
 }
 
 } // namespace fl

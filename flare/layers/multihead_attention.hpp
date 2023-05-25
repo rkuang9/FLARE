@@ -24,6 +24,7 @@ public:
                        Eigen::Index query_dim, Eigen::Index value_dim,
                        const Initializer<3> &initializer = GlorotUniform<3>());
 
+    // for functional programming, not to be used with Layer* and Sequential
     // inputs = [query, key, value]
     void Forward(const std::vector<fl::Tensor<3>> &inputs);
 

@@ -323,8 +323,8 @@ public:
 
 
     std::string name = "layer"; // name of layer, to be set by inherited classes
-    const int input_rank = -1;
-    const int output_rank = -1;
+    int input_rank = -1;
+    int output_rank = -1;
 };
 
 }
