@@ -10,6 +10,12 @@
 namespace fl
 {
 
+// Dimensions notation for documentation
+// N - batch
+// T - sequence
+// H - number of heads
+// F - input features (typically the last dimension of inputs)
+// D - dimension of query or key
 class MultiHeadAttention : public Layer
 {
 public:
@@ -24,6 +30,10 @@ public:
                        Eigen::Index query_dim, Eigen::Index value_dim,
                        const Initializer<3> &initializer = GlorotUniform<3>());
 
+    void Forward(const Tensor<3> &query,
+                 const Tensor<3> &key,
+                 const Tensor<3> &value);
+
     // for functional programming, not to be used with Layer* and Sequential
     // inputs = [query, key, value]
     void Forward(const std::vector<fl::Tensor<3>> &inputs);
@@ -33,7 +43,7 @@ public:
 
     void Forward(const Layer &prev) override;
 
-    void Backward(const Tensor<2> &gradients) override;
+    void Backward(const Tensor<3> &gradients) override;
 
     void Backward(Layer &next) override;
 
@@ -50,6 +60,9 @@ public:
     void SetWeights(const std::vector<fl::Tensor<3>> &weights) override;
 
 private:
+    Tensor<4> Q;
+    Tensor<4> K;
+    Tensor<4> V;
     // weight dims [heads, input_dim, dim]
     // for dev purposes, removed heads dim
     Tensor<3> w_q;
@@ -65,6 +78,7 @@ private:
     Eigen::Index heads = 1;
     Eigen::Index input_dim = -1;
     Eigen::Index query_dim = -1;
+    Eigen::Index key_value_dim = -1;
 
     Tensor<4> QK_T;
     Tensor<4> sm_QK_T;

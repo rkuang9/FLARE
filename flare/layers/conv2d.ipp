@@ -241,20 +241,6 @@ void Conv2D<Activation, Threads>::SetWeights(
 
 
 template<typename Activation, int Threads>
-void Conv2D<Activation, Threads>::SetBias(const Tensor<4> &bias)
-{
-    if (bias.dimensions() != this->b.dimensions()) {
-        std::ostringstream error_msg;
-        error_msg << this->name << "Conv2D::SetWeights EXPECTED DIMENSIONS "
-                  << this->b.dimensions() << ", GOT " << bias.dimensions();
-        throw std::invalid_argument(error_msg.str());
-    }
-
-    this->b = bias;
-}
-
-
-template<typename Activation, int Threads>
 int Conv2D<Activation, Threads>::GetInputRank() const
 {
     return 4;

@@ -17,6 +17,10 @@ include_directories(FLARE)
 include_directories(Eigen)
 ```
 
+- compile with the following flags for better performance
+  - O2
+  - fopenmp (only if OpenMP is available)
+
 ```#include <flare/flare.hpp> ``` to start using FLARE
 
 

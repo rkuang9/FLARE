@@ -171,27 +171,6 @@ void Dense<Activation>::SetWeights(const std::vector<fl::Tensor<2>> &weights)
 
 
 template<typename Activation>
-const Tensor<2> &Dense<Activation>::GetBias() const
-{
-    return this->b;
-}
-
-
-template<typename Activation>
-void Dense<Activation>::SetBias(const Tensor<2> &bias)
-{
-    if (bias.dimensions() != this->b.dimensions()) {
-        std::ostringstream error_msg;
-        error_msg << this->name << " Dense::SetBias EXPECTED DIMENSIONS " <<
-                  this->b.dimensions() << ", GOT " << bias.dimensions();
-        throw std::invalid_argument(error_msg.str());
-    }
-
-    this->b = bias;
-}
-
-
-template<typename Activation>
 void Dense<Activation>::BackwardSoftmax(const Tensor<2> &gradients)
 {
     // TODO: performance improvement by eliminating for loop

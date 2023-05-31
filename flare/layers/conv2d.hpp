@@ -56,8 +56,6 @@ public:
 
     void SetWeights(const std::vector<Tensor<4>> &weights) override;
 
-    void SetBias(const Tensor<4> &bias) override;
-
     int GetInputRank() const override;
 
     int GetOutputRank() const override;

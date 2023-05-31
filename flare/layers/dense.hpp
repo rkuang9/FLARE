@@ -99,20 +99,6 @@ public:
     void SetWeights(const std::vector<Tensor<2>> &weights) override;
 
 
-    /**
-     * @return   layer's bias
-     */
-    const Tensor<2> &GetBias() const override;
-
-
-    /**
-     * Set layer's bias
-     *
-     * @param bias   custom bias with dimensions [output units, 1]
-     */
-    void SetBias(const Tensor<2> &bias) override;
-
-
     void Save(const std::string &path) override;
 
 

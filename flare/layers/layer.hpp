@@ -261,38 +261,6 @@ public:
 
 
     /**
-     * @return   layer's bias
-     */
-    virtual const Tensor<2> &GetBias() const
-    {
-        throw std::logic_error(
-                "An error occurred, base class Layer GetBias was called on " +
-                this->name);
-    }
-
-
-    /**
-     * Set the layer's bias
-     *
-     * @param bias   a rank 2 tensor
-     */
-    virtual void SetBias(const Tensor<2> &bias)
-    {
-        throw std::logic_error(
-                "An error occurred, base class Layer SetBias was called on " +
-                this->name);
-    }
-
-
-    virtual void SetBias(const Tensor<4> &bias)
-    {
-        throw std::logic_error(
-                "An error occurred, base class Layer SetBias was called on " +
-                this->name);
-    }
-
-
-    /**
      * @return   expected rank of forward propagation's input tensor
      */
     virtual int GetInputRank() const
