@@ -21,22 +21,20 @@ class MultiHeadAttention : public Layer
 public:
     /**
      *
+     * For now dim is the size of query/key/value's last dimension
+     *
      * @param input_dim   number of features in input
      * @param key_dim     size of query and key dimensions per head
      * @param value_dim   size of value dimension per head
      * @param initializer
      */
-    MultiHeadAttention(Eigen::Index heads, Eigen::Index input_dim,
-                       Eigen::Index query_dim, Eigen::Index value_dim,
+    MultiHeadAttention(Eigen::Index heads, Eigen::Index input_dim, Eigen::Index dim,
                        const Initializer<3> &initializer = GlorotUniform<3>());
 
-    void Forward(const Tensor<3> &query,
+    // not to be used with Layer* and Sequential
+     void Forward(const Tensor<3> &query,
                  const Tensor<3> &key,
                  const Tensor<3> &value);
-
-    // for functional programming, not to be used with Layer* and Sequential
-    // inputs = [query, key, value]
-    void Forward(const std::vector<fl::Tensor<3>> &inputs);
 
     // self attention where query = key = value
     void Forward(const Tensor<3> &inputs) override;
@@ -60,11 +58,18 @@ public:
     void SetWeights(const std::vector<fl::Tensor<3>> &weights) override;
 
 private:
+    // layer input, not sure if having these as pointers is safe,
+    // but it's faster keeping copies per Forward() and requires less memory
+    Tensor<3> const *q = nullptr;
+    Tensor<3> const *k = nullptr;
+    Tensor<3> const *v = nullptr;
+
+    // layer input multiplied with weights
     Tensor<4> Q;
     Tensor<4> K;
     Tensor<4> V;
+
     // weight dims [heads, input_dim, dim]
-    // for dev purposes, removed heads dim
     Tensor<3> w_q;
     Tensor<3> w_k;
     Tensor<3> w_v;
@@ -76,17 +81,16 @@ private:
     Tensor<3> dL_w_o;
 
     Eigen::Index heads = 1;
-    Eigen::Index input_dim = -1;
-    Eigen::Index query_dim = -1;
-    Eigen::Index key_value_dim = -1;
+    Eigen::Index input_dim = -1; // length of input's last dimension
+    Eigen::Index layer_dim = -1; // length of Q,K's last dimension
 
-    Tensor<4> QK_T;
+    // intermediate terms saved during Forward() for Backward()
     Tensor<4> sm_QK_T;
     Tensor<4> sm_QK_T_V;
     Tensor<3> A; // softmax(Q x K_T / sqrt(dk)) x V
 
-    Eigen::ThreadPoolDevice device = Eigen::ThreadPoolDevice(new Eigen::ThreadPool(
-            (int) std::thread::hardware_concurrency()), 2);
+    Eigen::ThreadPool pool {(int) std::thread::hardware_concurrency()};
+    Eigen::ThreadPoolDevice device {&pool, 2};
 };
 
 } // namespace fl
