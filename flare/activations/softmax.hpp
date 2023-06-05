@@ -71,6 +71,7 @@ private:
                                softmax.dimension(1),
                                softmax.dimension(1));
 
+#pragma omp parallel for simd default(none) shared(softmax, softmax_grad)
         for (Eigen::Index batch = 0; batch < softmax.dimension(0); batch++) {
             // begin calculating the Jacobian matrix of each row
             // according to the formula, where S is the softmax gradient Jacobian
@@ -107,9 +108,7 @@ private:
                                softmax.dimension(2),
                                softmax.dimension(2));
 
-#ifdef _OPENMP
-#pragma omp parallel for num_threads(2) default(none) shared(softmax, softmax_grad)
-#endif
+#pragma omp parallel for simd default(none) shared(softmax, softmax_grad)
         for (Eigen::Index a = 0; a < softmax.dimension(0); a++) {
             for (Eigen::Index b = 0; b < softmax.dimension(1); b++) {
                 // begin calculating the Jacobian matrix of each row
@@ -147,7 +146,7 @@ private:
                                softmax.dimension(3));
 
 #ifdef _OPENMP
-#pragma omp parallel for num_threads(2) default(none) shared(softmax, softmax_grad)
+#pragma omp parallel for simd default(none) shared(softmax, softmax_grad)
 #endif
         for (Eigen::Index a = 0; a < softmax.dimension(0); a++) {
             for (Eigen::Index b = 0; b < softmax.dimension(1); b++) {
