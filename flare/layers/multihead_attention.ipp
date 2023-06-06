@@ -147,104 +147,101 @@ void MultiHeadAttention::Backward(const Tensor<3> &gradients)
     const Eigen::Index dims = this->layer_dim;
 
 
-    Tensor<4> dz_6(batch, sequence, this->heads, dims);
-    dz_6.device(this->device) = gradients.contract(this->w_o,
-                                                   ContractDim {Axes(2, 2)});
+    Tensor<4> dz6(batch, sequence, this->heads, dims);
+    dz6.device(this->device) = gradients.contract(this->w_o,
+                                                  ContractDim {Axes(2, 2)});
 
+    Tensor<4> dz3(batch, this->heads, dims, seq_key);
+    dz3.setZero();
 
-    Tensor<4> dz_3(batch, seq_query, this->heads, dims);
-    dz_3.setZero();
-
-#pragma omp parallel for simd shared(batch, seq_key, seq_query, dims, dz_3, dz_6) default(none)
-    for (Eigen::Index N = 0; N < batch; N++) {
-        for (Eigen::Index Tk = 0; Tk < seq_key; Tk++) {
-            for (Eigen::Index Tq = 0; Tq < seq_query; Tq++) {
-                for (Eigen::Index H = 0; H < this->heads; H++) {
-                    for (Eigen::Index D = 0; D < dims; D++) {
-                        // einsum notation: NQHK,NQHD->NKHD
-                        dz_3(N, Tk, H, D) +=
-                                this->sm_QK_T(N, Tq, H, Tk) * dz_6(N, Tq, H, D);
-                    }
-                }
-            }
-        }
-    }
-
-
-    Tensor<4> dz_5(batch, seq_query, heads, seq_value);
-    dz_5.setZero();
-
-#pragma omp parallel for simd shared(batch, seq_key, seq_query, dims, dz_5, dz_6) default(none)
-    for (Eigen::Index N = 0; N < batch; N++) {
-        for (Eigen::Index Tq = 0; Tq < seq_query; Tq++) {
-            for (Eigen::Index H = 0; H < this->heads; H++) {
-                for (Eigen::Index Tv = 0; Tv < seq_key; Tv++) {
-                    for (Eigen::Index D = 0; D < dims; D++) {
-                        // einsum notation: NQHV,NQHD->NVHD
-                        dz_5(N, Tq, H, Tv) +=
-                                dz_6(N, Tq, H, D) * this->V(N, Tv, H, D);
-                    }
-                }
-            }
-        }
-    }
-
-    Tensor<5> softmax_grad(batch, seq_query, this->heads, seq_key, seq_key);
-    softmax_grad.device(this->device) = Softmax::Gradients(this->sm_QK_T);
-
-    Tensor<4> dz_4(batch, seq_query, this->heads, seq_key);
-    dz_4.setZero();
-
-#pragma omp parallel for simd shared(batch, seq_key, seq_query, seq_value, dims, dz_4, dz_5, softmax_grad) default(none)
-    for (Eigen::Index N = 0; N < batch; N++) {
-        for (Eigen::Index Tq = 0; Tq < seq_query; Tq++) {
-            for (Eigen::Index H = 0; H < this->heads; H++) {
-                for (Eigen::Index Tk = 0; Tk < seq_key; Tk++) {
-                    for (Eigen::Index Tv = 0; Tv < seq_value; Tv++) {
-                        // einsum notation: NQHKV,NQHV->NQHK
-                        dz_4(N, Tq, H, Tk) += dz_5(N, Tq, H, Tv) *
-                                              softmax_grad(N, Tq, H, Tk, Tv);
-                    }
-                }
-            }
-        }
-    }
-
-    // dimensions as calculated for backpropagation
-    //Tensor<4> dz_2(batch, seq_key, this->heads, dims);
-
-    // for the sake of performance, shuffle the dimensions to be cache friendly
-    Tensor<4> dz_2(batch, seq_key, this->heads, dims);
-    dz_2.setZero();
-
-#pragma omp parallel for simd shared(batch, seq_key, seq_query, dims, dz_2, dz_4) default(none)
-    for (Eigen::Index N = 0; N < batch; N++) {
-        for (Eigen::Index Tq = 0; Tq < seq_query; Tq++) {
-            for (Eigen::Index Tk = 0; Tk < seq_key; Tk++) {
-                for (Eigen::Index H = 0; H < this->heads; H++) {
-                    for (Eigen::Index D = 0; D < dims; D++) {
-                        // einsum notation: NQHK,NQHD->NKHD
-                        dz_2(N, Tk, H, D) += dz_4(N, Tq, H, Tk) *
-                                             this->Q(N, Tq, H, D);
-                    }
-                }
-            }
-        }
-    }
-
-
-    Tensor<4> dz_1(batch, seq_query, this->heads, dims);
-    dz_1.setZero();
-
-#pragma omp parallel for simd shared(batch, seq_key, seq_query, dims, dz_1, dz_4) default(none)
+#pragma omp parallel for simd collapse(2) shared(batch, seq_query, dims, seq_key, dz6, dz3) default(none)
     for (Eigen::Index N = 0; N < batch; N++) {
         for (Eigen::Index Tq = 0; Tq < seq_query; Tq++) {
             for (Eigen::Index H = 0; H < this->heads; H++) {
                 for (Eigen::Index D = 0; D < dims; D++) {
                     for (Eigen::Index Tk = 0; Tk < seq_key; Tk++) {
-                        // einsum notation: NQHK,NKHD->NQHD
-                        dz_1(N, Tq, H, D) += dz_4(N, Tq, H, Tk) *
-                                             this->K(N, Tk, H, D);
+                        // moved Tk dim to the end in [N, Tk, H, D] for better cache access
+                        dz3(N, H, D, Tk) +=
+                                this->sm_QK_T(N, Tq, H, Tk) * dz6(N, Tq, H, D);
+                    }
+                }
+            }
+        }
+    }
+
+    Tensor<4> dz5(batch, seq_query, this->heads, seq_value);
+    dz5.setZero();
+
+#pragma omp parallel for simd shared(batch, seq_key, seq_query, dims, dz6, dz5) default(none)
+    for (Eigen::Index N = 0; N < batch; N++) {
+        for (Eigen::Index Tq = 0; Tq < seq_query; Tq++) {
+            for (Eigen::Index H = 0; H < this->heads; H++) {
+                for (Eigen::Index Tv = 0; Tv < seq_key; Tv++) {
+                    for (Eigen::Index D = 0; D < dims; D++) {
+                        dz5(N, Tq, H, Tv) +=
+                                dz6(N, Tq, H, D) * this->V(N, Tv, H, D);
+                    }
+                }
+            }
+        }
+    }
+
+    Tensor<4> dz4(batch, seq_key, this->heads, seq_key);
+    dz4.setZero();
+
+    Tensor<5> softmax_grad(batch, seq_query, this->heads, seq_key, seq_value);
+    softmax_grad.device(this->device) = Softmax::Gradients(this->sm_QK_T);
+
+#pragma omp parallel for simd collapse(3) shared(batch, seq_key, seq_query, seq_value, dims, dz5, dz4, softmax_grad) default(none)
+    for (Eigen::Index N = 0; N < batch; N++) {
+        for (Eigen::Index Tq = 0; Tq < seq_query; Tq++) {
+            for (Eigen::Index H = 0; H < this->heads; H++) {
+                for (Eigen::Index Tk = 0; Tk < seq_key; Tk++) {
+                    for (Eigen::Index Tv = 0; Tv < seq_value; Tv++) {
+                        dz4(N, Tq, H, Tk) +=
+                                dz5(N, Tq, H, Tv) *
+                                softmax_grad(N, Tq, H, Tk, Tv);
+                    }
+                }
+            }
+        }
+    }
+
+    // transpose dz4 for better cache access
+    Tensor<4> dz4_transpose(dz4.dimension(0),
+                            dz4.dimension(1),
+                            dz4.dimension(3),
+                            dz4.dimension(2));
+    dz4_transpose.device(this->device) = dz4.shuffle(Dims<4>(0, 1, 3, 2));
+
+    Tensor<4> dz2(batch, seq_key, this->heads, dims);
+    dz2.setZero();
+
+#pragma omp parallel for simd collapse(2) shared(batch, seq_key, seq_query, dims, dz2, dz4_transpose) default(none)
+    for (Eigen::Index N = 0; N < batch; N++) {
+        for (Eigen::Index Tq = 0; Tq < seq_query; Tq++) {
+            for (Eigen::Index Tk = 0; Tk < seq_key; Tk++) {
+                for (Eigen::Index H = 0; H < this->heads; H++) {
+                    for (Eigen::Index D = 0; D < dims; D++) {
+                        dz2(N, Tk, H, D) += dz4_transpose(N, Tq, Tk, H) *
+                                            this->Q(N, Tq, H, D);
+                    }
+                }
+            }
+        }
+    }
+
+    Tensor<4> dz1(batch, seq_query, this->heads, dims);
+    dz1.setZero();
+
+#pragma omp parallel for simd shared(batch, seq_key, seq_query, dims, dz1, dz4_transpose) default(none)
+    for (Eigen::Index N = 0; N < batch; N++) {
+        for (Eigen::Index Tq = 0; Tq < seq_query; Tq++) {
+            for (Eigen::Index Tk = 0; Tk < seq_key; Tk++) {
+                for (Eigen::Index H = 0; H < this->heads; H++) {
+                    for (Eigen::Index D = 0; D < dims; D++) {
+                        dz1(N, Tq, H, D) += dz4_transpose(N, Tq, Tk, H) *
+                                            this->K(N, Tk, H, D);
                     }
                 }
             }
@@ -257,14 +254,17 @@ void MultiHeadAttention::Backward(const Tensor<3> &gradients)
     Dims<3> shuffle_FHD_HFD(1, 0, 2);
 
     this->dL_w_q.device(this->device) =
-            this->q->contract(dz_1, double_contract).shuffle(shuffle_FHD_HFD) /
+            this->q->contract(dz1, double_contract).shuffle(shuffle_FHD_HFD) /
             std::sqrt(static_cast<Scalar>(this->layer_dim));
 
     this->dL_w_k.device(this->device) =
-            this->k->contract(dz_2, double_contract).shuffle(shuffle_FHD_HFD);
+            this->k->contract(dz2, double_contract).shuffle(shuffle_FHD_HFD);
 
+    // dz3 was "shuffled" so this will not be using the same contraction dims
     this->dL_w_v.device(this->device) =
-            this->v->contract(dz_3, double_contract).shuffle(shuffle_FHD_HFD);
+            this->v->contract(dz3, Eigen::array<Eigen::IndexPair<int>, 2> {
+                    Eigen::IndexPair<int>(0, 0),
+                    Eigen::IndexPair<int>(1, 3)}).shuffle(shuffle_FHD_HFD);
 
     this->dL_w_o.device(this->device) =
             this->sm_QK_T_V.contract(gradients, double_contract);
@@ -353,5 +353,3 @@ void MultiHeadAttention::SetWeights(const std::vector<fl::Tensor<3>> &weights)
 }
 
 } // namespace fl
-
-

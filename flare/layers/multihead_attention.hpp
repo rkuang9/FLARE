@@ -32,7 +32,7 @@ public:
                        const Initializer<3> &initializer = GlorotUniform<3>());
 
     // not to be used with Layer* and Sequential
-     void Forward(const Tensor<3> &query,
+    void Forward(const Tensor<3> &query,
                  const Tensor<3> &key,
                  const Tensor<3> &value);
 

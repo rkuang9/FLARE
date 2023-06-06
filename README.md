@@ -19,7 +19,7 @@ include_directories(Eigen)
 
 - compile with the following flags for better performance
   - O2
-  - fopenmp (only if OpenMP is available)
+  - fopenmp (strongly recommended if using Multi-head Attention or Softmax activation)
 
 ```#include <flare/flare.hpp> ``` to start using FLARE
 
@@ -73,12 +73,14 @@ int main()
   - Convolution 2D
   - Max Pooling 2D
   - Flatten
+  - Reshape
   - Convolution 2D Transpose
   - Batch Normalization
   - Dropout
   - Gated Recurrent Unit
   - Long Short-Term Memory
   - Bidirectional RNN
+  - Multi-head Attention
 - Activation Functions
   - Sigmoid
   - TanH
@@ -128,5 +130,5 @@ int main()
 - [x] Bidirectional RNN (4/5/2023)
 - [ ] Add bias support for layers
 - [ ] Evaluate a test set per epoch
-- [ ] Accuracy metrics
-- [ ] Attention architecture
+- [x] Accuracy metrics
+- [x] Attention architecture
