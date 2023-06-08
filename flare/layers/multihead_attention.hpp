@@ -49,7 +49,11 @@ public:
 
     const Tensor<3> &GetOutput3D() const override;
 
+    // for self attention where query = key = value
     const Tensor<3> &GetInputGradients3D() override;
+
+    // when query, key, and value are different
+    std::vector<Tensor<3>*> GetInputGradients();
 
     std::vector<fl::Tensor<3>> GetWeights3D() const override;
 
@@ -69,6 +73,17 @@ private:
     Tensor<4> K;
     Tensor<4> V;
 
+    Tensor<4> dL_dQ;
+    Tensor<4> dL_dK;
+    Tensor<4> dL_dV;
+
+
+    // layer input gradients
+    Tensor<3> dL_dX;
+    Tensor<3> dL_dq;
+    Tensor<3> dL_dk;
+    Tensor<3> dL_dv;
+
     // weight dims [heads, input_dim, dim]
     Tensor<3> w_q;
     Tensor<3> w_k;
@@ -87,7 +102,7 @@ private:
     // intermediate terms saved during Forward() for Backward()
     Tensor<4> sm_QK_T;
     Tensor<4> sm_QK_T_V;
-    Tensor<3> A; // softmax(Q x K_T / sqrt(dk)) x V
+    Tensor<3> A; // layer output = softmax(Q x K_T / sqrt(dk)) x V
 
     Eigen::ThreadPool pool {(int) std::thread::hardware_concurrency()};
     Eigen::ThreadPoolDevice device {&pool, 2};

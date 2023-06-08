@@ -14,7 +14,7 @@ MultiHeadAttention::MultiHeadAttention(
         input_dim(input_dim),
         layer_dim(layer_dim)
 {
-    this->name = "multi_head_attention";
+    this->name = "multihead_attention";
 
     int fan_in = static_cast<int>(input_dim);
     int fan_out = static_cast<int>(layer_dim);
@@ -151,17 +151,17 @@ void MultiHeadAttention::Backward(const Tensor<3> &gradients)
     dz6.device(this->device) = gradients.contract(this->w_o,
                                                   ContractDim {Axes(2, 2)});
 
-    Tensor<4> dz3(batch, this->heads, dims, seq_key);
-    dz3.setZero();
+    this->dL_dV.resize(batch, this->heads, dims, seq_key);
+    this->dL_dV.setZero();
 
-#pragma omp parallel for simd collapse(2) shared(batch, seq_query, dims, seq_key, dz6, dz3) default(none)
+#pragma omp parallel for simd collapse(2) shared(batch, seq_query, dims, seq_key, dz6) default(none)
     for (Eigen::Index N = 0; N < batch; N++) {
         for (Eigen::Index Tq = 0; Tq < seq_query; Tq++) {
             for (Eigen::Index H = 0; H < this->heads; H++) {
                 for (Eigen::Index D = 0; D < dims; D++) {
                     for (Eigen::Index Tk = 0; Tk < seq_key; Tk++) {
                         // moved Tk dim to the end in [N, Tk, H, D] for better cache access
-                        dz3(N, H, D, Tk) +=
+                        this->dL_dV(N, H, D, Tk) +=
                                 this->sm_QK_T(N, Tq, H, Tk) * dz6(N, Tq, H, D);
                     }
                 }
@@ -185,7 +185,7 @@ void MultiHeadAttention::Backward(const Tensor<3> &gradients)
             }
         }
     }
-
+    // TODO: dz5 CAN BE COMBINED INTO WITH dz4 LOOP
     Tensor<4> dz4(batch, seq_key, this->heads, seq_key);
     dz4.setZero();
 
@@ -214,34 +214,34 @@ void MultiHeadAttention::Backward(const Tensor<3> &gradients)
                             dz4.dimension(2));
     dz4_transpose.device(this->device) = dz4.shuffle(Dims<4>(0, 1, 3, 2));
 
-    Tensor<4> dz2(batch, seq_key, this->heads, dims);
-    dz2.setZero();
+    this->dL_dK.resize(batch, seq_key, this->heads, dims);
+    this->dL_dK.setZero();
 
-#pragma omp parallel for simd collapse(2) shared(batch, seq_key, seq_query, dims, dz2, dz4_transpose) default(none)
+#pragma omp parallel for simd collapse(2) shared(batch, seq_key, seq_query, dims, dz4_transpose) default(none)
     for (Eigen::Index N = 0; N < batch; N++) {
         for (Eigen::Index Tq = 0; Tq < seq_query; Tq++) {
             for (Eigen::Index Tk = 0; Tk < seq_key; Tk++) {
                 for (Eigen::Index H = 0; H < this->heads; H++) {
                     for (Eigen::Index D = 0; D < dims; D++) {
-                        dz2(N, Tk, H, D) += dz4_transpose(N, Tq, Tk, H) *
-                                            this->Q(N, Tq, H, D);
+                        this->dL_dK(N, Tk, H, D) += dz4_transpose(N, Tq, Tk, H) *
+                                                    this->Q(N, Tq, H, D);
                     }
                 }
             }
         }
     }
 
-    Tensor<4> dz1(batch, seq_query, this->heads, dims);
-    dz1.setZero();
+    this->dL_dQ.resize(batch, seq_query, this->heads, dims);
+    this->dL_dQ.setZero();
 
-#pragma omp parallel for simd shared(batch, seq_key, seq_query, dims, dz1, dz4_transpose) default(none)
+#pragma omp parallel for simd shared(batch, seq_key, seq_query, dims, dz4_transpose) default(none)
     for (Eigen::Index N = 0; N < batch; N++) {
         for (Eigen::Index Tq = 0; Tq < seq_query; Tq++) {
             for (Eigen::Index Tk = 0; Tk < seq_key; Tk++) {
                 for (Eigen::Index H = 0; H < this->heads; H++) {
                     for (Eigen::Index D = 0; D < dims; D++) {
-                        dz1(N, Tq, H, D) += dz4_transpose(N, Tq, Tk, H) *
-                                            this->K(N, Tk, H, D);
+                        this->dL_dQ(N, Tq, H, D) +=
+                                dz4_transpose(N, Tq, Tk, H) * this->K(N, Tk, H, D);
                     }
                 }
             }
@@ -254,15 +254,15 @@ void MultiHeadAttention::Backward(const Tensor<3> &gradients)
     Dims<3> shuffle_FHD_HFD(1, 0, 2);
 
     this->dL_w_q.device(this->device) =
-            this->q->contract(dz1, double_contract).shuffle(shuffle_FHD_HFD) /
-            std::sqrt(static_cast<Scalar>(this->layer_dim));
+            this->q->contract(this->dL_dQ, double_contract).shuffle(shuffle_FHD_HFD)
+            / std::sqrt(static_cast<Scalar>(this->layer_dim));
 
     this->dL_w_k.device(this->device) =
-            this->k->contract(dz2, double_contract).shuffle(shuffle_FHD_HFD);
+            this->k->contract(this->dL_dK, double_contract).shuffle(shuffle_FHD_HFD);
 
-    // dz3 was "shuffled" so this will not be using the same contraction dims
+    // dL_dV was "shuffled" so this will not be using the same contraction dims
     this->dL_w_v.device(this->device) =
-            this->v->contract(dz3, Eigen::array<Eigen::IndexPair<int>, 2> {
+            this->v->contract(this->dL_dV, Eigen::array<Eigen::IndexPair<int>, 2> {
                     Eigen::IndexPair<int>(0, 0),
                     Eigen::IndexPair<int>(1, 3)}).shuffle(shuffle_FHD_HFD);
 
@@ -294,7 +294,47 @@ const Tensor<3> &MultiHeadAttention::GetOutput3D() const
 
 const Tensor<3> &MultiHeadAttention::GetInputGradients3D()
 {
-    return this->w_o; // TODO: placeholder
+    FL_REQUIRES(this->q == this->k && this->k == this->v, this->name
+            << "::GetInputGradients3D should only be used for self-attention, when query, key, and value are the same");
+
+    Eigen::array<Eigen::IndexPair<int>, 2> contract_axes_q_k = {
+            Eigen::IndexPair<int>(2, 0), Eigen::IndexPair<int>(3, 2)};
+
+    // using different contraction axes for value because dL_dV was
+    // transposed during Backward() for better performance
+    Eigen::array<Eigen::IndexPair<int>, 2> contract_axes_v = {
+            Eigen::IndexPair<int>(1, 0), Eigen::IndexPair<int>(2, 2)};
+
+    this->dL_dX.resize(this->q->dimensions());
+    this->dL_dX.device(this->device) =
+            this->dL_dQ.contract(this->w_q, contract_axes_q_k) /
+            std::sqrt(static_cast<Scalar>(this->layer_dim)) +
+            this->dL_dK.contract(this->w_k, contract_axes_q_k) +
+            this->dL_dV.contract(this->w_v, contract_axes_v);
+
+    return this->dL_dX;
+}
+
+
+std::vector<fl::Tensor<3> *> MultiHeadAttention::GetInputGradients()
+{
+    Eigen::array<Eigen::IndexPair<int>, 2> contract_axes_q_k = {
+            Eigen::IndexPair<int>(2, 0), Eigen::IndexPair<int>(3, 2)};
+
+    // using different contraction axes for value because dL_dV was
+    // transposed during Backward() for better performance
+    Eigen::array<Eigen::IndexPair<int>, 2> contract_axes_v = {
+            Eigen::IndexPair<int>(1, 0), Eigen::IndexPair<int>(2, 2)};
+
+    this->dL_dq.device(this->device) =
+            this->dL_dQ.contract(this->w_q, contract_axes_q_k) /
+            std::sqrt(static_cast<Scalar>(this->layer_dim));
+    this->dL_dk.device(this->device) =
+            this->dL_dK.contract(this->w_k, contract_axes_q_k);
+    this->dL_dv.device(this->device) =
+            this->dL_dV.contract(this->w_v, contract_axes_v);
+
+    return {&this->dL_dq, &this->dL_dk, &this->dL_dv};
 }
 
 

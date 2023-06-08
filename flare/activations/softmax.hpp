@@ -14,9 +14,10 @@ class Softmax
 {
 public:
     /**
-     * Compute the activation of a tensor
+     * Compute the softmax of a tensor using the numerically stable version where
+     * the tensor is shifted towards 0 by the maximum values along the last dimension
      * @param tensor   Eigen::Tensor
-     * @return         Eigen::Tensor or Eigen::Tensor Op
+     * @return         Eigen::Tensor Op
      */
     template<int TensorRank>
     static auto Activate(const Tensor <TensorRank> &tensor)
@@ -28,18 +29,25 @@ public:
         bcast.fill(1);
         bcast.back() = tensor.dimension(TensorRank - 1);
 
-        auto features_sum = tensor
-                .exp()
+        auto max = tensor
+                .template maximum(Dims<1>(TensorRank - 1))
+                .reshape(predict_sum_dims)
+                .eval()
+                .broadcast(bcast);
+
+        auto shifted_by_max = (tensor - max).exp();
+
+        auto features_sum = shifted_by_max
                 .sum(Dims<1>(TensorRank - 1))
                 .reshape(predict_sum_dims)
                 .eval()
                 .broadcast(bcast);
-        return tensor.exp() / features_sum;
+        return shifted_by_max / features_sum;
     }
 
 
     /**
-     * Compute the Jacobian of a softmax function for up to rank 4 tensors
+     * Compute the Jacobian of a softmax function for tensors of rank 2 to 4
      * @param softmax   features already activated using softmax
      * @return          Eigen Tensor
      */
@@ -180,5 +188,49 @@ private:
 };
 
 } // namespace fl
+
+
+/* Normal softmax unshifted, numerically unstable, often outputs nan for large inputs
+
+        Dims <TensorRank> predict_sum_dims = tensor.dimensions();
+        predict_sum_dims.back() = 1;
+
+        Dims <TensorRank> bcast;
+        bcast.fill(1);
+        bcast.back() = tensor.dimension(TensorRank - 1);
+
+        auto features_sum = tensor
+                .exp()
+                .sum(Dims<1>(TensorRank - 1))
+                .reshape(predict_sum_dims)
+                .eval()
+                .broadcast(bcast);
+        return tensor.exp() / features_sum;
+ */
+
+
+/* log softmax
+Dims<TensorRank> predict_sum_dims = tensor.dimensions();
+    predict_sum_dims.back() = 1;
+
+    Dims<TensorRank> bcast;
+    bcast.fill(1);
+    bcast.back() = tensor.dimension(TensorRank - 1);
+
+    auto max = tensor
+            .template maximum(Dims<1>(TensorRank - 1))
+            .reshape(predict_sum_dims)
+            .eval()
+            .broadcast(bcast);
+
+    auto shifted_by_max = tensor - max;
+
+    return shifted_by_max - shifted_by_max.exp()
+            .sum(Dims<1>(TensorRank - 1))
+            .log()
+            .reshape(predict_sum_dims)
+            .eval()
+            .broadcast(bcast);
+ */
 
 #endif //FLARE_SOFTMAX_HPP
