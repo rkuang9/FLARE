@@ -49,13 +49,20 @@ void Flatten<InputTensorRank>::Forward(const Layer &prev)
 template<int InputTensorRank>
 void Flatten<InputTensorRank>::Backward(const Tensor<InputTensorRank> &gradients)
 {
-    fl_assert(this->Z.dimensions() == gradients.dimensions(),
-              this->name << "::Backward expected gradient dimension "
-                         << this->Z.dimensions() << ", instead got "
-                         << gradients.dimensions());
+    // gradient dimensions must match this layer's Forward output's dimensions
+    if (gradients.rank() != 2 || this->Z.size() != gradients.size()) {
+        // TODO: better check needed, this will not catch the
+        // case where gradients dimensions are correct but indices are not
+        std::ostringstream error;
+        error << "Flatten::Backward expects Tensor<2> gradients with dimensions " <<
+              this->Z.dimensions() << ", got a" << gradients.rank()
+              << "D tensor with dimensions " << gradients.dimensions() << " instead";
+        throw std::logic_error(error.str());
+    }
 
     this->dL_dZ.resize(gradients.dimensions());
 
+    // reshape gradients to this layer's input's dimensions
     if constexpr (InputTensorRank == 2) {
         this->dL_dZ.device(this->device) = gradients;
     }
